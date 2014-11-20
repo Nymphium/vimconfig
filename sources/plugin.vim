@@ -144,10 +144,10 @@ nmap <Leader>t :TagbarToggle<CR>
 
 	nnoremap <silent> %% :OverCommandLine<CR>%s/
 	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
-	nnoremap / <Nop>
-	nnoremap <silent> / :OverCommandLine<CR>/
-	nnoremap n <Nop
-	nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
+	" nnoremap / <Nop>
+	" nnoremap <silent> / :OverCommandLine<CR>/
+	" nnoremap n <Nop
+	" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
 "" g}
 
 "" vim-quickrun {
