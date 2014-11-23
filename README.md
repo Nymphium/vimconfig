@@ -1,5 +1,5 @@
 # vimconfig
 
 # about this
-Something about vim conpose this repository.poyo
+Something about vim conpose this repository.
 
