@@ -93,7 +93,7 @@ nmap <Leader>t :TagbarToggle<CR>
 
 	inoremap <ESC>C <Nop>
 	inoremap <expr><ESC>C neocomplete#undo_completion()
-	inoremap <expr><C-l> neocomplete#complete_common_string()
+	" inoremap <expr><C-l> neocomplete#complete_common_string()
 
 	"" <CR>: close popup and save indent.
 	inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
@@ -105,11 +105,9 @@ nmap <Leader>t :TagbarToggle<CR>
 	"" <TAB>: completion.
 	inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 	inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-	"" <C-h>, <BS>: close popup and delete backword char.
-	inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+	"" <BS>: close popup and delete backword char.
 	inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-	inoremap <expr><C-y> neocomplete#close_popup()
-	inoremap <expr><ESC>z neocomplete#cancel_popup()
+	inoremap <expr><ESC><ESC> neocomplete#close_popup()."\<C-c>"
 
 	"" For cursor moving in insert mode(Not recommended)
 	inoremap <expr><ESC>h neocomplete#close_popup() . "\<Left>"
@@ -148,7 +146,7 @@ nmap <Leader>t :TagbarToggle<CR>
 	" nnoremap <silent> / :OverCommandLine<CR>/
 	" nnoremap n <Nop
 	" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
-"" g}
+"" }
 
 "" vim-quickrun {
 	let g:quickrun_config = {}

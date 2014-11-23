@@ -1,4 +1,4 @@
-vnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
+vnoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 vnoremap v $h
 vnoremap L <Nop>
 vnoremap H <Nop>
@@ -53,7 +53,7 @@ nnoremap <S-k> k<S-j>
 nnoremap <silent> <F11> <ESC>:Q<CR>
 nnoremap V <C-v>
 
-inoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
+inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 inoremap <ESC>v <Nop>
 inoremap <ESC>v <ESC>"*pa
 inoremap <ESC>1 <Nop>
