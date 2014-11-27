@@ -15,7 +15,6 @@ NeoBundle "othree/html5.vim"
 NeoBundle 'adimit/prolog.vim'
 NeoBundle 'Shougo/vinarise.vim'
 NeoBundle 'OCamlPro/ocp-indent'
-NeoBundle 'rcmdnk/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'rhysd/unite-ruby-require.vim'
 
@@ -208,12 +207,6 @@ nmap <Leader>t :TagbarToggle<CR>
 		autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
 	augroup END
 "" }
-
-"" vim-markdown {
-	let g:vim_markdown_folding_disabled=1
-
-	let g:vim_markdown_initial_foldlevel=1
-""}
 
 "" vim-indent-guides {
 	let g:indent_guides_enable_on_vim_startup = 1
