@@ -4,7 +4,7 @@
 
 hi luaFunction cterm=bold ctermfg=214
 hi luaLength cterm=bold ctermfg=62
-hi link luaBracket String
+hi link luaBracket Special
 hi luaCond cterm=bold ctermfg=48
 hi link luaElse luaCond
 hi luaChar cterm=bold
