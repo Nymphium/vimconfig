@@ -1,0 +1,7 @@
+source $HOME/.vimrc
+
+set transparency=5
+set guioptions-=Tm
+set antialias
+set nobackup
+set guifont=Monaco\ 6
