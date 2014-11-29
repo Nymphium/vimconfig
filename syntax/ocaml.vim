@@ -1,3 +1,8 @@
+" Vim syntax file
+" Language: OCaml
+" Maintainer: Nymphium
+
+
 hi ocamlKeyword cterm=bold ctermfg=226
 hi ocamlKeyChar cterm=bold ctermfg=47
 hi ocamlFunc cterm=bold ctermfg=81
