@@ -13,5 +13,5 @@ syn match cChar /\(\/\)\@<!\*/
 syn match cFunc /\(\<\(\(int\)\|\(void\)\|\(char\)\|\(double\)\|\(float\)\)\s\+\)\@<=\w\+\(\s*(.*)\)\@=/
 syn match cFunc /\<\w\+\>\(\s*(.*)\)\@=/ contains=ALLBUT,cStatement,cLabel,cConditional,cRepeat,cUserLabel,cOperator,cStructure
 
-autocmd VimEnter,FileType * if &filetype == "c" | syn match cSurround /[(){}\[\]]/ | endif
+autocmd VimEnter *.c syn match cSurround /[(){}\[\]]/
 

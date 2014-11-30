@@ -27,7 +27,7 @@ set scrolloff=20
 set backspace=indent,eol,start
 set list
 set listchars=tab:>_,trail:.,extends:>,precedes:<,nbsp:%,eol:<
-set matchpairs& matchpairs+=<:>,（:）
+set matchpairs& matchpairs+=<:>
 set ambw=double
 set wildmenu
 set number
