@@ -209,6 +209,7 @@ nmap <Leader>t :TagbarToggle<CR>
 "" }
 
 "" vim-indent-guides {
-	let g:indent_guides_enable_on_vim_startup = 1
+	let g:indent_guides_exclude_filetypes=['help', 'man']
+		let g:indent_guides_enable_on_vim_startup = 1
 "" }
 
