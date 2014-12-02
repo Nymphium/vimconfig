@@ -169,7 +169,7 @@ nmap <Leader>t :TagbarToggle<CR>
 
 	nnoremap QC :Q -cmdopt '-lm -lGLU -lglut -lGL'<CR>
 
-	autocmd BufWritePre *.tex silent :QuickRun
+	autocmd BufWritePost *.tex silent :QuickRun
 "" }
 
 "" vim-pathogen {
