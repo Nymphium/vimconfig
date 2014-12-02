@@ -10,6 +10,7 @@ hi link ocamlIf Type
 hi ocamlDoubleSemicolon cterm=bold ctermfg=48
 hi link ocamlArrow ocamlKeyword
 hi link ocamlSymbol ocamlIf
+hi link ocamlBracket Special
 
 syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
 syn match ocamlDoubleSemicolon /\<;;\>/
@@ -22,5 +23,5 @@ autocmd VimEnter *.ml syn match ocamlFunc /\<print_\h\+\>/
 autocmd VimEnter *.ml syn match ocamlSymbol /:\{-2\}/
 autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}->\)\@=/
 autocmd VimEnter *.ml syn match ocamlArrow /\(|\s*.\{-\}\)\@<=->/
-autocmd VimEnter *.ml syn match ocamlBracekt
+autocmd VimEnter *.ml syn match ocamlBracket /[(){}\[]\]/
 
