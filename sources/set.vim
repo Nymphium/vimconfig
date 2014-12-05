@@ -54,8 +54,4 @@ set splitright
 
 set shellslash
 
-	" augroup CmdWithAlias
-	" autocmd!
-	" autocmd VimEnter * set shellcmdflag+=i
-" augroup END
-	
+set viminfo='100,<1000,s50,h,n~/.viminfo
