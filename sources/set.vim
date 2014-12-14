@@ -34,12 +34,12 @@ set number
 set relativenumber
 set cursorcolumn
 set cursorline
-if &term =~ '256color'
+if &term =~ "256color"
 	set t_ut=
 endif
 set t_Co=256
 set lazyredraw
-set shell=/usr/bin/zsh
+set shell=$SHELL
 set clipboard+=unnamed,autoselect
 set timeoutlen=250
 set display=uhex
