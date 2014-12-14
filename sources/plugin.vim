@@ -11,23 +11,23 @@ endif
 NeoBundle "vim-scripts/rdark"
 
 "" support by language
-NeoBundle "othree/html5.vim"
-NeoBundle 'adimit/prolog.vim'
-NeoBundle 'Shougo/vinarise.vim'
-NeoBundle 'OCamlPro/ocp-indent'
-NeoBundle 'kannokanno/previm'
-NeoBundle 'rhysd/unite-ruby-require.vim'
+NeoBundleLazy 'adimit/prolog.vim', {"autoload": {"filetypes": ["prolog"]}}
+NeoBundleLazy 'Shougo/vinarise.vim', {"autoload": {"filetypes": ["xxd"]}}
+NeoBundleLazy 'OCamlPro/ocp-indent', {"autoload": {"filetypes": ["ocaml"]}}
+NeoBundleLazy 'kannokanno/previm', {"type": "nosync", "autoload": {"filetypes": ["markdown"], "commands": ["PrevimOpen"]}}
+NeoBundleLazy 'rhysd/unite-ruby-require.vim', {"autoload": {"filetypes": ["ruby"]}}
+NeoBundleLazy 'Shirk/vim-gas', {"autoload": {"filetypes": ["asm"]}}
 
 NeoBundle "thinca/vim-quickrun"
 NeoBundle 'osyo-manga/vim-over'
 NeoBundle "scrooloose/nerdcommenter"
-NeoBundle "tpope/vim-surround"
-NeoBundle 'tpope/vim-endwise'
+NeoBundleLazy "tpope/vim-surround", {"autoload": {"insert": 1}}
+NeoBundleLazy 'tpope/vim-endwise', {"autoload": {"insert": 1}}
 NeoBundle 'tpope/vim-pathogen'
-NeoBundle 'Townk/vim-autoclose'
+NeoBundleLazy 'Townk/vim-autoclose', {"autload": {"insert": 1}}
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle "Shougo/neocomplete.vim"
+NeoBundleLazy "Shougo/neocomplete.vim", {"autoload": {"insert": 1}}
 NeoBundle 'Shougo/vimproc.vim', {
 \ 'build' : {
 \     'windows' : 'tools\\update-dll-mingw',
@@ -213,5 +213,9 @@ nmap <Leader>t :TagbarToggle<CR>
 "" vim-indent-guides {
 	let g:indent_guides_exclude_filetypes=['help', 'man']
 		let g:indent_guides_enable_on_vim_startup = 1
+"" }
+
+"" vim-gas {
+	autocmd FileType * if &ft == "asm" | set ft=gas
 "" }
 
