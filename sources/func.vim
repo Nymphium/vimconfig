@@ -1,38 +1,51 @@
-"" make block comment
-function! CommentInLine()
-	normal `<i/* 
+"" make block comment {
+	function! CommentInLine()
+		normal `<i/* 
 
-	normal `>3la */
-endfunction
+		normal `>3la */
+	endfunction
 
-vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
-
-"" highlighting program as Prolog {
-	augroup SyntaxProlog
-		autocmd!
-		autocmd BufNewFile *.swi set filetype=prolog
-		autocmd BufReadPost *.swi set filetype=prolog
-	augroup END
+	vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
 "" }
 
+
+
+"" highlighting *.swi as Prolog {
+	" augroup SyntaxProlog
+		" autocmd!
+
+		autocmd BufNewFile *.swi set filetype=prolog
+	
+		" autocmd BufReadPost *.swi set filetype=prolog
+	" augroup END
+"" }
+
+
 	let g:tex_flavor = "latex"
-	let php_parent_error_close = 1
-	let php_parent_error_open = 1
+
 	let java_highlight_all = 1
+
 	let java_highlight_debug = 1
+
 	let java_highlight_functions = 1
+
 
 "" substitute TeX file {
 	augroup LatexSub
 		autocmd!
+
 		autocmd BufWritePre *.tex silent :%s/｡/。/ge
+	
 		autocmd BufWritePre *.tex silent :%s/､/、/ge
+	
 		autocmd BufWritePre *.tex silent :%s/｢/「/ge
+	
 		autocmd BufWritePre *.tex silent :%s/｣/」/ge
 		" autocmd BufWritePre *.tex silent :%s/\([lL][eE][fF][tT]\)\@<!(/（/ge
 		" autocmd BufWritePre *.tex silent :%s/\([rR][iI][gG][hH][tT]\)\@<!)/）/ge
 	augroup END
 "" }
+
 
 "" highlight Zenkaku-space {
 	function! ZenkakuSpace()
@@ -42,7 +55,9 @@ vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
 	if has('syntax')
 		augroup ZenkakuSpace
 			autocmd!
+
 			autocmd ColorScheme       * call ZenkakuSpace()
+		
 			autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
 		augroup END
 
@@ -50,35 +65,28 @@ vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
 	endif
 "" }
 
-"" insertmode highlight {
-	let g:hi_insert = 'highlight StatusLine cterm=reverse,bold ctermfg=0 ctermbg=255'
 
+"" insertmode highlight {
 	if has('syntax')
-		augroup InsertHook
+		let g:hi_insert = 'StatusLine cterm=reverse,bold ctermfg=0 ctermbg=255'
+
+		let g:hi_normal = ""
+
+		redir => g:hi_normal
+			silent! hi StatusLine
+		redir END
+
+		let g:hi_normal = substitute(hi_normal, '[\r\n]', '', 'g')
+
+		let g:hi_normal = substitute(hi_normal, 'xxx ', '', '')
+
+		augroup InsertHighlight
 			autocmd!
-			autocmd InsertEnter * call s:StatusLine('Enter')
-			autocmd InsertLeave * call s:StatusLine('Leave')
+
+			autocmd InsertEnter * exec 'hi '. g:hi_insert
+
+			autocmd InsertLeave * exec 'hi '. g:hi_normal
 		augroup END
 	endif
-
-	let s:slhlcmd = ''
-	function! s:StatusLine(mode)
-		if a:mode == 'Enter'
-			silent! let s:slhlcmd = 'highlight ' . s:GetHighlight('StatusLine')
-			silent exec g:hi_insert
-		else
-			highlight clear StatusLine
-			silent exec s:slhlcmd
-		endif
-	endfunction
-
-	function! s:GetHighlight(hi)
-		redir => hl
-		exec 'highlight '.a:hi
-		redir END
-		let hl = substitute(hl, '[\r\n]', '', 'g')
-		let hl = substitute(hl, 'xxx', '', '')
-		return hl
-	endfunction
 "" }
 
