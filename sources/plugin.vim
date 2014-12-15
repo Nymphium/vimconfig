@@ -137,7 +137,7 @@ nmap <Leader>t :TagbarToggle<CR>
 "" vim-over {
 	let g:over_command_line_prompt = "Over > "
 	hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
-	hi OverCommandLineCursorInsert cterm=bold,reverse ctermbg=46
+	hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
 
 	nnoremap <silent> %% :OverCommandLine<CR>%s/
 	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
