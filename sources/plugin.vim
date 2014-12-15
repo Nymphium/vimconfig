@@ -11,69 +11,66 @@ endif
 NeoBundle "vim-scripts/rdark"
 
 "" support by language
-NeoBundleLazy 'adimit/prolog.vim', {"autoload": {"filetypes": ["prolog"]}}
-NeoBundleLazy 'Shougo/vinarise.vim', {"autoload": {"filetypes": ["xxd"]}}
-NeoBundleLazy 'OCamlPro/ocp-indent', {"autoload": {"filetypes": ["ocaml"]}}
-NeoBundleLazy 'kannokanno/previm', {"type": "nosync", "autoload": {"filetypes": ["markdown"], "commands": ["PrevimOpen"]}}
-NeoBundleLazy 'rhysd/unite-ruby-require.vim', {"autoload": {"filetypes": ["ruby"]}}
-NeoBundleLazy 'Shirk/vim-gas', {"autoload": {"filetypes": ["asm"]}}
+NeoBundleLazy 'adimit/prolog.vim', { 'autoload' : { 'filetypes' : ['prolog'] }}
+NeoBundleLazy 'Shougo/vinarise.vim', {'autoload' : {'filetypes' : ['xxd']}}
+NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
+NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
+" NeoBundleLazy 'rhysd/unite-ruby-require.vim', {'autoload' : { 'filetypes' : ['ruby'] }}
+NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm'] }}
 
-NeoBundle "thinca/vim-quickrun"
+NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'osyo-manga/vim-over'
-NeoBundle "scrooloose/nerdcommenter"
-NeoBundleLazy "tpope/vim-surround", {"autoload": {"insert": 1}}
-NeoBundleLazy 'tpope/vim-endwise', {"autoload": {"insert": 1}}
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-endwise'
+" NeoBundle 'Townk/vim-autoclose'
+" NeoBundle 'kana/vim-smartinput'
+" NeoBundle 'cohama/vim-smartinput-endwise'
 NeoBundle 'tpope/vim-pathogen'
-NeoBundleLazy 'Townk/vim-autoclose', {"autload": {"insert": 1}}
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 if has('lua')
-	NeoBundleLazy "Shougo/neocomplete.vim", {"autoload": {"insert": 1}}
+	NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload': {'insert': 1}}
 endif
 NeoBundle 'Shougo/vimproc.vim', {
-\ 'build' : {
-\     'windows' : 'tools\\update-dll-mingw',
-\     'cygwin' : 'make -f make_cygwin.mak',
-\     'mac' : 'make -f make_mac.mak',
-\     'linux' : 'make -j5',
-\     'unix' : 'gmake',
-\    },
-\ }
+\	'build' : {
+\		'windows' : 'tools\\update-dll-mingw',
+\		'cygwin' : 'make -f make_cygwin.mak',
+\		'mac' : 'make -f make_mac.mak',
+\		'linux' : 'make -j5',
+\		'unix' : 'gmake'}}
 NeoBundleLazy 'majutsushi/tagbar', {
-      \ "autload": {
-      \   "commands": ["TagbarToggle"],
-      \ },
-      \ "build": {
-      \   "mac": "brew install ctags",
-      \ }}
+\	'autload': {
+\		'commands': ['TagbarToggle'],
+\	},
+\	'build': {
+\		'mac': 'brew install ctags'}}
 
 "" ----plugins' settings & keymaps----{
-"" vim- surround {
-	if neobundle#is_installed('vim-surround')
+"" vim-surround {
 		xmap " <Plug>VSurround"
 		xmap ' <Plug>VSurround'
 		xmap ( <Plug>VSurround)
 		xmap { <Plug>VSurround}
 		xmap < <Plug>VSurround>
 		xmap [ <Plug>VSurround]
-	endif
+	" endfunction
 "" }
 
 
 "" NERDCommenter {
-	if neobundle#is_installed('nerdcommenter')
-		"" the number of space adding when commenting
-		let NERDSpaceDelims = 1
+	"" the number of space adding when commenting
+	let NERDSpaceDelims = 1
 
-		nmap <ESC>C <Nop>
-		nmap <ESC>C <Plug>NERDCommenterToggle
-		vmap <ESC>C <Nop>
-		vmap <ESC>C <Plug>NERDCommenterToggle
-	endif
+	nmap <ESC>C <Nop>
+	nmap <ESC>C <Plug>NERDCommenterToggle
+	vmap <ESC>C <Nop>
+	vmap <ESC>C <Plug>NERDCommenterToggle
 ""}
 
 "" neocomplete {
-	if neobundle#is_installed('neocomplete')
+	let s:bundle = neobundle#get('neocomplete.vim')
+	function! s:bundle.hooks.on_source(bundle)
 		" Disable AutoComplPop.
 		let g:acp_enableAtStartup = 0
 		"" Use neocomplete.
@@ -139,26 +136,25 @@ NeoBundleLazy 'majutsushi/tagbar', {
 		let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 		let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
 		let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-	endif
+	endfunction
 "" }
 
 "" vim-over {
-	if neobundle#is_installed('vim-over')
-		let g:over_command_line_prompt = "Over > "
-		hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
-		hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
+	let g:over_command_line_prompt = "Over > "
+	hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
+	hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
 
-		nnoremap <silent> %% :OverCommandLine<CR>%s/
-		nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
-		" nnoremap / <Nop>
-		" nnoremap <silent> / :OverCommandLine<CR>/
-		" nnoremap n <Nop
-		" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
-	endif
+	nnoremap <silent> %% :OverCommandLine<CR>%s/
+	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
+	" nnoremap / <Nop>
+	" nnoremap <silent> / :OverCommandLine<CR>/
+	" nnoremap n <Nop
+	" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
 "" }
 
 "" vim-quickrun {
-	if neobundle#is_installed('vim-quickrun')
+	let s:bundle = neobundle#get('vim-quickrun')
+	function! s:bundle.hooks.on_source(bundle)
 		let g:quickrun_config = {}
 
 		let g:quickrun_config['*'] = {
@@ -178,20 +174,20 @@ NeoBundleLazy 'majutsushi/tagbar', {
 			\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
 		\ }
 
-		nnoremap QC :Q -cmdopt '-lm -lGLU -lglut -lGL'<CR>
-
 		autocmd BufWritePost *.tex silent :QuickRun
-	endif
+	endfunction
 "" }
 
 "" vim-pathogen {
-	if neobundle#is_installed('vim-pathogen')
+	let s:bundle = neobundle#get('vim-pathogen')
+	function! s:bundle.hooks.on_source(bundle)
 		call pathogen#infect()
-	endif
+	endfunction
 "" }
 
 "" syntastic {
-	if neobundle#is_installed('syntastic')
+	let s:bundle = neobundle#get('syntastic')
+	function! s:bundle.hooks.on_source(bundle)
 		let g:syntastic_check_on_open = 1
 		let g:syntastic_loc_list_height = 3
 		let g:syntastic_echo_current_error = 1
@@ -205,47 +201,52 @@ NeoBundleLazy 'majutsushi/tagbar', {
 		let g:syntastic_c_compiler = 'clang'
 		let g:syntastic_c_compiler_options = '-std=c99 -Wall'
 		" let g:syntastic_ocaml_use_ocamlc = 1
-	endif
+	endfunction
 "" }
 
 "" vinarise {
-	if neobundle#is_installed('vinarise')
+	let s:bundle = neobundle#get('vinarise.vim')
+	function! s:bundle.hooks.on_source(bundle)
 		augroup VinariseXXD
 			autocmd!
 			autocmd BufReadPre *.bin let &binary = 1
 			autocmd BufReadPost * if &binary | silent Vinarise
 			autocmd BufReadPost * endif
 		augroup END
-	endif
+	endfunction
 "" }
 
 "" previm {
-	if neobundle#is_installed('previm')
+	let s:bundle = neobundle#get('previm')
+	function! s:bundle.hooks.on_source(bundle)
 		let g:previm_open_cmd = "firefox --new-window"
+	endfunction
 
-		augroup PrevimSettings
-			autocmd!
-			autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-		augroup END
-	endif
+	augroup PrevimSettings
+		autocmd!
+		autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+	augroup END
 "" }
 
 "" vim-indent-guides {
-	if neobundle#is_installed('vim-indent-guides')
-		let g:indent_guides_exclude_filetypes=['help', 'man']
-		let g:indent_guides_enable_on_vim_startup = 1
-	endif
+	let g:indent_guides_exclude_filetypes=['help', 'man']
+	let g:indent_guides_enable_on_vim_startup = 1
 "" }
 
 "" vim-gas {
-	if neobundle#is_installed('vim-gas')
+	let s:bundle = neobundle#get('vim-gas')
+	function! s:bundle.hooks.on_source(bundle)
 		autocmd FileType * if &ft == "asm" | set ft=gas
-	endif
+	endfunction
 "" }
 
 "" tagbar {
-	if neobundle#is_installed('tagbar')
+	let s:bundle = neobundle#get('tagbar')
+	function! s:bundle.hooks.on_source(bundle)
 		nmap <Leader>t :TagbarToggle<CR>
-	endif
+	endfunction
 "" }
 
+"" vim-smartinput-endwise {
+	" call smartinput_endwise#define_default_rules()
+"" }
