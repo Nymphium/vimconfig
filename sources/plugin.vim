@@ -27,7 +27,9 @@ NeoBundle 'tpope/vim-pathogen'
 NeoBundleLazy 'Townk/vim-autoclose', {"autload": {"insert": 1}}
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundleLazy "Shougo/neocomplete.vim", {"autoload": {"insert": 1}}
+if has('lua')
+	NeoBundleLazy "Shougo/neocomplete.vim", {"autoload": {"insert": 1}}
+endif
 NeoBundle 'Shougo/vimproc.vim', {
 \ 'build' : {
 \     'windows' : 'tools\\update-dll-mingw',
@@ -44,178 +46,206 @@ NeoBundleLazy 'majutsushi/tagbar', {
       \ "build": {
       \   "mac": "brew install ctags",
       \ }}
-nmap <Leader>t :TagbarToggle<CR>
 
 "" ----plugins' settings & keymaps----{
 "" vim- surround {
-	xmap " <Plug>VSurround"
-	xmap ' <Plug>VSurround'
-	xmap ( <Plug>VSurround)
-	xmap { <Plug>VSurround}
-	xmap < <Plug>VSurround>
-	xmap [ <Plug>VSurround]
+	if neobundle#is_installed('vim-surround')
+		xmap " <Plug>VSurround"
+		xmap ' <Plug>VSurround'
+		xmap ( <Plug>VSurround)
+		xmap { <Plug>VSurround}
+		xmap < <Plug>VSurround>
+		xmap [ <Plug>VSurround]
+	endif
 "" }
 
 
 "" NERDCommenter {
-	"" the number of space adding when commenting
-	let NERDSpaceDelims = 1
-	nmap <ESC>C <Nop>
-	nmap <ESC>C <Plug>NERDCommenterToggle
-	vmap <ESC>C <Nop>
-	vmap <ESC>C <Plug>NERDCommenterToggle
+	if neobundle#is_installed('nerdcommenter')
+		"" the number of space adding when commenting
+		let NERDSpaceDelims = 1
+
+		nmap <ESC>C <Nop>
+		nmap <ESC>C <Plug>NERDCommenterToggle
+		vmap <ESC>C <Nop>
+		vmap <ESC>C <Plug>NERDCommenterToggle
+	endif
 ""}
 
 "" neocomplete {
-	" Disable AutoComplPop.
-	let g:acp_enableAtStartup = 0
-	"" Use neocomplete.
-	let g:neocomplete#enable_at_startup = 1
-	"" Use smartcase.
-	let g:neocomplete#enable_smart_case = 1
-	"" Set minimum syntax keyword length.
-	let g:neocomplete#sources#syntax#min_keyword_length = 1
-	let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+	if neobundle#is_installed('neocomplete')
+		" Disable AutoComplPop.
+		let g:acp_enableAtStartup = 0
+		"" Use neocomplete.
+		let g:neocomplete#enable_at_startup = 1
+		"" Use smartcase.
+		let g:neocomplete#enable_smart_case = 1
+		"" Set minimum syntax keyword length.
+		let g:neocomplete#sources#syntax#min_keyword_length = 1
+		let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
-	"" Define dictionary.
-	let g:neocomplete#sources#dictionary#dictionaries = {
-		\ 'default' : '',
-		\ 'vimshell' : $HOME.'/.vimshell_hist',
-		\ 'scheme' : $HOME.'/.gosh_completions'
-	\ }
+		"" Define dictionary.
+		let g:neocomplete#sources#dictionary#dictionaries = {
+			\ 'default' : '',
+			\ 'vimshell' : $HOME.'/.vimshell_hist',
+			\ 'scheme' : $HOME.'/.gosh_completions'
+		\ }
 
-	" Define keyword.
-	if !exists('g:neocomplete#keyword_patterns')
-		let g:neocomplete#keyword_patterns = {}
+		" Define keyword.
+		if !exists('g:neocomplete#keyword_patterns')
+			let g:neocomplete#keyword_patterns = {}
+		endif
+		let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+		inoremap <ESC>C <Nop>
+		inoremap <expr><ESC>C neocomplete#undo_completion()
+		" inoremap <expr><C-l> neocomplete#complete_common_string()
+
+		"" <CR>: close popup and save indent.
+		inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+
+		function! s:my_cr_function()
+		  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+		endfunction
+
+		"" <TAB>: completion.
+		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
+		"" <BS>: close popup and delete backword char.
+		inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+		inoremap <expr><ESC><ESC> neocomplete#close_popup()."\<C-c>"
+
+		"" For cursor moving in insert mode(Not recommended)
+		inoremap <expr><ESC>h neocomplete#close_popup() . "\<Left>"
+		inoremap <expr><ESC>l neocomplete#close_popup() . "\<Right>"
+		inoremap <expr><ESC>k neocomplete#close_popup() . "\<Up>"
+		inoremap <expr><ESC>j neocomplete#close_popup() . "\<Down>"
+
+		"" Enable omni completion.
+		augroup OmniCompletion
+			autocmd!
+			autocmd FileType *.css setlocal omnifunc=csscomplete#CompleteCSS
+			autocmd FileType *.html,*.markdown setlocal omnifunc=htmlcomplete#CompleteTags
+			autocmd FileType *.javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+			autocmd FileType *.python setlocal omnifunc=pythoncomplete#Complete
+			autocmd FileType *.xml setlocal omnifunc=xmlcomplete#CompleteTags
+			autocmd FileType *.ruby setlocal omnifunc=rubycomplete#Complete
+		augroup END
+
+		"" Enable heavy omni completion.
+		if !exists('g:neocomplete#sources#omni#input_patterns')
+		  let g:neocomplete#sources#omni#input_patterns = {}
+		endif
+		let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+		let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+		let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 	endif
-	let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-	inoremap <ESC>C <Nop>
-	inoremap <expr><ESC>C neocomplete#undo_completion()
-	" inoremap <expr><C-l> neocomplete#complete_common_string()
-
-	"" <CR>: close popup and save indent.
-	inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-
-	function! s:my_cr_function()
-	  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-	endfunction
-
-	"" <TAB>: completion.
-	inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-	inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-	"" <BS>: close popup and delete backword char.
-	inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-	inoremap <expr><ESC><ESC> neocomplete#close_popup()."\<C-c>"
-
-	"" For cursor moving in insert mode(Not recommended)
-	inoremap <expr><ESC>h neocomplete#close_popup() . "\<Left>"
-	inoremap <expr><ESC>l neocomplete#close_popup() . "\<Right>"
-	inoremap <expr><ESC>k neocomplete#close_popup() . "\<Up>"
-	inoremap <expr><ESC>j neocomplete#close_popup() . "\<Down>"
-
-	"" Enable omni completion.
-	augroup OmniCompletion
-		autocmd!
-		autocmd FileType *.css setlocal omnifunc=csscomplete#CompleteCSS
-		autocmd FileType *.html,*.markdown setlocal omnifunc=htmlcomplete#CompleteTags
-		autocmd FileType *.javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-		autocmd FileType *.python setlocal omnifunc=pythoncomplete#Complete
-		autocmd FileType *.xml setlocal omnifunc=xmlcomplete#CompleteTags
-		autocmd FileType *.ruby setlocal omnifunc=rubycomplete#Complete
-	augroup END
-
-	"" Enable heavy omni completion.
-	if !exists('g:neocomplete#sources#omni#input_patterns')
-	  let g:neocomplete#sources#omni#input_patterns = {}
-	endif
-	let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-	let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-	let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 "" }
 
 "" vim-over {
-	let g:over_command_line_prompt = "Over > "
-	hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
-	hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
+	if neobundle#is_installed('vim-over')
+		let g:over_command_line_prompt = "Over > "
+		hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
+		hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
 
-	nnoremap <silent> %% :OverCommandLine<CR>%s/
-	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
-	" nnoremap / <Nop>
-	" nnoremap <silent> / :OverCommandLine<CR>/
-	" nnoremap n <Nop
-	" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
+		nnoremap <silent> %% :OverCommandLine<CR>%s/
+		nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
+		" nnoremap / <Nop>
+		" nnoremap <silent> / :OverCommandLine<CR>/
+		" nnoremap n <Nop
+		" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
+	endif
 "" }
 
 "" vim-quickrun {
-	let g:quickrun_config = {}
+	if neobundle#is_installed('vim-quickrun')
+		let g:quickrun_config = {}
 
-	let g:quickrun_config['*'] = {
-		\ 'outputter/buffer/close_on_empty' : 1 ,
-	\ }
+		let g:quickrun_config['*'] = {
+			\ 'outputter/buffer/close_on_empty' : 1 ,
+		\ }
 
-	let g:quickrun_config['tex'] = {
-		\ 'command' : 'lpshow', 
-		\ 'outputter/error/error' : 'quickfix',
-	\ }
-	let g:quickrun_config['cpp'] = {
-		\ 'command' : 'clang++',
-		\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
-	\ }
-	let g:quickrun_config['c'] = {
-		\ 'command' : 'clang',
-		\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
-	\ }
+		let g:quickrun_config['tex'] = {
+			\ 'command' : 'lpshow', 
+			\ 'outputter/error/error' : 'quickfix',
+		\ }
+		let g:quickrun_config['cpp'] = {
+			\ 'command' : 'clang++',
+			\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
+		\ }
+		let g:quickrun_config['c'] = {
+			\ 'command' : 'clang',
+			\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
+		\ }
 
-	nnoremap QC :Q -cmdopt '-lm -lGLU -lglut -lGL'<CR>
+		nnoremap QC :Q -cmdopt '-lm -lGLU -lglut -lGL'<CR>
 
-	autocmd BufWritePost *.tex silent :QuickRun
+		autocmd BufWritePost *.tex silent :QuickRun
+	endif
 "" }
 
 "" vim-pathogen {
-	call pathogen#infect()
+	if neobundle#is_installed('vim-pathogen')
+		call pathogen#infect()
+	endif
 "" }
 
 "" syntastic {
-	let g:syntastic_check_on_open = 1
-	let g:syntastic_loc_list_height = 3
-	let g:syntastic_echo_current_error = 1
-	let g:syntastic_enable_balloons = 1
-	let g:syntastic_enable_highlighting = 1
-	let g:syntastic_enable_signs=1
-	let g:syntastic_auto_loc_list=2
-	let g:syntastic_ignore_files = ['\.tex$']
-	let g:syntastic_cpp_compiler = 'clang++'
-	let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall'
-	let g:syntastic_c_compiler = 'clang'
-	let g:syntastic_c_compiler_options = '-std=c99 -Wall'
-	" let g:syntastic_ocaml_use_ocamlc = 1
+	if neobundle#is_installed('syntastic')
+		let g:syntastic_check_on_open = 1
+		let g:syntastic_loc_list_height = 3
+		let g:syntastic_echo_current_error = 1
+		let g:syntastic_enable_balloons = 1
+		let g:syntastic_enable_highlighting = 1
+		let g:syntastic_enable_signs=1
+		let g:syntastic_auto_loc_list=2
+		let g:syntastic_ignore_files = ['\.tex$']
+		let g:syntastic_cpp_compiler = 'clang++'
+		let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall'
+		let g:syntastic_c_compiler = 'clang'
+		let g:syntastic_c_compiler_options = '-std=c99 -Wall'
+		" let g:syntastic_ocaml_use_ocamlc = 1
+	endif
 "" }
 
 "" vinarise {
-	augroup VinariseXXD
-		autocmd!
-		autocmd BufReadPre *.bin let &binary = 1
-		autocmd BufReadPost * if &binary | silent Vinarise
-		autocmd BufReadPost * endif
-	augroup END
+	if neobundle#is_installed('vinarise')
+		augroup VinariseXXD
+			autocmd!
+			autocmd BufReadPre *.bin let &binary = 1
+			autocmd BufReadPost * if &binary | silent Vinarise
+			autocmd BufReadPost * endif
+		augroup END
+	endif
 "" }
 
 "" previm {
-	let g:previm_open_cmd = "firefox --new-window"
+	if neobundle#is_installed('previm')
+		let g:previm_open_cmd = "firefox --new-window"
 
-	augroup PrevimSettings
-		autocmd!
-		autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-	augroup END
+		augroup PrevimSettings
+			autocmd!
+			autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+		augroup END
+	endif
 "" }
 
 "" vim-indent-guides {
-	let g:indent_guides_exclude_filetypes=['help', 'man']
+	if neobundle#is_installed('vim-indent-guides')
+		let g:indent_guides_exclude_filetypes=['help', 'man']
 		let g:indent_guides_enable_on_vim_startup = 1
+	endif
 "" }
 
 "" vim-gas {
-	autocmd FileType * if &ft == "asm" | set ft=gas
+	if neobundle#is_installed('vim-gas')
+		autocmd FileType * if &ft == "asm" | set ft=gas
+	endif
+"" }
+
+"" tagbar {
+	if neobundle#is_installed('tagbar')
+		nmap <Leader>t :TagbarToggle<CR>
+	endif
 "" }
 
