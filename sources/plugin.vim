@@ -16,7 +16,7 @@ NeoBundleLazy 'Shougo/vinarise.vim', {'autoload' : {'filetypes' : ['xxd']}}
 NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
 NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
 " NeoBundleLazy 'rhysd/unite-ruby-require.vim', {'autoload' : { 'filetypes' : ['ruby'] }}
-NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm'] }}
+NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'osyo-manga/vim-over'
@@ -207,7 +207,7 @@ NeoBundleLazy 'majutsushi/tagbar', {
 "" vinarise {
 	augroup VinariseXXD
 		autocmd!
-		autocmd BufReadPre *.bin let &binary = 1
+		autocmd BufReadPre *.{bin,out} let &binary = 1
 		autocmd BufReadPost * if &binary | silent Vinarise
 		autocmd BufReadPost * endif
 	augroup END
@@ -231,10 +231,13 @@ NeoBundleLazy 'majutsushi/tagbar', {
 "" }
 
 "" vim-gas {
-	let s:bundle = neobundle#get('vim-gas')
-	function! s:bundle.hooks.on_source(bundle)
-		autocmd FileType * if &ft == "asm" | set ft=gas
-	endfunction
+	" let s:bundle = neobundle#get('vim-gas')
+	" function! s:bundle.hooks.on_source(bundle)
+	augroup VimGas
+		autocmd!
+		autocmd BufNewFile,BufRead *.{asm,s} set filetype=gas
+	augroup END
+	" endfunction
 "" }
 
 "" tagbar {
