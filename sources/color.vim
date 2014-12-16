@@ -1,4 +1,6 @@
-colorscheme rdark
+" colorscheme rdark
+" `colorscheme` defined at ./plugin.vim #rdark
+
 hi CursorLine cterm=none ctermbg=237
 hi CursorColumn cterm=none ctermbg=237
 hi Comment ctermfg=255 ctermbg=237

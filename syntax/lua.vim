@@ -19,6 +19,6 @@ syn match luaTable /\w\+\s*\(=\_s*\)\@=/
 syn match luaFunc /\<\w\+\>\(\s*(.*)\)\@=/ contains=ALLBUT,luaCond,luaKeyword,luaFunction,luaOperator,luaIn,luaStatement
 syn match luaFunc /\<\w\+\>\(\s*=\s*function\)\@=/
 
-" autocmd VimEnter *.lua syn match luaBracket /[(){}\[\]]/ 
+autocmd VimEnter *.lua syn match luaBracket /[(){}\[\]]/ 
 autocmd VimEnter *.lua syn region luaString start="\[\[" end="\]\]" contains=ALL skipnl skipwhite skipempty
 

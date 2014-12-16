@@ -23,14 +23,14 @@ NeoBundle 'osyo-manga/vim-over'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-endwise'
-" NeoBundle 'Townk/vim-autoclose'
+NeoBundle 'Townk/vim-autoclose'
 " NeoBundle 'kana/vim-smartinput'
 " NeoBundle 'cohama/vim-smartinput-endwise'
 NeoBundle 'tpope/vim-pathogen'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 if has('lua')
-	NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload': {'insert': 1}}
+	NeoBundle 'Shougo/neocomplete.vim'
 endif
 NeoBundle 'Shougo/vimproc.vim', {
 \	'build' : {
@@ -69,8 +69,8 @@ NeoBundleLazy 'majutsushi/tagbar', {
 ""}
 
 "" neocomplete {
-	let s:bundle = neobundle#get('neocomplete.vim')
-	function! s:bundle.hooks.on_source(bundle)
+	" let s:bundle = neobundle#get('neocomplete.vim')
+	" function! s:bundle.hooks.on_source(bundle)
 		" Disable AutoComplPop.
 		let g:acp_enableAtStartup = 0
 		"" Use neocomplete.
@@ -136,7 +136,7 @@ NeoBundleLazy 'majutsushi/tagbar', {
 		let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 		let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
 		let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-	endfunction
+	" endfunction
 "" }
 
 "" vim-over {
@@ -153,8 +153,8 @@ NeoBundleLazy 'majutsushi/tagbar', {
 "" }
 
 "" vim-quickrun {
-	let s:bundle = neobundle#get('vim-quickrun')
-	function! s:bundle.hooks.on_source(bundle)
+	" let s:bundle = neobundle#get('vim-quickrun')
+	" function! s:bundle.hooks.on_source(bundle)
 		let g:quickrun_config = {}
 
 		let g:quickrun_config['*'] = {
@@ -175,19 +175,19 @@ NeoBundleLazy 'majutsushi/tagbar', {
 		\ }
 
 		autocmd BufWritePost *.tex silent :QuickRun
-	endfunction
+	" endfunction
 "" }
 
 "" vim-pathogen {
-	let s:bundle = neobundle#get('vim-pathogen')
-	function! s:bundle.hooks.on_source(bundle)
+	" let s:bundle = neobundle#get('vim-pathogen')
+	" function! s:bundle.hooks.on_source(bundle)
 		call pathogen#infect()
-	endfunction
+	" endfunction
 "" }
 
 "" syntastic {
-	let s:bundle = neobundle#get('syntastic')
-	function! s:bundle.hooks.on_source(bundle)
+	" let s:bundle = neobundle#get('syntastic')
+	" function! s:bundle.hooks.on_source(bundle)
 		let g:syntastic_check_on_open = 1
 		let g:syntastic_loc_list_height = 3
 		let g:syntastic_echo_current_error = 1
@@ -201,19 +201,16 @@ NeoBundleLazy 'majutsushi/tagbar', {
 		let g:syntastic_c_compiler = 'clang'
 		let g:syntastic_c_compiler_options = '-std=c99 -Wall'
 		" let g:syntastic_ocaml_use_ocamlc = 1
-	endfunction
+	" endfunction
 "" }
 
 "" vinarise {
-	let s:bundle = neobundle#get('vinarise.vim')
-	function! s:bundle.hooks.on_source(bundle)
-		augroup VinariseXXD
-			autocmd!
-			autocmd BufReadPre *.bin let &binary = 1
-			autocmd BufReadPost * if &binary | silent Vinarise
-			autocmd BufReadPost * endif
-		augroup END
-	endfunction
+	augroup VinariseXXD
+		autocmd!
+		autocmd BufReadPre *.bin let &binary = 1
+		autocmd BufReadPost * if &binary | silent Vinarise
+		autocmd BufReadPost * endif
+	augroup END
 "" }
 
 "" previm {
@@ -241,12 +238,16 @@ NeoBundleLazy 'majutsushi/tagbar', {
 "" }
 
 "" tagbar {
-	let s:bundle = neobundle#get('tagbar')
-	function! s:bundle.hooks.on_source(bundle)
+	" let s:bundle = neobundle#get('tagbar')
+	" function! s:bundle.hooks.on_source(bundle)
 		nmap <Leader>t :TagbarToggle<CR>
-	endfunction
+	" endfunction
 "" }
 
 "" vim-smartinput-endwise {
 	" call smartinput_endwise#define_default_rules()
+"" }
+
+"" rdark {
+	colorscheme rdark
 "" }
