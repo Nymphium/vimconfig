@@ -22,6 +22,7 @@ autocmd VimEnter *.ml syn match ocamlFunc /\(\<and\s\+\)\@<=\w\+\>/
 autocmd VimEnter *.ml syn match ocamlFunc /\<print_\h\+\>/
 autocmd VimEnter *.ml syn match ocamlSymbol /:\{-2\}/
 autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}->\)\@=/
-autocmd VimEnter *.ml syn match ocamlArrow /\(|\s*.\{-\}\)\@<=->/
+autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}of\)\@=/
+autocmd VimEnter *.ml syn match ocamlArrow /\(|\s.\{-\}\)\@<=->/
 autocmd VimEnter *.ml syn match ocamlBracket /[(){}\[]\]/
 
