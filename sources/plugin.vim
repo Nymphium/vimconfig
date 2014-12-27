@@ -188,7 +188,9 @@ NeoBundleLazy 'majutsushi/tagbar', {
 "" syntastic {
 	" let s:bundle = neobundle#get('syntastic')
 	" function! s:bundle.hooks.on_source(bundle)
-		let g:syntastic_check_on_open = 1
+		if &enc == "utf8"
+			let g:syntastic_check_on_open = 1
+		endif
 		let g:syntastic_loc_list_height = 3
 		let g:syntastic_echo_current_error = 1
 		let g:syntastic_enable_balloons = 1

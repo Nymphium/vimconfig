@@ -1,4 +1,4 @@
-set fileencodings=utf-8
+set fileencodings=utf-8,sjis
 set fileformats=unix,dos,mac
 
 set nobackup
