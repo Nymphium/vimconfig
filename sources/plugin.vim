@@ -32,6 +32,7 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 if has('lua')
 	NeoBundle 'Shougo/neocomplete.vim'
 endif
+NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {
 \	'build' : {
 \		'windows' : 'tools\\update-dll-mingw',
@@ -39,12 +40,14 @@ NeoBundle 'Shougo/vimproc.vim', {
 \		'mac' : 'make -f make_mac.mak',
 \		'linux' : 'make -j5',
 \		'unix' : 'gmake'}}
-NeoBundleLazy 'majutsushi/tagbar', {
-\	'autload': {
-\		'commands': ['TagbarToggle'],
-\	},
-\	'build': {
-\		'mac': 'brew install ctags'}}
+" NeoBundleLazy 'majutsushi/tagbar', {
+" \	'autload': {
+" \		'commands': ['TagbarToggle'],
+" \	},
+" \	'build': {
+" \		'mac': 'brew install ctags'}}
+NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
+
 
 "" ----plugins' settings & keymaps----{
 "" vim-surround {
@@ -245,7 +248,7 @@ NeoBundleLazy 'majutsushi/tagbar', {
 "" tagbar {
 	" let s:bundle = neobundle#get('tagbar')
 	" function! s:bundle.hooks.on_source(bundle)
-		nmap <Leader>t :TagbarToggle<CR>
+		" nmap <Leader>t :TagbarToggle<CR>
 	" endfunction
 "" }
 
