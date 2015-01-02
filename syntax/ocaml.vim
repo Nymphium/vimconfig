@@ -16,13 +16,16 @@ syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
 syn match ocamlDoubleSemicolon /\<;;\>/
 syn match ocamlSymbol "@"
 
-autocmd VimEnter *.nl syn match ocamlFunc "\(\w\+\s\+\)\@<!\w\+\(\(\s\+\w\+\)\{1,\}\)\@=" contains=ALLBUT,ocamlKeyword,ocamlNone
-autocmd VimEnter *.ml syn match ocamlFunc /\(\<let\s\+\(rec\s\+\)\{0,1\}\)\@<=\w\+\>/
-autocmd VimEnter *.ml syn match ocamlFunc /\(\<and\s\+\)\@<=\w\+\>/
-autocmd VimEnter *.ml syn match ocamlFunc /\<print_\h\+\>/
-autocmd VimEnter *.ml syn match ocamlSymbol /:\{-2\}/
-autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}->\)\@=/
-autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}of\)\@=/
-autocmd VimEnter *.ml syn match ocamlArrow /\(|\s.\{-\}\)\@<=->/
-autocmd VimEnter *.ml syn match ocamlBracket /[(){}\[]\]/
+augroup OcamlSyn
+	autocmd!
+	autocmd VimEnter *.nl syn match ocamlFunc "\(\w\+\s\+\)\@<!\w\+\(\(\s\+\w\+\)\{1,\}\)\@=" contains=ALLBUT,ocamlKeyword,ocamlNone
+	autocmd VimEnter *.ml syn match ocamlFunc /\(\<let\s\+\(rec\s\+\)\{0,1\}\)\@<=\w\+\>/
+	autocmd VimEnter *.ml syn match ocamlFunc /\(\<and\s\+\)\@<=\w\+\>/
+	autocmd VimEnter *.ml syn match ocamlFunc /\<print_\h\+\>/
+	autocmd VimEnter *.ml syn match ocamlSymbol /:\{-2\}/
+	autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}->\)\@=/
+	autocmd VimEnter *.ml syn match ocamlArrow /|\(\s*.\{-\}of\)\@=/
+	autocmd VimEnter *.ml syn match ocamlArrow /\(|\s.\{-\}\)\@<=->/
+	autocmd VimEnter *.ml syn match ocamlBracket /[(){}\[]\]/
+augroup END
 

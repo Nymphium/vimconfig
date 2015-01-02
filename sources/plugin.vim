@@ -28,6 +28,7 @@ NeoBundle 'Townk/vim-autoclose'
 " NeoBundle 'kana/vim-smartinput'
 " NeoBundle 'cohama/vim-smartinput-endwise'
 NeoBundle 'tpope/vim-pathogen'
+NeoBundle 'tmhedberg/matchit'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 if has('lua')
@@ -173,11 +174,21 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
 	\ }
 
-	autocmd BufWritePost *.tex silent :QuickRun
+	augroup QuickLatex
+		autocmd!
+		autocmd BufWritePost *.tex silent :QuickRun
+	augroup END
 "" }
 
 "" vim-pathogen {
 	call pathogen#infect()
+"" }
+
+"" matchit {
+	augroup Matchit
+		autocmd!
+		autocmd FileType *.lua,*.t let b:match_words = /\<\(function\|do\|if\|then\|elseif\|else\|while\|for\)\>/
+	augroup END
 "" }
 
 "" syntastic {

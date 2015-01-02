@@ -13,5 +13,8 @@ syn match cChar /\(\/\)\@<!\*/
 syn match cFunc /\(\<\(\(int\)\|\(void\)\|\(char\)\|\(double\)\|\(float\)\)\s\+\)\@<=\w\+\(\s*(.*)\)\@=/
 syn match cFunc /\<\w\+\>\(\s*(.*)\)\@=/ contains=ALLBUT,cStatement,cLabel,cConditional,cRepeat,cUserLabel,cOperator,cStructure
 
-autocmd VimEnter *.c,*.cpp syn match cSurround /[(){}\[\]]/
+augroup CSyn
+	autocmd!
+	autocmd VimEnter *.c,*.cpp syn match cSurround /[(){}\[\]]/
+augroup END
 
