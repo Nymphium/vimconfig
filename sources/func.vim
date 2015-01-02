@@ -11,35 +11,24 @@
 
 
 "" highlighting *.swi as Prolog {
-	" augroup SyntaxProlog
-		" autocmd!
-
+	augroup SyntaxProlog
+		autocmd!
 		autocmd BufNewFile *.swi set filetype=prolog
-	
 		" autocmd BufReadPost *.swi set filetype=prolog
-	" augroup END
+	augroup END
 "" }
 
 
-	let g:tex_flavor = "latex"
-
-	let java_highlight_all = 1
-
-	let java_highlight_debug = 1
-
-	let java_highlight_functions = 1
-
-
-"" substitute TeX file {
-	augroup LatexSub
+"" edit TeX file {
+	augroup LatexEnv
 		autocmd!
-
+		autocmd BufNewFile *.tex let g:tex_flavor = "latex"
+		autocmd BufNewFile *.tex let java_highlight_all = 1
+		autocmd BufNewFile *.tex let java_highlight_debug = 1
+		autocmd BufNewFile *.tex let java_highlight_functions = 1
 		autocmd BufWritePre *.tex silent :%s/｡/。/ge
-	
 		autocmd BufWritePre *.tex silent :%s/､/、/ge
-	
 		autocmd BufWritePre *.tex silent :%s/｢/「/ge
-	
 		autocmd BufWritePre *.tex silent :%s/｣/」/ge
 		" autocmd BufWritePre *.tex silent :%s/\([lL][eE][fF][tT]\)\@<!(/（/ge
 		" autocmd BufWritePre *.tex silent :%s/\([rR][iI][gG][hH][tT]\)\@<!)/）/ge
