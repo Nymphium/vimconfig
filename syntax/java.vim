@@ -19,6 +19,6 @@ augroup JavaSyn
 	autocmd!
 	autocmd VimEnter *.java syn clear javaFuncDef
 	autocmd VimEnter *.java syn match javaClass /\<[A-Z]\w*\(\.\)\@=/
-	autocmd VimEnter *.java syn match javaBraces /[()\[\]]/
+	autocmd VimEnter *.java syn match javaBraces /[()\[\]{}]/
 augroup END
 

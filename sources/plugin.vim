@@ -161,23 +161,21 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		\ 'outputter/buffer/close_on_empty' : 1 ,
 	\ }
 
-	let g:quickrun_config['tex'] = {
-		\ 'command' : 'lpshow', 
+	let g:quickrun_config.tex = {
+		\ 'command' : 'xelatex',
+		\ 'exec' : ['%c -halt-on-error -interaction=nonstopmode %s | egrep -i "error|can.t use" -A 2'],
 		\ 'outputter/error/error' : 'quickfix',
 	\ }
-	let g:quickrun_config['cpp'] = {
+
+
+	let g:quickrun_config.cpp = {
 		\ 'command' : 'clang++',
 		\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
 	\ }
-	let g:quickrun_config['c'] = {
+	let g:quickrun_config.c = {
 		\ 'command' : 'clang',
 		\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
 	\ }
-
-	augroup QuickLatex
-		autocmd!
-		autocmd BufWritePost *.tex silent :QuickRun
-	augroup END
 "" }
 
 "" vim-pathogen {
