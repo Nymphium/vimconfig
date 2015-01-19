@@ -52,6 +52,7 @@ nnoremap wo :new<Space><cfile><CR>
 nnoremap <S-k> k<S-j>
 nnoremap <silent> <F11> <ESC>:Q<CR>
 nnoremap V <C-v>
+nnoremap Q <Nop>
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 inoremap <ESC>v <Nop>

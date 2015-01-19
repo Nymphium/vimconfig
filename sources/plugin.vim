@@ -185,8 +185,9 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 "" matchit {
 	augroup Matchit
 		autocmd!
-		autocmd FileType lua let b:match_words = '\<\(function\|if\|while\|for\)\>:\<\(elseif\|then\|do\)\>:\<else\>:\<end\>'
+		autocmd FileType lua let b:match_words = '\<\(if\)\>:\<\(elseif\|then\)\>:\<\(else\)\>:\<\(end\)\>,\<\(function\|for\|while\)\>:\<\(do\)\>:\<\(end\)\>'
 		autocmd FileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
+		autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 	augroup END
 "" }
 
@@ -239,6 +240,13 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	augroup VimGas
 		autocmd!
 		autocmd BufNewFile,BufRead *.{asm,s} set filetype=gas
+	augroup END
+"" }
+
+"" LaTeX-Box {
+	augroup LatexBox
+		autocmd!
+		autocmd BufNewFile,BufRead *.tex set ft=tex
 	augroup END
 "" }
 

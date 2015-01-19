@@ -33,6 +33,13 @@
 		" autocmd BufWritePre *.tex silent :%s/\([lL][eE][fF][tT]\)\@<!(/（/ge
 		" autocmd BufWritePre *.tex silent :%s/\([rR][iI][gG][hH][tT]\)\@<!)/）/ge
 	augroup END
+
+	function! SyncTexForward()
+		let execstr = "silent !xdg-open %:p:r.pdf &"
+		exec execstr
+	endfunction
+
+	nmap <Leader>f :call SyncTexForward()<CR>
 "" }
 
 
