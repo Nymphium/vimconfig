@@ -31,6 +31,7 @@ set list
 set listchars=tab:>_,trail:.,extends:>,precedes:<,nbsp:%,eol:<
 set matchpairs& matchpairs+=<:>
 set ambw=double
+set formatoptions+=mM
 set wildmenu
 set number
 set relativenumber
@@ -44,7 +45,7 @@ set lazyredraw
 set shell=$SHELL
 set clipboard+=unnamed,autoselect
 set timeoutlen=250
-set display=uhex
+set display=uhex,lastline
 
 set omnifunc=syntaxcomplete#Complete
 

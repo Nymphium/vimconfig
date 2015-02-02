@@ -50,7 +50,6 @@ NeoBundle 'Shougo/vimproc.vim', {
 " \		'mac': 'brew install ctags'}}
 NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 
-
 "" ----plugins' settings & keymaps----{
 "" vim-surround {
 		xmap " <Plug>VSurround"

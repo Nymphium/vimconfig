@@ -1,7 +1,13 @@
+" vim: ft=vim
+
 source $HOME/.vimrc
+colorscheme evening
 
 " set transparency=5
 set guioptions=
 set antialias
 set nobackup
 set guifont=Monaco\ 6
+set cmdheight=2
+set antialias=on
+
