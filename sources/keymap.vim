@@ -53,6 +53,7 @@ nnoremap <S-k> k<S-j>
 nnoremap <silent> <F11> <ESC>:Q<CR>
 nnoremap V <C-v>
 nnoremap Q <Nop>
+nnoremap ; a;<ESC><ESC>
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 inoremap <ESC>v <Nop>
@@ -67,13 +68,4 @@ inoremap <ESC>w <S-Left>
 inoremap <ESC>e <S-Right>
 inoremap <C-q> <ESC>:q!<CR>
 inoremap <F3> <ESC><ESC>:setlocal relativenumber!<CR>a
-" inoremap " <Nop>
-" inoremap " ""<Left>
-" inoremap ` <Nop>
-" inoremap ` ``<Left>
-" inoremap ( <Nop>
-" inoremap ( ()<Left>
-" inoremap { <Nop>
-" inoremap { {}<Left>
-" inoremap [ <Nop>
-" inoremap [ []<Left>
+

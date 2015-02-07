@@ -161,8 +161,8 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	\ }
 
 	let g:quickrun_config.tex = {
-		\ 'command' : 'xelatex',
-		\ 'exec' : ['%c -halt-on-error -interaction=nonstopmode %s | egrep -i "error|can.t use" -A 2'],
+		\ 'command' : 'latexmk',
+		\ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
 		\ 'outputter/error/error' : 'quickfix',
 	\ }
 
