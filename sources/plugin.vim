@@ -184,7 +184,7 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 "" matchit {
 	augroup Matchit
 		autocmd!
-		autocmd FileType lua let b:match_words = '\<\(if\)\>:\<\(elseif\|then\)\>:\<\(else\)\>:\<\(end\)\>,\<\(function\|for\|while\)\>:\<\(do\)\>:\<\(end\)\>'
+		autocmd FileType lua let b:match_words = '\<\(if\|function\|for\|while\)\>:\<\(\|then\|do\)\>:\<\(elseif\)\>:\<\(else\)\>:\<\(end\)\>'
 		autocmd FileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
 		autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 	augroup END
