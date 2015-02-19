@@ -20,10 +20,11 @@ syn match luaChar /-\(-\)\@!/ contained display
 " #table 
 syn match luaLength /#\w\+\>/ display
 syn match luaTableName /\w\+\([\.:]\)\@=/
-syn match luaTableName /\w\+\s*\(=\_s*\)\@=/
 
-syn match luaFunc /\<\w\+\>\(\s*(.*\)\@=/ contains=ALLBUT,luaCond,luaKeyword,luaFunction,luaOperator,luaIn,luaStatement display
+" ??? I edited /PATH/TO/vim/syntax/lua.vim
+" syn match luaFunc /\<\w\+\>\(\s*(.*\)\@=/ contains=ALLBUT,luaKeyword,luaOperator,luaIn,luaStatement
+
 syn match luaFunc /\<\w\+\>\(\s*=\s*function\)\@=/ display
-syn match luaBracket /[(){}\[\]]/
+syn match luaBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
 syn match luaMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|modd|pow\|concat\|eq\|lt\|gt\)\>/
 
