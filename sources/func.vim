@@ -1,8 +1,12 @@
 "" make block comment {
 	function! CommentInLine()
-		normal `<i/* 
-
-		normal `>3la */
+		if &filetype =~ "lua"
+			normal `<i--[[ 
+			normal `>5la ]]
+		else
+			normal `<i/* 
+			normal `>3la */
+		endif
 	endfunction
 
 	vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
