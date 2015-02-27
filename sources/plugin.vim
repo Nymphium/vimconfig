@@ -18,6 +18,7 @@ NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
 " NeoBundleLazy 'rhysd/unite-ruby-require.vim', {'autoload' : { 'filetypes' : ['ruby'] }}
 NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 NeoBundleLazy 'LaTeX-Box-Team/LaTeX-Box', {'autoload' : {'filetypes' : ['tex'] }}
+NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
 
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'osyo-manga/vim-over'
@@ -166,7 +167,6 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		\ 'outputter/error/error' : 'quickfix',
 	\ }
 
-
 	let g:quickrun_config.cpp = {
 		\ 'command' : 'clang++',
 		\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
@@ -174,6 +174,10 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	let g:quickrun_config.c = {
 		\ 'command' : 'clang',
 		\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
+	\ }
+
+	let g:quickrun_config.moon = {
+		\ 'command' : 'moon'
 	\ }
 "" }
 
