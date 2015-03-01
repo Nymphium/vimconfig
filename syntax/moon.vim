@@ -10,7 +10,8 @@ hi link moonBracket Special
 
 syn match moonChar /[=%<>/+\*,]/ contained display
 
-syn match moonLuaFunc /\<\w\+\>\(\s*=\s*(.*\)\@=/
+syn match moonLuaFunc /\<\w\+\>\(\s*=\?\s*\((.*\)\|\(->\)\)\@=/
+syn match moonLuaFunc /\<\w\+\>\(!\)\@=/
 
 syn match moonBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
 
