@@ -19,7 +19,7 @@ syn match luaChar /-\(-\)\@!/ contained display
 
 " #table 
 syn match luaLength /#[\w\.]\+\>/ display
-syn match luaTableName /\w\+\([\.:]\)\@=\(\.\)\@!/
+syn match luaTableName /\w\+\([\.:]\)\@=\(\.\)\@!/ display
 syn match luaTableName /\<\w\+\>\(\s*\[\)\@=/ display
 
 " function name

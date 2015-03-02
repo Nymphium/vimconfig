@@ -7,6 +7,7 @@ hi moonFunction cterm=bold ctermfg=214
 hi moonChar cterm=bold
 hi link moonKeyword Statement
 hi link moonBracket Special
+hi link moonConditional Type
 hi moonMetatable cterm=bold
 
 syn clear moonShortHandAssign
