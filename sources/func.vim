@@ -86,11 +86,11 @@
 
 
 "" gui-transparency {
-	function! s:Transset(opacity)
-	  call system('transset-df --id ' . v:windowid . ' ' . a:opacity)
-	endfunction
+	if has('gui_running')
+		function! s:Transset(opacity)
+		  call system('transset-df --id ' . v:windowid . ' ' . a:opacity)
+		endfunction
 
-	command! -nargs=1 Transset call <SID>Transset(<q-args>)
-
-	autocmd VimEnter * exec 'Transset 0.85'
+		command! -nargs=1 Transset call <SID>Transset(<q-args>)
+	endif
 ""  }

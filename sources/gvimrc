@@ -1,5 +1,3 @@
-" vim: ft=vim
-
 runtime! archlinux.vim
 
 filetype plugin indent on
@@ -17,4 +15,5 @@ source $HOME/.vim/sources/color.vim
 source $HOME/.vim/sources/func.vim
 
 autocmd Filetype * set formatoptions-=ro
+autocmd VimEnter * exec 'Transset 0.85'
 
