@@ -67,10 +67,18 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	"" the number of space adding when commenting
 	let NERDSpaceDelims = 1
 
-	nmap <ESC>C <Nop>
-	nmap <ESC>C <Plug>NERDCommenterToggle
-	vmap <ESC>C <Nop>
-	vmap <ESC>C <Plug>NERDCommenterToggle
+	if has('gui_running')
+		nmap <M-C> <Nop>
+		nmap <M-C> <Plug>NERDCommenterToggle
+		vmap <M-C> <Nop>
+		vmap <M-C> <Plug>NERDCommenterToggle
+	else
+		nmap <ESC>C <Nop>
+		nmap <ESC>C <Plug>NERDCommenterToggle
+		vmap <ESC>C <Nop>
+		vmap <ESC>C <Plug>NERDCommenterToggle
+
+	endif
 ""}
 
 "" neocomplete {
@@ -97,8 +105,14 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	endif
 	let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-	inoremap <ESC>C <Nop>
-	inoremap <expr><ESC>C neocomplete#undo_completion()
+	if has('gui_running')
+		inoremap <M-C> <Nop>
+		inoremap <expr><M-C> neocomplete#undo_completion()
+	else
+		inoremap <ESC>C <Nop>
+		inoremap <expr><ESC>C neocomplete#undo_completion()
+	endif
+
 	" inoremap <expr><C-l> neocomplete#complete_common_string()
 
 	"" <CR>: close popup and save indent.
@@ -263,5 +277,10 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 
 "" rdark {
 	colorscheme rdark
+
+	if has('gui_running')
+		colorscheme evening
+	endif
+
 "" }
 

@@ -58,3 +58,14 @@ set splitright
 set shellslash
 
 set viminfo='100,<1000,s50,h,n~/.viminfo
+
+if has('gui_running')
+	set guioptions=
+	set antialias
+	set nobackup
+	set guifont=Monaco\ 6
+	set cmdheight=2
+	set antialias=on
+	set mouse=c
+endif
+

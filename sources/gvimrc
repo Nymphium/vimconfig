@@ -1,13 +1,20 @@
 " vim: ft=vim
 
-source $HOME/.vimrc
-colorscheme evening
+runtime! archlinux.vim
 
-" set transparency=5
-set guioptions=
-set antialias
-set nobackup
-set guifont=Monaco\ 6
-set cmdheight=2
-set antialias=on
+filetype plugin indent on
+
+syntax on
+
+source $HOME/.vim/sources/set.vim
+
+source $HOME/.vim/sources/keymap.vim
+
+source $HOME/.vim/sources/plugin.vim
+
+source $HOME/.vim/sources/color.vim
+
+source $HOME/.vim/sources/func.vim
+
+autocmd Filetype * set formatoptions-=ro
 

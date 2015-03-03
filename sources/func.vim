@@ -55,9 +55,7 @@
 	if has('syntax')
 		augroup ZenkakuSpace
 			autocmd!
-
 			autocmd ColorScheme       * call ZenkakuSpace()
-		
 			autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
 		augroup END
 
@@ -69,7 +67,6 @@
 "" insertmode highlight {
 	if has('syntax')
 		let g:hi_insert = 'StatusLine cterm=reverse,bold ctermfg=0 ctermbg=255'
-
 		let g:hi_normal = ""
 
 		redir => g:hi_normal
@@ -77,16 +74,23 @@
 		redir END
 
 		let g:hi_normal = substitute(hi_normal, '[\r\n]', '', 'g')
-
 		let g:hi_normal = substitute(hi_normal, 'xxx ', '', '')
 
 		augroup InsertHighlight
 			autocmd!
-
 			autocmd InsertEnter * exec 'hi '. g:hi_insert
-
 			autocmd InsertLeave * exec 'hi '. g:hi_normal
 		augroup END
 	endif
 "" }
 
+
+"" gui-transparency {
+	function! s:Transset(opacity)
+	  call system('transset-df --id ' . v:windowid . ' ' . a:opacity)
+	endfunction
+
+	command! -nargs=1 Transset call <SID>Transset(<q-args>)
+
+	autocmd VimEnter * exec 'Transset 0.85'
+""  }
