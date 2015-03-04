@@ -18,7 +18,10 @@ syn match luaChar /\([\w\s]\)\@<=\.\.\([\w\s]\)\@=/ contained display
 syn match luaChar /-\(-\)\@!/ contained display
 
 " #table 
-syn match luaLength /#[\w\.]\+\>/ display
+syn match luaLength /#\(\w\+[\.:]\?\)\+/ display
+syn match luaLength /#{\(.*\)\@=}/ display
+syn region luaTableLength matchgroup=luaLength start="#{" end="}" contains=ALL
+
 syn match luaTableName /\w\+\([\.:]\)\@=\(\.\)\@!/ display
 syn match luaTableName /\<\w\+\>\(\s*\[\)\@=/ display
 
