@@ -3,12 +3,13 @@
 " Maintainer: Nymphium
 
 
-hi moonFunction cterm=bold ctermfg=214
-hi moonChar cterm=bold
+hi moonFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
+hi moonChar cterm=bold gui=bold
+hi moonMetatable cterm=bold gui=bold
 hi link moonKeyword Statement
 hi link moonBracket Special
 hi link moonConditional Type
-hi moonMetatable cterm=bold
+hi link moonGlobal Boolean
 
 syn clear moonShortHandAssign
 syn clear moonObjAssign

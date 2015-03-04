@@ -3,14 +3,14 @@
 " Maintainer: Nymphium
 
 
-hi luaFunction cterm=bold ctermfg=214
-hi luaLength cterm=bold ctermfg=62
+hi luaFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf00
+hi luaLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
 hi link luaBracket Special
-hi luaCond cterm=bold ctermfg=48
+hi luaCond cterm=bold gui=bold ctermfg=48 guifg=#00ff87
 hi link luaElse luaCond
-hi luaChar cterm=bold
+hi luaChar cterm=bold gui=bold
 hi link luaTableName Structure
-hi luaMetatable cterm=bold
+hi luaMetatable cterm=bold gui=bold
 
 "" '=', '%', '<', '>', '/', '+', '*', ',', '-', ".."
 syn match luaChar /[=%<>/+\*,]/ contained display
