@@ -8,12 +8,14 @@ hi luaLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
 hi link luaBracket Special
 hi luaCond cterm=bold gui=bold ctermfg=48 guifg=#00ff87
 hi link luaElse luaCond
-hi luaChar cterm=bold gui=bold
+hi link luaCamma Special
+hi link luaChar Statement
 hi link luaTableName Structure
 hi luaMetatable cterm=bold gui=bold
 
 "" '=', '%', '<', '>', '/', '+', '*', ',', '-', ".."
-syn match luaChar /[=%<>/+\*,]/ contained display
+syn match luaChar /[=%<>/+\*]/ contained display
+syn match luaCamma "," contained display
 syn match luaChar /\([\w\s]\)\@<=\.\.\([\w\s]\)\@=/ contained display
 syn match luaChar /-\(-\)\@!/ contained display
 
