@@ -42,6 +42,7 @@ NeoBundle 'Shougo/vimproc.vim', {
 \		'linux' : 'make -j5',
 \		'unix' : 'gmake'}}
 NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
+NeoBundle 'tpope/vim-fugitive'
 
 "" ----plugins' settings & keymaps----{
 "" vim-surround {
@@ -51,7 +52,6 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		xmap { <Plug>VSurround}
 		xmap < <Plug>VSurround>
 		xmap [ <Plug>VSurround]
-	" endfunction
 "" }
 
 
