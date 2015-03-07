@@ -28,7 +28,7 @@ syn match moonKeyword ":"
 syn match moonObjAssign /\<\w\+\>\(:\s*\(\((.\{-\})\)\?-\|=>\)\?\)\@=/ display
 syn match moonObjAssign /\(\s\+:\)\@<=\<\w\+\>/ display
 
-syn match moonLength /#\(\w\+[\.:]\?\)\+/ display
+syn match moonLength /#\(@\?\w\+[\.:]\?\)\+/ display
 syn match moonLength /#{\(.*\)\@=}/ display
 syn region moonTableLength matchgroup=moonLength start="#{" end="}" contains=ALL
 
@@ -40,8 +40,8 @@ syn match moonOperator "\~=" contained display
 syn match moonOperator "!=" contained contains=NONE display
 
 syn match moonLuaFunc /\<\w\+\>\(\s*=\?\s*(\)\@=/ display contains=ALLBUT,Normal
-syn match moonLuaFunc /\w\+\(\(:\|\(\s*=\)\)\?\s*\((.\{-\})\)\?\s*\(=\|-\)>\)\@=/ display contains=ALLBUT,moonConditional,moonKeyword
-syn match moonLuaFunc /\<\w\+\>\(!\)\@=/ display
+syn match moonLuaFunc /\<\w\+\>\(\(:\|\(\s*=\)\)\(\s*(.*)\)\?\s*\(=\|-\)>\)\@=/ display
+syn match moonLuaFunc /@\?\w\+\(!\)\@=/ display
 syn match moonLuaFunc /\(\\\)\@<=\<\w\+\>/ display
 
 syn match moonBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
