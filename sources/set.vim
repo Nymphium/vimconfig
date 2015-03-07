@@ -59,6 +59,8 @@ set shellslash
 
 set viminfo='100,<1000,s50,h,n~/.viminfo
 
+set conceallevel=2
+
 if has('gui_running')
 	set guioptions=
 	set antialias

@@ -26,8 +26,6 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'Townk/vim-autoclose'
-" NeoBundle 'kana/vim-smartinput'
-" NeoBundle 'cohama/vim-smartinput-endwise'
 NeoBundle 'tpope/vim-pathogen'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'scrooloose/syntastic'
@@ -43,12 +41,6 @@ NeoBundle 'Shougo/vimproc.vim', {
 \		'mac' : 'make -f make_mac.mak',
 \		'linux' : 'make -j5',
 \		'unix' : 'gmake'}}
-" NeoBundleLazy 'majutsushi/tagbar', {
-" \	'autload': {
-" \		'commands': ['TagbarToggle'],
-" \	},
-" \	'build': {
-" \		'mac': 'brew install ctags'}}
 NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 
 "" ----plugins' settings & keymaps----{
@@ -106,14 +98,12 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 	if has('gui_running')
-		inoremap <M-C> <Nop>
-		inoremap <expr><M-C> neocomplete#undo_completion()
+		inoremap <M-c> <Nop>
+		inoremap <expr><M-c> neocomplete#undo_completion()
 	else
-		inoremap <ESC>C <Nop>
-		inoremap <expr><ESC>C neocomplete#undo_completion()
+		inoremap <ESC>c <Nop>
+		inoremap <expr><ESC>c neocomplete#undo_completion()
 	endif
-
-	" inoremap <expr><C-l> neocomplete#complete_common_string()
 
 	"" <CR>: close popup and save indent.
 	inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
@@ -127,13 +117,6 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
 	"" <BS>: close popup and delete backword char.
 	inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-	inoremap <expr><ESC><ESC> neocomplete#close_popup()."\<C-c>"
-
-	"" For cursor moving in insert mode(Not recommended)
-	inoremap <expr><ESC>h neocomplete#close_popup() . "\<Left>"
-	inoremap <expr><ESC>l neocomplete#close_popup() . "\<Right>"
-	inoremap <expr><ESC>k neocomplete#close_popup() . "\<Up>"
-	inoremap <expr><ESC>j neocomplete#close_popup() . "\<Down>"
 
 	"" Enable omni completion.
 	augroup OmniCompletion
@@ -162,10 +145,6 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 
 	nnoremap <silent> %% :OverCommandLine<CR>%s/
 	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
-	" nnoremap / <Nop>
-	" nnoremap <silent> / :OverCommandLine<CR>/
-	" nnoremap n <Nop
-	" nnoremap <silent> n :OverCommandLine<CR>/<Up><CR>
 "" }
 
 "" vim-quickrun {
@@ -212,6 +191,8 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		if &enc == "utf8"
 			let g:syntastic_check_on_open = 1
 		endif
+		let g:syntastic_always_populate_loc_list = 1
+		let g:syntastic_check_on_wq = 0
 		let g:syntastic_loc_list_height = 3
 		let g:syntastic_echo_current_error = 1
 		let g:syntastic_enable_balloons = 1
@@ -223,8 +204,11 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		let g:syntastic_c_compiler = 'clang'
 		let g:syntastic_c_compiler_options = '-std=c99 -Wall'
 		let g:syntastic_ignore_files = ['\.tex$']
-		" let g:syntastic_tex_checkers = ['chktex']
-		" let g:syntastic_ocaml_use_ocamlc = 1
+		let g:syntastic_lua_checkers = ["luac", "luacheck"]
+		let g:syntastic_lua_luacheck_args = ["-d", "-a"]
+		set statusline+=\ %#warningmsg#
+		set statusline+=%{SyntasticStatuslineFlag()}
+		set statusline+=%*
 "" }
 
 "" vinarise {
@@ -267,14 +251,6 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 	augroup END
 "" }
 
-"" tagbar {
-	" nmap <Leader>t :TagbarToggle<CR>
-"" }
-
-"" vim-smartinput-endwise {
-	" call smartinput_endwise#define_default_rules()
-"" }
-
 "" rdark {
 	colorscheme rdark
 
@@ -282,5 +258,9 @@ NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
 		colorscheme evening
 	endif
 
+"" }
+
+"" unite-tag {
+	nmap <Leader>t :exec "Unite tag"<CR>
 "" }
 
