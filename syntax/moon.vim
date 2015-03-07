@@ -39,8 +39,8 @@ syn match moonTable /\<\w\+\>\(\\\)\@=/ display
 syn match moonOperator "\~=" contained display
 syn match moonOperator "!=" contained contains=NONE display
 
-syn match moonLuaFunc /\<\w\+\>\(\s*=\?\s*(\)\@=/ display
-syn match moonLuaFunc /\w\+\(\(:\|\(\s*=\)\)\?\s*\((.\{-\})\)\?\s*\(=\|-\)>\)\@=/ display
+syn match moonLuaFunc /\<\w\+\>\(\s*=\?\s*(\)\@=/ display contains=ALLBUT,Normal
+syn match moonLuaFunc /\w\+\(\(:\|\(\s*=\)\)\?\s*\((.\{-\})\)\?\s*\(=\|-\)>\)\@=/ display contains=ALLBUT,moonConditional,moonKeyword
 syn match moonLuaFunc /\<\w\+\>\(!\)\@=/ display
 syn match moonLuaFunc /\(\\\)\@<=\<\w\+\>/ display
 
