@@ -13,7 +13,7 @@ hi Type cterm=bold gui=bold ctermfg=47 guifg=#00ff5f
 hi Statement cterm=bold gui=bold
 hi Constant cterm=bold gui=bold
 hi Shebang cterm=bold,italic gui=bold,italic ctermfg=126 guibg=#af00af guifg=black
-hi Normal guibg=#000000 guifg=#1fff40
+hi Normal ctermfg=46 ctermbg=NONE guifg=#1fff40 guibg=#000000
 hi Identifier term=underline cterm=bold gui=bold ctermfg=14 guifg=#00ffff
 hi Constant term=underline cterm=bold gui=bold ctermfg=13 guifg=#ff4fff
 
