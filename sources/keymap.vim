@@ -33,7 +33,7 @@ nnoremap <ESC>j <C-d>
 nnoremap <ESC>k <C-u>
 nnoremap <silent> <F3> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
-nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>
+nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
 nnoremap ww <ESC>:vne<Space>
 nnoremap wv <ESC>:new<Space>
 nnoremap w<TAB> <C-w>w
