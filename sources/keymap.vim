@@ -33,7 +33,7 @@ nnoremap <ESC>j <C-d>
 nnoremap <ESC>k <C-u>
 nnoremap <silent> <F3> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
-nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
+nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>
 nnoremap ww <ESC>:vne<Space>
 nnoremap wv <ESC>:new<Space>
 nnoremap w<TAB> <C-w>w
@@ -68,32 +68,30 @@ inoremap <C-q> <ESC>:q!<CR>
 inoremap <F3> <ESC><ESC>:setlocal relativenumber!<CR>a
 
 
-if has('gui_running')
-	vnoremap <M-L> $
-	vnoremap <M-H> ^
-	vnoremap <M-j> <C-d>
-	vnoremap <M-k> <C-u>
+vnoremap <M-L> $
+vnoremap <M-H> ^
+vnoremap <M-j> <C-d>
+vnoremap <M-k> <C-u>
 
-	nnoremap <M-a> <ESC>:saveas 
-	nnoremap <M-s> <ESC>:w!<CR>
-	nnoremap <M-s>><M-s> <ESC>:wq!<CR>
-	nnoremap <M-w><M-w> <ESC>:q!<CR>
-	nnoremap <M-1> <C-x>
-	nnoremap <M-2> <C-a>
-	nnoremap <M-j> <C-d>
-	nnoremap <M-k> <C-u>
-	nnoremap <M-o> <Nop>
-	nnoremap <M-o> o<ESC>
+nnoremap <M-a> <ESC>:saveas 
+nnoremap <M-s> <ESC>:w!<CR>
+nnoremap <M-s>><M-s> <ESC>:wq!<CR>
+nnoremap <M-w><M-w> <ESC>:q!<CR>
+nnoremap <M-1> <C-x>
+nnoremap <M-2> <C-a>
+nnoremap <M-j> <C-d>
+nnoremap <M-k> <C-u>
+nnoremap <M-o> <Nop>
+nnoremap <M-o> o<ESC>
 
-	inoremap <M-v> <Nop>
-	inoremap <M-v> <ESC>"*pa
-	inoremap <M-1> <Nop>
-	inoremap <M-2> <Nop>
-	inoremap <M-1> <ESC><C-x>i
-	inoremap <M-2> <ESC><C-a>i
-	inoremap <M-p> <ESC>pi
-	inoremap <M-d> <ESC>ddi
-	inoremap <M-w> <S-Left>
-	inoremap <M-e> <S-Right>
-endif
+inoremap <M-v> <Nop>
+inoremap <M-v> <ESC>"*pa
+inoremap <M-1> <Nop>
+inoremap <M-2> <Nop>
+inoremap <M-1> <ESC><C-x>i
+inoremap <M-2> <ESC><C-a>i
+inoremap <M-p> <ESC>pi
+inoremap <M-d> <ESC>ddi
+inoremap <M-w> <S-Left>
+inoremap <M-e> <S-Right>
 
