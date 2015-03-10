@@ -105,7 +105,7 @@
 		let s:this_ft = matchstr(s:line, '\(^#!.\{-}\/bin\/.\{-}\)\@<=\w\+$')
 
 		if strlen(s:this_ft) > 0
-			if s:this_ft == "bash"
+			if s:this_ft == "bash" || s:this_ft == "zsh"
 				let s:this_ft = "sh"
 			endif
 
