@@ -10,6 +10,7 @@
 	endfunction
 
 	vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
+	vnoremap <M-z> <ESC>:call CommentInLine()<CR>
 "" }
 
 
