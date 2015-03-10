@@ -94,3 +94,35 @@
 		command! -nargs=1 Transset call <SID>Transset(<q-args>)
 	endif
 ""  }
+
+
+"" set-shellscript filetype {
+	function! DetectFromShebang()
+		let s:l = line(".")
+		let s:c = col(".")
+		normal gg
+		let s:line = getline(".")
+		let s:this_ft = matchstr(s:line, '\(^#!.\{-}\/bin\/.\{-}\)\@<=\w\+$')
+
+		if strlen(s:this_ft) > 0
+			if s:this_ft == "bash"
+				let s:this_ft = "sh"
+			endif
+
+			let s:this_ft = "set ft=" . s:this_ft
+
+			execute (s:this_ft)
+		endif
+
+		call cursor(s:l, s:c)
+	endfunction
+
+	if strlen(&ft) < 1
+		augroup DetectFromShebangAndHighlightAgain
+			autocmd!
+			autocmd BufWritePost * call DetectFromShebang()
+			autocmd BufWritePost * syn match Shebang /^#!\/.\{-\}bin\/.*$/
+		augroup END
+	endif
+"" }
+
