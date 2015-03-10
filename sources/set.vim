@@ -41,6 +41,8 @@ if &term =~ "256color"
 	set t_ut=
 endif
 set t_Co=256
+set t_ZH=[3m
+set t_ZR=[23m
 set lazyredraw
 set shell=$SHELL
 set clipboard+=unnamed,autoselect
