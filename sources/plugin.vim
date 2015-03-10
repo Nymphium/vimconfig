@@ -59,18 +59,14 @@ NeoBundle 'tpope/vim-fugitive'
 	"" the number of space adding when commenting
 	let NERDSpaceDelims = 1
 
-	if has('gui_running')
-		nmap <M-C> <Nop>
-		nmap <M-C> <Plug>NERDCommenterToggle
-		vmap <M-C> <Nop>
-		vmap <M-C> <Plug>NERDCommenterToggle
-	else
-		nmap <ESC>C <Nop>
-		nmap <ESC>C <Plug>NERDCommenterToggle
-		vmap <ESC>C <Nop>
-		vmap <ESC>C <Plug>NERDCommenterToggle
-
-	endif
+	nmap <M-C> <Nop>
+	nmap <M-C> <Plug>NERDCommenterToggle
+	vmap <M-C> <Nop>
+	vmap <M-C> <Plug>NERDCommenterToggle
+	nmap <ESC>C <Nop>
+	nmap <ESC>C <Plug>NERDCommenterToggle
+	vmap <ESC>C <Nop>
+	vmap <ESC>C <Plug>NERDCommenterToggle
 ""}
 
 "" neocomplete {
@@ -97,13 +93,10 @@ NeoBundle 'tpope/vim-fugitive'
 	endif
 	let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-	if has('gui_running')
-		inoremap <M-c> <Nop>
-		inoremap <expr><M-c> neocomplete#undo_completion()
-	else
-		inoremap <ESC>c <Nop>
-		inoremap <expr><ESC>c neocomplete#undo_completion()
-	endif
+	inoremap <M-c> <Nop>
+	inoremap <expr><M-c> neocomplete#undo_completion()
+	inoremap <ESC>c <Nop>
+	inoremap <expr><ESC>c neocomplete#undo_completion()
 
 	"" <CR>: close popup and save indent.
 	inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
