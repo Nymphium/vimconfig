@@ -198,7 +198,7 @@ NeoBundle 'tpope/vim-fugitive'
 		let g:syntastic_c_compiler_options = '-std=c99 -Wall'
 		let g:syntastic_ignore_files = ['\.tex$']
 		let g:syntastic_lua_checkers = ["luac", "luacheck"]
-		let g:syntastic_lua_luacheck_args = ["-d", "-a"]
+		let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u"]
 		set statusline+=\ %#warningmsg#
 		set statusline+=%{SyntasticStatuslineFlag()}
 		set statusline+=%*
