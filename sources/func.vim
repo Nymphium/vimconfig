@@ -67,7 +67,7 @@
 
 "" insertmode highlight {
 	if has('syntax')
-		let g:hi_insert = 'StatusLine cterm=reverse,bold ctermfg=0 ctermbg=255'
+		let g:hi_insert = 'StatusLine cterm=bold ctermfg=0 ctermbg=255 guifg=#000000 guibg=#ffffff'
 		let g:hi_normal = ""
 
 		redir => g:hi_normal
@@ -79,8 +79,8 @@
 
 		augroup InsertHighlight
 			autocmd!
-			autocmd InsertEnter * exec 'hi '. g:hi_insert
-			autocmd InsertLeave * exec 'hi '. g:hi_normal
+			autocmd InsertEnter * exec 'hi '. g:hi_normal
+			autocmd InsertLeave * exec 'hi '. g:hi_insert
 		augroup END
 	endif
 "" }
