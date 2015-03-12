@@ -44,7 +44,7 @@ syn match moonLuaFunc /\<\w\+\>\(\(:\|\(\s*=\)\)\(\s*(.*)\)\?\s*\(=\|-\)>\)\@=/ 
 syn match moonLuaFunc /@\?\w\+\(!\)\@=/ display
 syn match moonLuaFunc /\(\\\)\@<=\<\w\+\>/ display
 
-syn match moonBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
+syn match moonBracket /[(){}]\|\[\|\]/
 
 syn match moonMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|modd|pow\|concat\|eq\|lt\|gt\|class\|name\|inherited\)\>/ display
 
