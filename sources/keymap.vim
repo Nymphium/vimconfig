@@ -66,6 +66,8 @@ inoremap <ESC>w <S-Left>
 inoremap <ESC>e <S-Right>
 inoremap <C-q> <ESC>:q!<CR>
 inoremap <F3> <ESC><ESC>:setlocal relativenumber!<CR>a
+inoremap <ESC>D <C-W>
+inoremap <ESC>d <S-Right><C-W>
 
 
 vnoremap <M-L> $
@@ -94,4 +96,6 @@ inoremap <M-p> <ESC>pi
 inoremap <M-d> <ESC>ddi
 inoremap <M-w> <S-Left>
 inoremap <M-e> <S-Right>
+inoremap <M-D> <C-W>
+inoremap <M-d> <S-Right><C-W>
 
