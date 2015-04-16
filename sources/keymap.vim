@@ -52,10 +52,13 @@ nnoremap <silent> <F11> <ESC>:Q<CR>
 nnoremap V <C-v>
 nnoremap Q <Nop>
 nnoremap ; a;<ESC><ESC>
+nnoremap <ESC>d de
+nnoremap <ESC><S-d> db
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
-inoremap <ESC>v <Nop>
-inoremap <ESC>v <ESC>"*pa
+" inoremap <ESC>v <Nop>
+" inoremap <ESC>v <ESC>"*pa
+inoremap <ESC>v <C-x>r+
 inoremap <ESC>1 <Nop>
 inoremap <ESC>2 <Nop>
 inoremap <ESC>1 <ESC><C-x>i
@@ -85,6 +88,8 @@ nnoremap <M-j> <C-d>
 nnoremap <M-k> <C-u>
 nnoremap <M-o> <Nop>
 nnoremap <M-o> o<ESC>
+nnoremap <M-d> de
+nnoremap <M-D> db
 
 inoremap <M-v> <Nop>
 inoremap <M-v> <ESC>"*pa
