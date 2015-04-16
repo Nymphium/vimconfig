@@ -17,7 +17,7 @@ NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
 NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
 " NeoBundleLazy 'rhysd/unite-ruby-require.vim', {'autoload' : { 'filetypes' : ['ruby'] }}
 NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
-NeoBundleLazy 'LaTeX-Box-Team/LaTeX-Box', {'autoload' : {'filetypes' : ['tex'] }}
+NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
 
 NeoBundle 'thinca/vim-quickrun'
@@ -147,11 +147,11 @@ NeoBundle 'tpope/vim-fugitive'
 		\ 'outputter/buffer/close_on_empty' : 1 ,
 	\ }
 
-	let g:quickrun_config.tex = {
-		\ 'command' : 'latexmk',
-		\ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
-		\ 'outputter/error/error' : 'quickfix',
-	\ }
+	" let g:quickrun_config.tex = {
+		" \ 'command' : 'latexmk',
+		" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
+		" \ 'outputter/error/error' : 'quickfix',
+	" \ }
 
 	let g:quickrun_config.cpp = {
 		\ 'command' : 'clang++',
@@ -241,11 +241,19 @@ NeoBundle 'tpope/vim-fugitive'
 	augroup END
 "" }
 
-"" LaTeX-Box {
-	augroup LatexBox
+"" LaTeX {
+	augroup LatexDetect
 		autocmd!
 		autocmd BufNewFile,BufRead *.tex set ft=tex
 	augroup END
+
+	let g:latex_view_method = 'general'
+	let g:latex_view_general_viewer ='open'
+	let g:latex_fold_enabled = 0
+	if !exists('g:neocomplete#sources#omni#input_patterns')
+		let g:neocomplete#sources#omni#input_patterns = {}
+	endif
+	let g:neocomplete#sources#omni#input_patterns.tex = '\\ref{\s*[0-9A-Za-z_:]*'
 "" }
 
 "" rdark {
