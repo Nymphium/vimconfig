@@ -12,7 +12,7 @@ NeoBundle "vim-scripts/rdark"
 
 "" support by language
 NeoBundleLazy 'adimit/prolog.vim', { 'autoload' : { 'filetypes' : ['prolog'] }}
-NeoBundleLazy 'Shougo/vinarise.vim', {'autoload' : {'filetypes' : ['xxd']}}
+" NeoBundleLazy 'Shougo/vinarise.vim', {'autoload' : {'filetypes' : ['xxd']}}
 NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
 NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
 " NeoBundleLazy 'rhysd/unite-ruby-require.vim', {'autoload' : { 'filetypes' : ['ruby'] }}
@@ -29,7 +29,7 @@ NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'tpope/vim-pathogen'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'scrooloose/syntastic'
-NeoBundle 'nathanaelkane/vim-indent-guides'
+" NeoBundle 'nathanaelkane/vim-indent-guides'
 if has('lua')
 	NeoBundle 'Shougo/neocomplete.vim'
 endif
@@ -207,15 +207,6 @@ NeoBundle 'tpope/vim-fugitive'
 		set statusline+=%*
 "" }
 
-"" vinarise {
-	augroup VinariseXXD
-		autocmd!
-		autocmd BufReadPre *.{bin,out} let &binary = 1
-		autocmd BufReadPost * if &binary | silent Vinarise
-		autocmd BufReadPost * endif
-	augroup END
-"" }
-
 "" previm {
 	let s:bundle = neobundle#get('previm')
 	function! s:bundle.hooks.on_source(bundle)
@@ -229,11 +220,6 @@ NeoBundle 'tpope/vim-fugitive'
 	augroup END
 "" }
 
-"" vim-indent-guides {
-	let g:indent_guides_exclude_filetypes=['help', 'man']
-	let g:indent_guides_enable_on_vim_startup = 1
-"" }
-
 "" vim-gas {
 	augroup VimGas
 		autocmd!
@@ -242,11 +228,6 @@ NeoBundle 'tpope/vim-fugitive'
 "" }
 
 "" LaTeX {
-	augroup LatexDetect
-		autocmd!
-		autocmd BufNewFile,BufRead *.tex set ft=tex
-	augroup END
-
 	let g:latex_view_method = 'general'
 	let g:latex_view_general_viewer ='open'
 	let g:latex_fold_enabled = 0
@@ -254,6 +235,12 @@ NeoBundle 'tpope/vim-fugitive'
 		let g:neocomplete#sources#omni#input_patterns = {}
 	endif
 	let g:neocomplete#sources#omni#input_patterns.tex = '\\ref{\s*[0-9A-Za-z_:]*'
+
+	augroup LatexSetup
+		autocmd!
+		autocmd BufNewFile,BufRead *.tex set ft=tex
+	augroup END
+
 "" }
 
 "" rdark {
