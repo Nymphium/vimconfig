@@ -228,19 +228,39 @@ NeoBundle 'tpope/vim-fugitive'
 "" }
 
 "" LaTeX {
-	let g:latex_view_method = 'general'
-	let g:latex_view_general_viewer ='open'
-	let g:latex_fold_enabled = 0
+	let g:vimtex_view_method = 'general'
+	let g:vimtex_view_general_viewer ='evince'
+	let g:vimtex_fold_enabled = 0
+	let g:vimtex_latexmk_options = '-pdfdvi'
+
+	function! s:findInPdf(...)
+		let l:str = ''
+
+		if a:0 < 1
+			let l:tmp = @x
+			normal "xye
+			let l:str = @x . ' '
+			let @x = l:tmp
+		else
+			let l:str = a:1 . ' '
+		endif
+
+		if strlen(l:str) > 2
+			call system("evince -l ". l:str . g:vimtex#data[b:vimtex.id].out() . " >/dev/null 2>&1 &")
+		endif
+	endfunction
+
 	if !exists('g:neocomplete#sources#omni#input_patterns')
 		let g:neocomplete#sources#omni#input_patterns = {}
 	endif
-	let g:neocomplete#sources#omni#input_patterns.tex = '\\ref{\s*[0-9A-Za-z_:]*'
+	let g:neocomplete#sources#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
 
 	augroup LatexSetup
 		autocmd!
 		autocmd BufNewFile,BufRead *.tex set ft=tex
+		autocmd BufNewFile,Bufread *.tex vmap <silent> <LocalLeader>lf :call <SID>findInPdf(@*)<CR>
+		autocmd BufNewFile,Bufread *.tex nmap <silent> <LocalLeader>lf :call <SID>findInPdf()<CR>
 	augroup END
-
 "" }
 
 "" rdark {
