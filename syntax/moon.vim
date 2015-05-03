@@ -30,7 +30,7 @@ syn match moonObjAssign /\(\s\+:\)\@<=\<\w\+\>/ display
 
 syn match moonLength /#\(@\?\w\+[\.:]\?\)\+/ display
 syn match moonLength /#{\(.*\)\@=}/ display
-syn region moonTableLength matchgroup=moonLength start="#{" end="}" contains=ALL
+syn region moonTableLength matchgroup=moonLength start="#{" end="}" display transparent oneline
 
 syn match moonTable /\zs\<\w\+\>\ze\.\(\.\)\@!/ display
 syn match moonTable /\<\w\+\>\(\[\)\@=/ display

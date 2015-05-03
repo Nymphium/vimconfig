@@ -22,4 +22,6 @@ syn match javaClass /\(new\s\+\)\@<=[A-Z]\w*/ display
 syn match javaClass /\<[A-Z]\w*\(\.\)\@=/ display
 syn match javaBraces /[()\[\]{}]/ display
 syn match javaLambda /\s*\zs->\ze\s*/ contains=NONE display
-
+syn match javaBraces /\(<\)\(\a*\)\@=\(>\)/ display
+syn match GenericsType /\(<\)\@<=\a\+\(>\)\@=/ contained
+syn region Type matchgroup=javaBraces start=/<\(\a\+>\)\@=/ end=/\(<\a\+\)\@<=>/ oneline
