@@ -1,21 +1,42 @@
+" Note: Skip initialization for vim-tiny or vim-small.
+if !1 | finish | endif
+
 if has('vim_starting')
-	set runtimepath+=~/.vim/bundle/neobundle.vim
-	call neobundle#begin('~/.vim/bundle')
-	NeoBundleFetch 'Shougo/neobundle.vim'
-	call neobundle#end()
-	filetype plugin on
-	filetype indent on
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
+
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
+
 
 "" color
 NeoBundle "vim-scripts/rdark"
 
 "" support by language
-NeoBundleLazy 'adimit/prolog.vim', { 'autoload' : { 'filetypes' : ['prolog'] }}
-" NeoBundleLazy 'Shougo/vinarise.vim', {'autoload' : {'filetypes' : ['xxd']}}
 NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
 NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
-" NeoBundleLazy 'rhysd/unite-ruby-require.vim', {'autoload' : { 'filetypes' : ['ruby'] }}
 NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
@@ -26,10 +47,8 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'Townk/vim-autoclose'
-NeoBundle 'tpope/vim-pathogen'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'scrooloose/syntastic'
-" NeoBundle 'nathanaelkane/vim-indent-guides'
 if has('lua')
 	NeoBundle 'Shougo/neocomplete.vim'
 endif
@@ -41,7 +60,7 @@ NeoBundle 'Shougo/vimproc.vim', {
 \		'mac' : 'make -f make_mac.mak',
 \		'linux' : 'make -j5',
 \		'unix' : 'gmake'}}
-NeoBundleLazy 'tsukkee/unite-tag', {'depends' : 'Shougo/unite.vim'}
+NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'tpope/vim-fugitive'
 
 "" ----plugins' settings & keymaps----{
@@ -167,10 +186,6 @@ NeoBundle 'tpope/vim-fugitive'
 	\ }
 "" }
 
-"" vim-pathogen {
-	call pathogen#infect()
-"" }
-
 "" matchit {
 	augroup Matchit
 		autocmd!
@@ -202,6 +217,7 @@ NeoBundle 'tpope/vim-fugitive'
 		let g:syntastic_moon_checkers = ['mooncheck']
 		" let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u"]
 		let g:syntastic_sh_checkers = ['shellcheck']
+		let g:statline_syntastic = 0
 		set statusline+=\ %#warningmsg#
 		set statusline+=%{SyntasticStatuslineFlag()}
 		set statusline+=%*
