@@ -1,38 +1,13 @@
-" Note: Skip initialization for vim-tiny or vim-small.
-if !1 | finish | endif
+" set nocompatible
 
 if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
-  endif
-
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+	set runtimepath+=~/.vim/bundle/neobundle.vim
 endif
-
-" Required:
 call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-" My Bundles here:
-" Refer to |:NeoBundle-examples|.
-" Note: You don't set neobundle setting in .gvimrc!
-
-call neobundle#end()
-
-" Required:
-filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-
-
-"" color
-NeoBundle "vim-scripts/rdark"
+" colorscheme
+NeoBundle 'vim-scripts/rdark'
 
 "" support by language
 NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
@@ -54,24 +29,28 @@ if has('lua')
 endif
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {
-\	'build' : {
-\		'windows' : 'tools\\update-dll-mingw',
-\		'cygwin' : 'make -f make_cygwin.mak',
-\		'mac' : 'make -f make_mac.mak',
-\		'linux' : 'make -j5',
-\		'unix' : 'gmake'}}
+\ 'build' : {
+\     'windows' : 'tools\\update-dll-mingw',
+\     'cygwin' : 'make -f make_cygwin.mak',
+\     'mac' : 'make -f make_mac.mak',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\    },
+\ }
 NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'tpope/vim-fugitive'
+call neobundle#end()
+NeoBundleCheck
 
-"" ----plugins' settings & keymaps----{
-"" vim-surround {
-		xmap " <Plug>VSurround"
-		xmap ' <Plug>VSurround'
-		xmap ( <Plug>VSurround)
-		xmap { <Plug>VSurround}
-		xmap < <Plug>VSurround>
-		xmap [ <Plug>VSurround]
-"" }
+" ----plugins' settings & keymaps----{
+" vim-surround {
+  	xmap " <Plug>VSurround"
+  	xmap ' <Plug>VSurround'
+  	xmap ( <Plug>VSurround)
+  	xmap { <Plug>VSurround}
+  	xmap < <Plug>VSurround>
+  	xmap [ <Plug>VSurround]
+" }
 
 
 "" NERDCommenter {
@@ -194,7 +173,7 @@ NeoBundle 'tpope/vim-fugitive'
 		autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 	augroup END
 "" }
-
+" 
 "" syntastic {
 		if &enc == "utf8"
 			let g:syntastic_check_on_open = 1
@@ -215,9 +194,8 @@ NeoBundle 'tpope/vim-fugitive'
 		let g:syntastic_lua_checkers = ["luac", "luacheck"]
 		let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u"]
 		let g:syntastic_moon_checkers = ['mooncheck']
-		" let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u"]
+		let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u"]
 		let g:syntastic_sh_checkers = ['shellcheck']
-		let g:statline_syntastic = 0
 		set statusline+=\ %#warningmsg#
 		set statusline+=%{SyntasticStatuslineFlag()}
 		set statusline+=%*
@@ -225,7 +203,7 @@ NeoBundle 'tpope/vim-fugitive'
 
 "" previm {
 	let s:bundle = neobundle#get('previm')
-	function! s:bundle.hooks.on_source(bundle)
+	function! s:bundle.hooks.onsource(bundle)
 		let g:previm_open_cmd = "open"
 		let g:previm_enable_realtime = 1
 	endfunction
@@ -237,10 +215,10 @@ NeoBundle 'tpope/vim-fugitive'
 "" }
 
 "" vim-gas {
-	augroup VimGas
-		autocmd!
-		autocmd BufNewFile,BufRead *.{asm,s} set filetype=gas
-	augroup END
+  augroup VimGas
+  	autocmd!
+  	autocmd BufNewFile,BufRead *.{asm,s} set filetype=gas
+  augroup END
 "" }
 
 "" LaTeX {
@@ -286,9 +264,5 @@ NeoBundle 'tpope/vim-fugitive'
 		colorscheme evening
 	endif
 
-"" }
-
-"" unite-tag {
-	nmap <Leader>t :exec "Unite tag"<CR>
 "" }
 

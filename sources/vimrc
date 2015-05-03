@@ -1,9 +1,5 @@
 runtime! archlinux.vim
 
-filetype plugin indent on
-
-syntax on
-
 source $HOME/.vim/sources/set.vim
 
 source $HOME/.vim/sources/keymap.vim
@@ -11,6 +7,10 @@ source $HOME/.vim/sources/keymap.vim
 source $HOME/.vim/sources/plugin.vim
 
 source $HOME/.vim/sources/func.vim
+
+filetype plugin indent on
+
+syntax on
 
 source $HOME/.vim/sources/color.vim
 
