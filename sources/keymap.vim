@@ -1,27 +1,23 @@
 vnoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 vnoremap v $h
-vnoremap L <Nop>
-vnoremap H <Nop>
 vnoremap W b
 vnoremap E <Nop>
 vnoremap E e
-vnoremap <ESC>L $
-vnoremap <ESC>H ^
-vnoremap <ESC>j <C-d>
-vnoremap <ESC>k <C-u>
 vnoremap <TAB> >
 vnoremap <S-Tab> <
-vnoremap <silent> n "vy/\V<C-r>=substitute(escape(@v,'\/'),"\n",'\\n','g')<CR><CR>
+vnoremap <silent> n "*y/<C-r>*<CR>
 vnoremap <S-y> "+y
 
 nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
-nnoremap <ESC>a <ESC>:saveas 
 nnoremap <ESC>s <ESC>:w!<CR>
-nnoremap <ESC>s<ESC>s <ESC>:wq!<CR>
+nnoremap <M-s> <ESC>:w!<CR>
 nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
+nnoremap <M-w><M-w> <ESC>:q!<CR>
 nnoremap <BS> X
 nnoremap <ESC>1 <C-x>
+nnoremap <M-1> <C-x>
 nnoremap <ESC>2 <C-a>
+nnoremap <M-2> <C-a>
 nnoremap j gj
 nnoremap k gk
 nnoremap E <Nop>
@@ -30,7 +26,9 @@ nnoremap W <Nop>
 nnoremap W b
 nnoremap r <C-r>
 nnoremap <ESC>j <C-d>
+nnoremap <M-j> <C-d>
 nnoremap <ESC>k <C-u>
+nnoremap <M-k> <C-u>
 nnoremap <silent> <F3> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
 nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
@@ -53,54 +51,47 @@ nnoremap V <C-v>
 nnoremap Q <Nop>
 nnoremap ; a;<ESC><ESC>
 nnoremap <ESC>d de
-nnoremap <ESC><S-d> db
+nnoremap <M-d> de
+nnoremap <ESC><S-d> dbx
+nnoremap <M-D> dbx
+nnoremap <ESC>x "
+nnoremap <M-x> "
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
-" inoremap <ESC>v <Nop>
-" inoremap <ESC>v <ESC>"*pa
 inoremap <ESC>v <C-x>r+
-inoremap <ESC>1 <Nop>
-inoremap <ESC>2 <Nop>
+inoremap <M-v> <Nop>
+inoremap <M-v> <ESC>"*pa
 inoremap <ESC>1 <ESC><C-x>i
+inoremap <M-1> <ESC><C-x>i
 inoremap <ESC>2 <ESC><C-a>i
+inoremap <M-2> <ESC><C-a>i
+inoremap <M-p> <ESC>pi
 inoremap <ESC>p <ESC>pi
 inoremap <ESC>d <ESC>ddi
 inoremap <ESC>w <S-Left>
+inoremap <M-w> <S-Left>
 inoremap <ESC>e <S-Right>
+inoremap <M-e> <S-Right>
 inoremap <C-q> <ESC>:q!<CR>
 inoremap <F3> <ESC><ESC>:setlocal relativenumber!<CR>a
 inoremap <ESC>D <C-W>
-inoremap <ESC>d <S-Right><C-W>
-
-
-vnoremap <M-L> $
-vnoremap <M-H> ^
-vnoremap <M-j> <C-d>
-vnoremap <M-k> <C-u>
-
-nnoremap <M-a> <ESC>:saveas 
-nnoremap <M-s> <ESC>:w!<CR>
-nnoremap <M-s>><M-s> <ESC>:wq!<CR>
-nnoremap <M-w><M-w> <ESC>:q!<CR>
-nnoremap <M-1> <C-x>
-nnoremap <M-2> <C-a>
-nnoremap <M-j> <C-d>
-nnoremap <M-k> <C-u>
-nnoremap <M-o> <Nop>
-nnoremap <M-o> o<ESC>
-nnoremap <M-d> de
-nnoremap <M-D> db
-
-inoremap <M-v> <Nop>
-inoremap <M-v> <ESC>"*pa
-inoremap <M-1> <Nop>
-inoremap <M-2> <Nop>
-inoremap <M-1> <ESC><C-x>i
-inoremap <M-2> <ESC><C-a>i
-inoremap <M-p> <ESC>pi
-inoremap <M-d> <ESC>ddi
-inoremap <M-w> <S-Left>
-inoremap <M-e> <S-Right>
 inoremap <M-D> <C-W>
+inoremap <ESC>d <S-Right><C-W>
 inoremap <M-d> <S-Right><C-W>
+inoremap <ESC>x <C-x><C-r>
+
+cnoremap <ESC>w <Nop>
+cnoremap <M-w> <Nop>
+cnoremap <ESC>w <S-Left>
+cnoremap <M-w> <S-Left>
+cnoremap <ESC>e <Nop>
+cnoremap <M-e> <Nop>
+cnoremap <ESC>e <S-Right>
+cnoremap <M-e> <S-Right>
+cnoremap <ESC>d <Nop>
+cnoremap <M-d> <Nop>
+cnoremap <ESC>d <C-w>
+cnoremap <M-d> <C-w>
+cnoremap <ESC>x <C-r>
+cnoremap <M-x> <C-r>
 
