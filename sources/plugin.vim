@@ -39,6 +39,8 @@ NeoBundle 'Shougo/vimproc.vim', {
 \ }
 NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'fuenor/im_control.vim'
+
 call neobundle#end()
 NeoBundleCheck
 
@@ -257,12 +259,30 @@ NeoBundleCheck
 	augroup END
 "" }
 
+"" im_control {
+" 「日本語入力固定モード」の動作モード
+let IM_CtrlMode = 1
+" 「日本語入力固定モード」切替キー
+inoremap <silent> <C-j> <C-r>=IMState('FixMode')<CR>
+
+" IBus 1.5以降
+	function! IMCtrl(cmd)
+		let cmd = a:cmd
+		if cmd == 'On'
+			let res = system('ibus engine "mozc-jp" && xmodmap ~/.xmodmap')
+		elseif cmd == 'Off'
+			let res = system('ibus engine "xkb:jp::jpn" && xmodmap ~/.xmodmap')
+		endif
+		return ''
+	endfunction
+"" }
+
+
 "" rdark {
 	colorscheme rdark
 
 	if has('gui_running')
 		colorscheme evening
 	endif
-
 "" }
 
