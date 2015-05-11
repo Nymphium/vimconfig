@@ -45,7 +45,9 @@ set t_ZH=[3m
 set t_ZR=[23m
 set lazyredraw
 set shell=$SHELL
-set clipboard+=unnamed,autoselect
+if !has('nvim')
+	set clipboard+=unnamed,autoselect
+endif
 set timeoutlen=250
 set display=uhex,lastline
 

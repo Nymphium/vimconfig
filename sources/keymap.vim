@@ -44,6 +44,8 @@ nnoremap <TAB> >>
 nnoremap <S-Tab> <<
 nnoremap <ESC>o <Nop>
 nnoremap <ESC>o o<ESC>
+nnoremap <M-o> <Nop>
+nnoremap <M-o> o<ESC>
 nnoremap wo :new<Space><cfile><CR>
 nnoremap <S-k> k<S-j>
 nnoremap <silent> <F11> <ESC>:Q<CR>
@@ -58,9 +60,10 @@ nnoremap <ESC>x "
 nnoremap <M-x> "
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
-inoremap <ESC>v <C-x>r+
+inoremap <ESC>v <Nop>
+inoremap <ESC>v <C-x><C-r>+
 inoremap <M-v> <Nop>
-inoremap <M-v> <ESC>"*pa
+inoremap <M-v> <C-x><C-r>+
 inoremap <ESC>1 <ESC><C-x>i
 inoremap <M-1> <ESC><C-x>i
 inoremap <ESC>2 <ESC><C-a>i
@@ -78,7 +81,10 @@ inoremap <ESC>D <C-W>
 inoremap <M-D> <C-W>
 inoremap <ESC>d <S-Right><C-W>
 inoremap <M-d> <S-Right><C-W>
+inoremap <ESC>x <Nop>
+inoremap <M-x> <Nop>
 inoremap <ESC>x <C-x><C-r>
+inoremap <M-x> <C-x><C-r>
 
 cnoremap <ESC>w <Nop>
 cnoremap <M-w> <Nop>
