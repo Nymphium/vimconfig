@@ -6,7 +6,8 @@ set fileformats=unix,dos,mac
 set nobackup
 set noswapfile
 
-set grepprg=grep\ -nH\ $*
+set grepprg=ag\ --vimgrep\ --hidden\ -S\ --stats\ $*
+set grepformat=%f:%l:%c:%m
 set nocompatible
 set history=2000
 
