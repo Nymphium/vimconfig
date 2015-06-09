@@ -1,14 +1,16 @@
 set encoding=utf-8
+scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,sjis,cp932,euc-jp
 set fileformats=unix,dos,mac
 
 set nobackup
 set noswapfile
+set ttyfast
 
 set grepprg=ag\ --vimgrep\ --hidden\ -S\ --stats\ $*
 set grepformat=%f:%l:%c:%m
-set nocompatible
+" set nocompatible
 set history=2000
 
 set ignorecase
@@ -29,9 +31,10 @@ set wrap
 set scrolloff=20
 set backspace=indent,eol,start
 set list
-set listchars=tab:>_,trail:.,extends:>,precedes:<,nbsp:%,eol:<
+" set listchars=tab:>_,trail:.,extends:>,precedes:<,nbsp:%,eol:<
+set listchars=tab:>―,trail:.,extends:>,precedes:<,nbsp:%,eol:◁
 set matchpairs& matchpairs+=<:>
-set ambw=double
+" set ambw=double
 set formatoptions+=mM
 set wildmenu
 set number

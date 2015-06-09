@@ -1,9 +1,19 @@
 " set nocompatible
 
 if has('vim_starting')
-	set runtimepath+=~/.vim/bundle/neobundle.vim
+	if has('nvim')
+		set runtimepath+=~/.nvim/bundle/neobundle.vim
+	else
+		set runtimepath+=~/.vim/bundle/neobundle.vim
+	endif
 endif
-call neobundle#begin(expand('~/.vim/bundle/'))
+
+if has('nvim')
+	call neobundle#begin(expand('~/.nvim/bundle/'))
+else
+	call neobundle#begin(expand('~/.vim/bundle/'))
+endif
+
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " colorscheme
@@ -15,7 +25,15 @@ NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
 NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
+NeoBundleLazy 'vim-scripts/javacomplete', {
+\   'build': {
+\       'cygwin': 'javac autoload/Reflection.java',
+\       'mac': 'javac autoload/Reflection.java',
+\       'unix': 'javac autoload/Reflection.java',
+\   },
+\}
 
+NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'osyo-manga/vim-over'
 NeoBundle 'scrooloose/nerdcommenter'
@@ -24,8 +42,12 @@ NeoBundle 'tpope/vim-endwise'
 NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'scrooloose/syntastic'
-if has('lua')
+if has('nvim')
+	NeoBundle "Shougo/deoplete.nvim"
+elseif has('lua')
 	NeoBundle 'Shougo/neocomplete.vim'
+	" NeoBundle 'Shougo/neosnippet'
+	" NeoBundle 'Shougo/neosnippet-snippets'
 endif
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {
@@ -44,12 +66,14 @@ NeoBundleCheck
 
 " ----plugins' settings & keymaps----{
 " vim-surround {
-  	xmap " <Plug>VSurround"
-  	xmap ' <Plug>VSurround'
-  	xmap ( <Plug>VSurround)
-  	xmap { <Plug>VSurround}
-  	xmap < <Plug>VSurround>
-  	xmap [ <Plug>VSurround]
+	if !empty(neobundle#get('vim-surround'))
+		xmap " <Plug>VSurround"
+		xmap ' <Plug>VSurround'
+		xmap ( <Plug>VSurround)
+		xmap { <Plug>VSurround}
+		xmap < <Plug>VSurround>
+		xmap [ <Plug>VSurround]
+	endif
 " }
 
 
@@ -66,6 +90,10 @@ NeoBundleCheck
 	vmap <ESC>C <Nop>
 	vmap <ESC>C <Plug>NERDCommenterToggle
 ""}
+
+"" deoplete {
+	let g:deoplete#enable_at_startup = 1
+"" }
 
 "" neocomplete {
 	" Disable AutoComplPop.
@@ -175,31 +203,59 @@ NeoBundleCheck
 "" }
 " 
 "" syntastic {
-		if &enc == "utf8"
-			let g:syntastic_check_on_open = 1
-		endif
-		let g:syntastic_always_populate_loc_list = 1
-		let g:syntastic_check_on_wq = 0
-		let g:syntastic_loc_list_height = 3
-		let g:syntastic_echo_current_error = 1
-		let g:syntastic_enable_balloons = 1
-		let g:syntastic_enable_highlighting = 1
-		let g:syntastic_enable_signs=1
-		let g:syntastic_auto_loc_list=2
-		let g:syntastic_cpp_compiler = 'clang++'
-		let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall'
-		let g:syntastic_c_compiler = 'clang'
-		let g:syntastic_c_compiler_options = '-std=c99 -Wall'
-		let g:syntastic_ignore_files = ['\.tex$']
-		let g:syntastic_lua_checkers = ["luac", "luacheck"]
-		let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u"]
-		let g:syntastic_moon_checkers = ['mooncheck']
-		let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u"]
-		let g:syntastic_sh_checkers = ['shellcheck']
-		set statusline+=\ %#warningmsg#
-		set statusline+=%{SyntasticStatuslineFlag()}
-		set statusline+=%*
+	if &enc == "utf8"
+		let g:syntastic_check_on_open = 1
+	endif
+	" let g:syntastic_debug = 0
+	let g:syntastic_always_populate_loc_list = 1
+	let g:syntastic_check_on_wq = 0
+	let g:syntastic_loc_list_height = 3
+	let g:syntastic_echo_current_error = 1
+	let g:syntastic_enable_balloons = 1
+	let g:syntastic_enable_highlighting = 1
+	let g:syntastic_enable_signs=1
+	let g:syntastic_auto_loc_list=2
+	let g:syntastic_cpp_compiler = 'clang++'
+	let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall'
+	let g:syntastic_c_compiler = 'clang'
+	let g:syntastic_c_compiler_options = '-std=c99 -Wall'
+	let g:syntastic_ignore_files = ['\.tex$']
+	let g:syntastic_lua_checkers = ["luac", "luacheck"]
+	let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u"]
+	let g:syntastic_moon_checkers = ['mooncheck']
+	let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u"]
+	let g:syntastic_sh_checkers = ['shellcheck']
+	let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
+	set statusline+=\ %#warningmsg#
+	set statusline+=%{SyntasticStatuslineFlag()}
+	set statusline+=%*
 "" }
+
+"" neosnippet {
+	" imap <ESC>s <Plug>(neosnippet_expand_or_jump)
+	" imap <M-s> <Plug>(neosnippet_expand_or_jump)
+	" smap <ESC>s <Plug>(neosnippet_expand_or_jump)
+	" smap <M-s> <Plug>(neosnippet_expand_or_jump)
+"" }
+
+" SrcExpl {
+	" Set refresh time in ms
+	let g:SrcExpl_RefreshTime = 1000
+	" Is update tags when SrcExpl is opened
+	let g:SrcExpl_isUpdateTags = 0
+	" Tag update command
+	let g:SrcExpl_updateTagsCmd = 'ctags --sort=foldcase ' . expand("%:p")
+	" Source Explorer Window Height
+	let g:SrcExpl_winHeight = 24
+
+	nmap <silent> <LocalLeader>t :SrcExplToggle<CR>
+	nmap <silent> <LocalLeader>n :call g:SrcExpl_NextDef()<CR>
+	nmap <silent> <LocalLeader>p :call g:SrcExpl_PrevDef()<CR>
+
+	command! TagUpdateAll call system("ctags --sort=foldcase -R .")
+	command! TagUpdate call system(g:SrcExpl_updateTagsCmd)
+" }
+
 
 "" previm {
 	let s:bundle = neobundle#get('previm')
@@ -221,7 +277,7 @@ NeoBundleCheck
   augroup END
 "" }
 
-"" LaTeX {
+"" vimtex {
 	let g:vimtex_view_method = 'general'
 	let g:vimtex_view_general_viewer ='evince'
 	let g:vimtex_fold_enabled = 0

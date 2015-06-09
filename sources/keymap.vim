@@ -58,6 +58,8 @@ nnoremap <ESC><S-d> dbx
 nnoremap <M-D> dbx
 nnoremap <ESC>x "
 nnoremap <M-x> "
+nnoremap tn <C-]>
+nnoremap tt <C-t>
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 inoremap <ESC>v <Nop>

@@ -1,18 +1,34 @@
 runtime! archlinux.vim
 
-source $HOME/.vim/sources/set.vim
+if has('nvim')
+	source $HOME/.nvim/sources/set.vim
 
-source $HOME/.vim/sources/keymap.vim
+	source $HOME/.nvim/sources/keymap.vim
 
-source $HOME/.vim/sources/plugin.vim
+	source $HOME/.nvim/sources/plugin.vim
 
-source $HOME/.vim/sources/func.vim
+	source $HOME/.nvim/sources/func.vim
 
-filetype plugin indent on
+	filetype plugin indent on
 
-syntax on
+	syntax on
 
-source $HOME/.vim/sources/color.vim
+	source $HOME/.nvim/sources/color.vim
+else
+	source $HOME/.vim/sources/set.vim
+
+	source $HOME/.vim/sources/keymap.vim
+
+	source $HOME/.vim/sources/plugin.vim
+
+	source $HOME/.vim/sources/func.vim
+
+	filetype plugin indent on
+
+	syntax on
+
+	source $HOME/.vim/sources/color.vim
+endif
 
 autocmd Filetype * set formatoptions-=ro
 

@@ -92,6 +92,10 @@
 
 "" set-shellscript filetype {
 	function! DetectFromShebang()
+		if strlen(&ft) > 1
+			return
+		endif
+
 		let s:l = line(".")
 		let s:c = col(".")
 		normal gg
