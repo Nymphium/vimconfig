@@ -16,6 +16,7 @@ endif
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+" plugins {{{
 " colorscheme
 NeoBundle 'vim-scripts/rdark'
 
@@ -61,11 +62,14 @@ NeoBundle 'Shougo/vimproc.vim', {
 \ }
 NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'tpope/vim-fugitive'
+" }}}
+
 call neobundle#end()
 NeoBundleCheck
 
-" ----plugins' settings & keymaps----{
-" vim-surround {
+
+" ----plugins' settings & keymaps----{{{
+" vim-surround {{{
 	if !empty(neobundle#get('vim-surround'))
 		xmap " <Plug>VSurround"
 		xmap ' <Plug>VSurround'
@@ -74,10 +78,9 @@ NeoBundleCheck
 		xmap < <Plug>VSurround>
 		xmap [ <Plug>VSurround]
 	endif
-" }
+" }}}
 
-
-"" NERDCommenter {
+"" NERDCommenter {{{
 	"" the number of space adding when commenting
 	let NERDSpaceDelims = 1
 
@@ -89,120 +92,127 @@ NeoBundleCheck
 	nmap <ESC>C <Plug>NERDCommenterToggle
 	vmap <ESC>C <Nop>
 	vmap <ESC>C <Plug>NERDCommenterToggle
-""}
+""}}}
 
-"" deoplete {
+"" deoplete {{{
 	let g:deoplete#enable_at_startup = 1
-"" }
 
-"" neocomplete {
-	" Disable AutoComplPop.
-	let g:acp_enableAtStartup = 0
+	if !empty(neobundle#get('deoplete.vim'))
+		
+	endif
+"" }}}
+
+"" neocomplete {{{
 	"" Use neocomplete.
 	let g:neocomplete#enable_at_startup = 1
-	"" Use smartcase.
-	let g:neocomplete#enable_smart_case = 1
-	"" Set minimum syntax keyword length.
-	let g:neocomplete#sources#syntax#min_keyword_length = 1
-	let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
-	"" Define dictionary.
-	let g:neocomplete#sources#dictionary#dictionaries = {
-		\ 'default' : '',
-		\ 'vimshell' : $HOME.'/.vimshell_hist',
-		\ 'scheme' : $HOME.'/.gosh_completions'
-	\ }
+	if !empty(neobundle#get('neocomplete.vim'))
+		" Disable AutoComplPop.
+		let g:acp_enableAtStartup = 0
+		"" Use smartcase.
+		let g:neocomplete#enable_smart_case = 1
+		"" Set minimum syntax keyword length.
+		let g:neocomplete#sources#syntax#min_keyword_length = 1
+		let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
-	" Define keyword.
-	if !exists('g:neocomplete#keyword_patterns')
-		let g:neocomplete#keyword_patterns = {}
+		"" Define dictionary.
+		let g:neocomplete#sources#dictionary#dictionaries = {
+					\ 'default' : '',
+					\ 'vimshell' : $HOME.'/.vimshell_hist',
+					\ 'scheme' : $HOME.'/.gosh_completions'
+					\ }
+
+		" Define keyword.
+		if !exists('g:neocomplete#keyword_patterns')
+			let g:neocomplete#keyword_patterns = {}
+		endif
+		let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+		"" Enable heavy omni completion.
+		if !exists('g:neocomplete#sources#omni#input_patterns')
+			let g:neocomplete#sources#omni#input_patterns = {}
+		endif
+		let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+		let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+		let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+		inoremap <M-c> <Nop>
+		inoremap <expr><M-c> neocomplete#undo_completion()
+		inoremap <ESC>c <Nop>
+		inoremap <expr><ESC>c neocomplete#undo_completion()
+
+		"" <CR>: close popup and save indent.
+		inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+
+		function! s:my_cr_function()
+			return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+		endfunction
+
+		"" <TAB>: completion.
+		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
+		"" <BS>: close popup and delete backword char.
+		inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+
+		"" Enable omni completion.
+		augroup OmniCompletion
+			autocmd!
+			autocmd FileType *.css setlocal omnifunc=csscomplete#CompleteCSS
+			autocmd FileType *.html,*.markdown setlocal omnifunc=htmlcomplete#CompleteTags
+			autocmd FileType *.javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+			autocmd FileType *.python setlocal omnifunc=pythoncomplete#Complete
+			autocmd FileType *.xml setlocal omnifunc=xmlcomplete#CompleteTags
+			autocmd FileType *.ruby setlocal omnifunc=rubycomplete#Complete
+		augroup END
 	endif
-	let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+"" }}}
 
-	inoremap <M-c> <Nop>
-	inoremap <expr><M-c> neocomplete#undo_completion()
-	inoremap <ESC>c <Nop>
-	inoremap <expr><ESC>c neocomplete#undo_completion()
-
-	"" <CR>: close popup and save indent.
-	inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-
-	function! s:my_cr_function()
-	  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-	endfunction
-
-	"" <TAB>: completion.
-	inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-	inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-	"" <BS>: close popup and delete backword char.
-	inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-
-	"" Enable omni completion.
-	augroup OmniCompletion
-		autocmd!
-		autocmd FileType *.css setlocal omnifunc=csscomplete#CompleteCSS
-		autocmd FileType *.html,*.markdown setlocal omnifunc=htmlcomplete#CompleteTags
-		autocmd FileType *.javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-		autocmd FileType *.python setlocal omnifunc=pythoncomplete#Complete
-		autocmd FileType *.xml setlocal omnifunc=xmlcomplete#CompleteTags
-		autocmd FileType *.ruby setlocal omnifunc=rubycomplete#Complete
-	augroup END
-
-	"" Enable heavy omni completion.
-	if !exists('g:neocomplete#sources#omni#input_patterns')
-	  let g:neocomplete#sources#omni#input_patterns = {}
-	endif
-	let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-	let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-	let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-"" }
-
-"" vim-over {
+"" vim-over {{{
 	let g:over_command_line_prompt = "Over > "
 	hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
 	hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
 
 	nnoremap <silent> %% :OverCommandLine<CR>%s/
 	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
-"" }
+"" }}}
 
-"" vim-quickrun {
+"" vim-quickrun {{{
 	let g:quickrun_config = {}
 
 	let g:quickrun_config['*'] = {
-		\ 'outputter/buffer/close_on_empty' : 1 ,
-	\ }
+				\ 'outputter/buffer/close_on_empty' : 1 ,
+				\ }
 
 	" let g:quickrun_config.tex = {
-		" \ 'command' : 'latexmk',
-		" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
-		" \ 'outputter/error/error' : 'quickfix',
+	" \ 'command' : 'latexmk',
+	" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
+	" \ 'outputter/error/error' : 'quickfix',
 	" \ }
 
 	let g:quickrun_config.cpp = {
-		\ 'command' : 'clang++',
-		\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
-	\ }
+				\ 'command' : 'clang++',
+				\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
+				\ }
 	let g:quickrun_config.c = {
-		\ 'command' : 'clang',
-		\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
-	\ }
+				\ 'command' : 'clang',
+				\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
+				\ }
 
 	let g:quickrun_config.moon = {
-		\ 'command' : 'moon'
-	\ }
-"" }
+				\ 'command' : 'moon'
+				\ }
+"" }}}
 
-"" matchit {
+"" matchit {{{
 	augroup Matchit
 		autocmd!
 		autocmd FileType lua let b:match_words = '\<\(if\|function\|for\|while\)\>:\<\(\|then\|do\)\>:\<\(elseif\)\>:\<\(else\)\>:\<\(end\)\>'
 		autocmd FileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
 		autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 	augroup END
-"" }
+"" }}}
 " 
-"" syntastic {
+"" syntastic {{{
 	if &enc == "utf8"
 		let g:syntastic_check_on_open = 1
 	endif
@@ -229,16 +239,16 @@ NeoBundleCheck
 	set statusline+=\ %#warningmsg#
 	set statusline+=%{SyntasticStatuslineFlag()}
 	set statusline+=%*
-"" }
+"" }}}
 
-"" neosnippet {
+"" neosnippet {{{
 	" imap <ESC>s <Plug>(neosnippet_expand_or_jump)
 	" imap <M-s> <Plug>(neosnippet_expand_or_jump)
 	" smap <ESC>s <Plug>(neosnippet_expand_or_jump)
 	" smap <M-s> <Plug>(neosnippet_expand_or_jump)
-"" }
+"" }}}
 
-" SrcExpl {
+" SrcExpl {{{
 	" Set refresh time in ms
 	let g:SrcExpl_RefreshTime = 1000
 	" Is update tags when SrcExpl is opened
@@ -254,10 +264,9 @@ NeoBundleCheck
 
 	command! TagUpdateAll call system("ctags --sort=foldcase -R .")
 	command! TagUpdate call system(g:SrcExpl_updateTagsCmd)
-" }
+" }}}
 
-
-"" previm {
+"" previm {{{
 	let s:bundle = neobundle#get('previm')
 	function! s:bundle.hooks.onsource(bundle)
 		let g:previm_open_cmd = "open"
@@ -268,16 +277,16 @@ NeoBundleCheck
 		autocmd!
 		autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
 	augroup END
-"" }
+"" }}}
 
-"" vim-gas {
+"" vim-gas {{{
   augroup VimGas
   	autocmd!
   	autocmd BufNewFile,BufRead *.{asm,s} set filetype=gas
   augroup END
-"" }
+"" }}}
 
-"" vimtex {
+"" vimtex {{{
 	let g:vimtex_view_method = 'general'
 	let g:vimtex_view_general_viewer ='evince'
 	let g:vimtex_fold_enabled = 0
@@ -311,14 +320,15 @@ NeoBundleCheck
 		autocmd BufNewFile,Bufread *.tex vmap <silent> <LocalLeader>lf :call <SID>findInPdf(@*)<CR>
 		autocmd BufNewFile,Bufread *.tex nmap <silent> <LocalLeader>lf :call <SID>findInPdf()<CR>
 	augroup END
-"" }
+"" }}}
 
-"" rdark {
+"" rdark {{{
 	colorscheme rdark
 
 	if has('gui_running')
 		colorscheme evening
 	endif
 
-"" }
+"" }}}
+" }}}
 

@@ -58,7 +58,8 @@
 "" }
 
 
-"" insertmode highlight {
+"" insertmode highlight {{{
+
 	if has('syntax')
 		let g:hi_insert = 'StatusLine cterm=bold ctermfg=0 ctermbg=255 guifg=#000000 guibg=#ffffff'
 		let g:hi_normal = ""
@@ -76,10 +77,10 @@
 			autocmd InsertLeave * exec 'hi '. g:hi_insert
 		augroup END
 	endif
-"" }
+"" }}}
 
 
-"" gui-transparency {
+"" gui-transparency {{{
 	if has('gui_running')
 		function! s:Transset(opacity)
 		  call system('transset-df --id ' . v:windowid . ' ' . a:opacity)
@@ -87,10 +88,10 @@
 
 		command! -nargs=1 Transset call <SID>Transset(<q-args>)
 	endif
-""  }
+""  }}}
 
 
-"" set-shellscript filetype {
+"" set-shellscript filetype {{{
 	function! DetectFromShebang()
 		if strlen(&ft) > 1
 			return
@@ -122,5 +123,5 @@
 			autocmd BufWritePost * syn match Shebang /^#!\/.\{-\}bin\/.*$/
 		augroup END
 	endif
-"" }
+"" }}}
 
