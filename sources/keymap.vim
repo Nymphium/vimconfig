@@ -13,6 +13,8 @@ nnoremap <ESC>s <ESC>:w!<CR>
 nnoremap <M-s> <ESC>:w!<CR>
 " nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
 " nnoremap <M-w><M-w> <ESC>:q!<CR>
+nnoremap <C-w> <Nop>
+nnoremap <C-w><C-w> :q!<CR>
 nnoremap <ESC>w b
 nnoremap <M-w> b
 nnoremap <ESC>e w
