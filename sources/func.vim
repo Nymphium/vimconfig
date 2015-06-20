@@ -42,19 +42,11 @@
 
 
 "" highlight Zenkaku-space {
-	function! ZenkakuSpace()
-		hi ZenkakuSpace cterm=underline ctermbg=196 gui=underline guifg=darkgrey
-	endfunction
-
-	if has('syntax')
-		augroup ZenkakuSpace
-			autocmd!
-			autocmd ColorScheme       * call ZenkakuSpace()
-			autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
-		augroup END
-
-		call ZenkakuSpace()
-	endif
+	augroup ZenkakuSpaceHighlight
+		autocmd!
+		autocmd ColorScheme * hi ZenkakuSpace cterm=underline ctermbg=196 gui=underline guifg=darkgrey
+		autocmd VimEnter * match ZenkakuSpace /　/
+	augroup END
 "" }
 
 

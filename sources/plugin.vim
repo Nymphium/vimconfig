@@ -1,75 +1,67 @@
-" set nocompatible
+"" set nocompatible
 
 if has('vim_starting')
-	if has('nvim')
-		set runtimepath+=~/.nvim/bundle/neobundle.vim
-	else
-		set runtimepath+=~/.vim/bundle/neobundle.vim
-	endif
+	set runtimepath+=~/.vim/bundle/neobundle.vim
 endif
 
-if has('nvim')
-	call neobundle#begin(expand('~/.nvim/bundle/'))
-else
-	call neobundle#begin(expand('~/.vim/bundle/'))
-endif
+call neobundle#begin(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-" plugins {{{
-" colorscheme
-NeoBundle 'vim-scripts/rdark'
+"" plugins {{{
+	"" colorscheme
+	NeoBundle 'vim-scripts/rdark'
 
-"" support by language
-NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
-NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
-NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
-NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
-NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
-NeoBundleLazy 'vim-scripts/javacomplete', {
-\   'build': {
-\       'cygwin': 'javac autoload/Reflection.java',
-\       'mac': 'javac autoload/Reflection.java',
-\       'unix': 'javac autoload/Reflection.java',
-\   },
-\}
+	"" support by language
+	NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
+	NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
+	NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
+	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
+	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
+	NeoBundleLazy 'vim-scripts/javacomplete', {
+	\   'build': {
+	\       'cygwin': 'javac autoload/Reflection.java',
+	\       'mac': 'javac autoload/Reflection.java',
+	\       'unix': 'javac autoload/Reflection.java',
+	\   },
+	\}
 
-NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'osyo-manga/vim-over'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'Townk/vim-autoclose'
-NeoBundle 'tmhedberg/matchit'
-NeoBundle 'scrooloose/syntastic'
-if has('nvim')
-	NeoBundle "Shougo/deoplete.nvim"
-elseif has('lua')
-	NeoBundle 'Shougo/neocomplete.vim'
-	" NeoBundle 'Shougo/neosnippet'
-	" NeoBundle 'Shougo/neosnippet-snippets'
-endif
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimproc.vim', {
-\ 'build' : {
-\     'windows' : 'tools\\update-dll-mingw',
-\     'cygwin' : 'make -f make_cygwin.mak',
-\     'mac' : 'make -f make_mac.mak',
-\     'linux' : 'make',
-\     'unix' : 'gmake',
-\    },
-\ }
-NeoBundle 'tsukkee/unite-tag'
-NeoBundle 'tpope/vim-fugitive'
-" }}}
+	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
+	NeoBundle 'thinca/vim-quickrun'
+	NeoBundle 'osyo-manga/vim-over'
+	NeoBundle 'scrooloose/nerdcommenter'
+	NeoBundle 'tpope/vim-surround'
+	NeoBundle 'tpope/vim-endwise'
+	NeoBundle 'Townk/vim-autoclose'
+	NeoBundle 'tmhedberg/matchit'
+	NeoBundle 'scrooloose/syntastic'
+	if has('nvim')
+		NeoBundle "Shougo/deoplete.nvim"
+	elseif has('lua')
+		NeoBundle 'Shougo/neocomplete.vim'
+		"" NeoBundle 'Shougo/neosnippet'
+		"" NeoBundle 'Shougo/neosnippet-snippets'
+	endif
+	NeoBundle 'Shougo/unite.vim'
+	NeoBundle 'Shougo/vimproc.vim', {
+	\ 'build' : {
+	\     'windows' : 'tools\\update-dll-mingw',
+	\     'cygwin' : 'make -f make_cygwin.mak',
+	\     'mac' : 'make -f make_mac.mak',
+	\     'linux' : 'make',
+	\     'unix' : 'gmake',
+	\    },
+	\ }
+	NeoBundle 'tsukkee/unite-tag'
+	NeoBundle 'tpope/vim-fugitive'
+"" }}}
 
 call neobundle#end()
 NeoBundleCheck
 
 
-" ----plugins' settings & keymaps----{{{
-" vim-surround {{{
+"" ----plugins' settings & keymaps----{{{
+"" vim-surround {{{
 	if !empty(neobundle#get('vim-surround'))
 		xmap " <Plug>VSurround"
 		xmap ' <Plug>VSurround'
@@ -78,7 +70,7 @@ NeoBundleCheck
 		xmap < <Plug>VSurround>
 		xmap [ <Plug>VSurround]
 	endif
-" }}}
+"" }}}
 
 "" NERDCommenter {{{
 	"" the number of space adding when commenting
@@ -98,7 +90,16 @@ NeoBundleCheck
 	let g:deoplete#enable_at_startup = 1
 
 	if !empty(neobundle#get('deoplete.vim'))
-		
+		augroup DeopleteInit
+			autocmd VimEnter * call deoplete#initialize()
+		augroup END
+
+		let g:deoplete#auto_completion_start_length=1
+		let g:deoplete#enable_smart_case=1
+		"" let g:deoplete#omi_patterns = '\h\w*'
+		let g:deoplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+
+		inoremap <expr><Tab>  deoplete#mappings#manual_complete()
 	endif
 "" }}}
 
@@ -107,7 +108,7 @@ NeoBundleCheck
 	let g:neocomplete#enable_at_startup = 1
 
 	if !empty(neobundle#get('neocomplete.vim'))
-		" Disable AutoComplPop.
+		"" Disable AutoComplPop.
 		let g:acp_enableAtStartup = 0
 		"" Use smartcase.
 		let g:neocomplete#enable_smart_case = 1
@@ -122,7 +123,7 @@ NeoBundleCheck
 					\ 'scheme' : $HOME.'/.gosh_completions'
 					\ }
 
-		" Define keyword.
+		"" Define keyword.
 		if !exists('g:neocomplete#keyword_patterns')
 			let g:neocomplete#keyword_patterns = {}
 		endif
@@ -183,11 +184,11 @@ NeoBundleCheck
 				\ 'outputter/buffer/close_on_empty' : 1 ,
 				\ }
 
-	" let g:quickrun_config.tex = {
-	" \ 'command' : 'latexmk',
-	" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
-	" \ 'outputter/error/error' : 'quickfix',
-	" \ }
+	"" let g:quickrun_config.tex = {
+	"" \ 'command' : 'latexmk',
+	"" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
+	"" \ 'outputter/error/error' : 'quickfix',
+	"" \ }
 
 	let g:quickrun_config.cpp = {
 				\ 'command' : 'clang++',
@@ -211,12 +212,12 @@ NeoBundleCheck
 		autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 	augroup END
 "" }}}
-" 
+"" 
 "" syntastic {{{
 	if &enc == "utf8"
 		let g:syntastic_check_on_open = 1
 	endif
-	" let g:syntastic_debug = 0
+	"" let g:syntastic_debug = 0
 	let g:syntastic_always_populate_loc_list = 1
 	let g:syntastic_check_on_wq = 0
 	let g:syntastic_loc_list_height = 3
@@ -242,20 +243,20 @@ NeoBundleCheck
 "" }}}
 
 "" neosnippet {{{
-	" imap <ESC>s <Plug>(neosnippet_expand_or_jump)
-	" imap <M-s> <Plug>(neosnippet_expand_or_jump)
-	" smap <ESC>s <Plug>(neosnippet_expand_or_jump)
-	" smap <M-s> <Plug>(neosnippet_expand_or_jump)
+	"" imap <ESC>s <Plug>(neosnippet_expand_or_jump)
+	"" imap <M-s> <Plug>(neosnippet_expand_or_jump)
+	"" smap <ESC>s <Plug>(neosnippet_expand_or_jump)
+	"" smap <M-s> <Plug>(neosnippet_expand_or_jump)
 "" }}}
 
-" SrcExpl {{{
-	" Set refresh time in ms
+"" SrcExpl {{{
+	"" Set refresh time in ms
 	let g:SrcExpl_RefreshTime = 1000
-	" Is update tags when SrcExpl is opened
+	"" Is update tags when SrcExpl is opened
 	let g:SrcExpl_isUpdateTags = 0
-	" Tag update command
+	"" Tag update command
 	let g:SrcExpl_updateTagsCmd = 'ctags --sort=foldcase ' . expand("%:p")
-	" Source Explorer Window Height
+	"" Source Explorer Window Height
 	let g:SrcExpl_winHeight = 24
 
 	nmap <silent> <LocalLeader>t :SrcExplToggle<CR>
@@ -264,7 +265,7 @@ NeoBundleCheck
 
 	command! TagUpdateAll call system("ctags --sort=foldcase -R .")
 	command! TagUpdate call system(g:SrcExpl_updateTagsCmd)
-" }}}
+"" }}}
 
 "" previm {{{
 	let s:bundle = neobundle#get('previm')
@@ -330,5 +331,5 @@ NeoBundleCheck
 	endif
 
 "" }}}
-" }}}
+"" }}}
 

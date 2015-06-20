@@ -7,6 +7,7 @@ set fileformats=unix,dos,mac
 set nobackup
 set noswapfile
 set ttyfast
+set autoread
 
 set grepprg=ag\ --vimgrep\ --hidden\ -S\ --stats\ $*
 set grepformat=%f:%l:%c:%m
@@ -35,7 +36,8 @@ set list
 set listchars=tab:>―,trail:.,extends:>,precedes:<,nbsp:%,eol:◁
 set matchpairs& matchpairs+=<:>
 " set ambw=double
-set formatoptions+=mM
+" set formatoptions+=mM
+set formatoptions=lmoq
 set wildmenu
 set number
 set relativenumber
@@ -54,6 +56,7 @@ if !has('nvim')
 endif
 set timeoutlen=250
 set display=uhex,lastline
+set whichwrap=b,s,h,l,<,>,[,]
 
 set omnifunc=syntaxcomplete#Complete
 

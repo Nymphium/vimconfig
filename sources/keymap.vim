@@ -11,8 +11,12 @@ vnoremap <S-y> "+y
 nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
 nnoremap <ESC>s <ESC>:w!<CR>
 nnoremap <M-s> <ESC>:w!<CR>
-nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
-nnoremap <M-w><M-w> <ESC>:q!<CR>
+" nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
+" nnoremap <M-w><M-w> <ESC>:q!<CR>
+nnoremap <ESC>w b
+nnoremap <M-w> b
+nnoremap <ESC>e w
+nnoremap <M-e> w
 nnoremap <BS> X
 nnoremap <ESC>1 <C-x>
 nnoremap <M-1> <C-x>
@@ -20,10 +24,10 @@ nnoremap <ESC>2 <C-a>
 nnoremap <M-2> <C-a>
 nnoremap j gj
 nnoremap k gk
-nnoremap E <Nop>
-nnoremap E w
-nnoremap W <Nop>
-nnoremap W b
+" nnoremap E <Nop>
+" nnoremap E w
+" nnoremap W <Nop>
+" nnoremap W b
 nnoremap r <C-r>
 nnoremap <ESC>j <C-d>
 nnoremap <M-j> <C-d>
