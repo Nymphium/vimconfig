@@ -255,16 +255,13 @@ NeoBundleCheck
 	"" Is update tags when SrcExpl is opened
 	let g:SrcExpl_isUpdateTags = 0
 	"" Tag update command
-	let g:SrcExpl_updateTagsCmd = 'ctags --sort=foldcase ' . expand("%:p")
+	" let g:SrcExpl_updateTagsCmd = 'ctags --sort=foldcase ' . expand("%:p")
 	"" Source Explorer Window Height
 	let g:SrcExpl_winHeight = 24
 
 	nmap <silent> <LocalLeader>t :SrcExplToggle<CR>
 	nmap <silent> <LocalLeader>n :call g:SrcExpl_NextDef()<CR>
 	nmap <silent> <LocalLeader>p :call g:SrcExpl_PrevDef()<CR>
-
-	command! TagUpdateAll call system("ctags --sort=foldcase -R .")
-	command! TagUpdate call system(g:SrcExpl_updateTagsCmd)
 "" }}}
 
 "" previm {{{

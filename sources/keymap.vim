@@ -31,10 +31,10 @@ nnoremap k gk
 " nnoremap W <Nop>
 " nnoremap W b
 nnoremap r <C-r>
-nnoremap <ESC>j <C-d>
-nnoremap <M-j> <C-d>
-nnoremap <ESC>k <C-u>
-nnoremap <M-k> <C-u>
+" nnoremap <ESC>j <C-d>
+" nnoremap <M-j> <C-d>
+" nnoremap <ESC>k <C-u>
+" nnoremap <M-k> <C-u>
 nnoremap <silent> <F3> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
 nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
@@ -64,7 +64,16 @@ nnoremap <ESC><S-d> dbx
 nnoremap <M-D> dbx
 nnoremap <ESC>x "
 nnoremap <M-x> "
-nnoremap tn <C-]>
+
+" tag jump
+function TagUpdateOrTagJump()
+	if strlen(findfile("tags")) < 1
+		TagUpdate
+	endif
+
+	exe('tjump ' .expand("<cword>"))
+endfunction
+nnoremap tn :call TagUpdateOrTagJump()<CR>
 nnoremap tt <C-t>
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>

@@ -1,16 +1,16 @@
 "" make block comment {
-	function! CommentInLine()
-		if &filetype =~ "lua"
-			normal `<i--[[ 
-			normal `>5la ]]
-		else
-			normal `<i/* 
-			normal `>3la */
-		endif
-	endfunction
+	" function! CommentInLine()
+		" if &filetype =~ "lua"
+			" normal `<i--[[ 
+			" normal `>5la ]]
+		" else
+			" normal `<i/* 
+			" normal `>3la */
+		" endif
+	" endfunction
 
-	vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
-	vnoremap <M-z> <ESC>:call CommentInLine()<CR>
+	" vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
+	" vnoremap <M-z> <ESC>:call CommentInLine()<CR>
 "" }
 
 
@@ -45,7 +45,7 @@
 	augroup ZenkakuSpaceHighlight
 		autocmd!
 		autocmd ColorScheme * hi ZenkakuSpace cterm=underline ctermbg=196 gui=underline guifg=darkgrey
-		autocmd VimEnter * match ZenkakuSpace /　/
+		autocmd BufReadPost,FileReadPost * match ZenkakuSpace /　/
 	augroup END
 "" }
 
@@ -117,3 +117,9 @@
 	endif
 "" }}}
 
+
+""  tag command{{{
+	command! TagUpdateAll call system("ctags --languages=" . &filetype .  " --sort=foldcase -R .")
+	command! TagUpdate call system("ctags --languages=" . &filetype .  " " . expand("%.p"))
+	command! RemoveTag call system("rm tags")
+"" }}}

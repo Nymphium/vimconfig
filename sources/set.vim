@@ -72,6 +72,11 @@ set viminfo='100,<1000,s50,h,n~/.viminfo
 
 " set conceallevel=2
 
+if &filetype == "lua"
+	set iskeyword+=:
+endif
+
+
 if has('gui_running')
 	set guioptions=
 	set antialias
@@ -81,4 +86,5 @@ if has('gui_running')
 	set antialias=on
 	set mouse=c
 endif
+
 
