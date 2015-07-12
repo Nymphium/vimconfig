@@ -42,8 +42,8 @@ syn match moonOperator "!=" contains=NONE display
 
 syn match moonFunction /->\|=>/ display
 
-syn match moonLuaFunc /\<\w\+\>\(\s*=\?\s*(\)\@=/ display contains=ALLBUT,Normal
-syn match moonLuaFunc /\<\w\+\>\(\(:\|\(\s*=\)\)\(\s*(.*)\)\?\s*\(=\|-\)>\)\@=/ display
+syn match moonLuaFunc /\<\w\+\>\(\s*(.\{-})\)\@=/ display contains=ALLBUT,Normal
+syn match moonLuaFunc /\<\w\+\>\(\s*=\s*\((\w\+\(,\s*\w\+\)*)\)\s*[\-=]>\)\@=/ display
 syn match moonLuaFunc /@\?\w\+\(!\)\@=/ display
 syn match moonLuaFunc /\(\\\)\@<=\<\w\+\>/ display
 

@@ -90,14 +90,11 @@ NeoBundleCheck
 	let g:deoplete#enable_at_startup = 1
 
 	if !empty(neobundle#get('deoplete.vim'))
-		augroup DeopleteInit
-			autocmd VimEnter * call deoplete#initialize()
-		augroup END
-
+		let g:deoplete#enable_smart_case = 1
 		let g:deoplete#auto_completion_start_length=1
-		let g:deoplete#enable_smart_case=1
-		"" let g:deoplete#omi_patterns = '\h\w*'
-		let g:deoplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+		let g:deoplete#sources._ = ['buffer', 'tag']
+
+		inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 
 		inoremap <expr><Tab>  deoplete#mappings#manual_complete()
 	endif
