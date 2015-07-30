@@ -14,10 +14,10 @@ hi link luaTableName Structure
 hi luaMetatable cterm=bold gui=bold
 
 "" '=', '%', '<', '>', '/', '+', '*', ',', '-', ".."
-syn match luaChar /[=%<>/+\*]/ contained display
-syn match luaCamma "," contained display
-syn match luaChar /\([\w\s]\)\@<=\.\.\([\w\s]\)\@=/ contained display
-syn match luaChar /-\(-\)\@!/ contained display
+syn match luaChar /[=%<>/+\*\^]/ display
+syn match luaCamma "," display
+syn match luaChar /\(\.\)\@<!\.\{2\}\(\.\)\@!/ display
+syn match luaChar /-\(-\)\@!/ display
 
 " #table 
 syn match luaLength /#\(\w\+[\.:]\?\)\+/ display
@@ -40,7 +40,7 @@ syn region luaLoopBlock transparent matchgroup=luaRepeat start="\<for\>" end="\<
 syn region luaIfThen transparent matchgroup=luaCond start="\<if\>" end="\<then\>"me=e-4           contains=ALLBUT,luaTodo,luaSpecial,luaElseifThen,luaElse,luaIn nextgroup=luaThenEnd skipwhite skipempty
 syn region luaElseifThen contained transparent matchgroup=luaCond start="\<elseif\>" end="\<then\>" contains=ALLBUT,luaTodo,luaSpecial,luaElseifThen,luaElse,luaThenEnd,luaIn
 
-syn match luaFunc /\<\w\+\>\(\s*=\s*function\)\@=/ display
+syn match luaFunc /\<\w\+\>\(\s*=\s*function\>\)\@=/ display
 syn match luaBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
 syn match luaMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|idiv\|mod\|pow\|concat\|eq\|lt\|gt\|ipairs\|band\|bor\|bxor\|bnot\|shl\|shr\)\>/ display
 

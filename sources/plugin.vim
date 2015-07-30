@@ -54,6 +54,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\ }
 	NeoBundle 'tsukkee/unite-tag'
 	NeoBundle 'tpope/vim-fugitive'
+	NeoBundle 'nymphium/syntastic-moonscript', {'build' : {'linux' : 'make'}}
 "" }}}
 
 call neobundle#end()
@@ -97,6 +98,7 @@ NeoBundleCheck
 		inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 
 		inoremap <expr><Tab>  deoplete#mappings#manual_complete()
+		inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 	endif
 "" }}}
 
@@ -188,12 +190,10 @@ NeoBundleCheck
 	"" \ }
 
 	let g:quickrun_config.cpp = {
-				\ 'command' : 'clang++',
-				\ 'cmdopt': '-Wall -lm -march=native --std=c++11 -O3'
+				\ 'command' : 'g++',
 				\ }
 	let g:quickrun_config.c = {
-				\ 'command' : 'clang',
-				\ 'cmdopt' : "-Wall -lm -march=native --std=c11 -O3"
+				\ 'command' : 'gcc',
 				\ }
 
 	let g:quickrun_config.moon = {
@@ -223,10 +223,10 @@ NeoBundleCheck
 	let g:syntastic_enable_highlighting = 1
 	let g:syntastic_enable_signs=1
 	let g:syntastic_auto_loc_list=2
-	let g:syntastic_cpp_compiler = 'clang++'
-	let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall'
-	let g:syntastic_c_compiler = 'clang'
-	let g:syntastic_c_compiler_options = '-std=c99 -Wall'
+	let g:syntastic_cpp_compiler = 'g++'
+	let g:syntastic_cpp_compiler_options = '-Wall -Wextra'
+	let g:syntastic_c_compiler = 'gcc'
+	let g:syntastic_c_compiler_options = '-Wall -Wextra'
 	let g:syntastic_ignore_files = ['\.tex$']
 	let g:syntastic_lua_checkers = ["luac", "luacheck"]
 	let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u"]
