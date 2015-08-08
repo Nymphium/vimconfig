@@ -1,8 +1,11 @@
 vnoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 vnoremap v $h
-vnoremap W b
-vnoremap E <Nop>
-vnoremap E e
+vnoremap <ESC>w b
+vnoremap <M-w> b
+vnoremap <ESC>e <Nop>
+vnoremap <ESC>e e
+vnoremap <M-e> <Nop>
+vnoremap <M-e> e
 vnoremap <TAB> >
 vnoremap <S-Tab> <
 vnoremap <silent> n "*y/<C-r>*<CR>
@@ -10,7 +13,9 @@ vnoremap <S-y> "+y
 
 nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
 nnoremap <ESC>s <ESC>:w!<CR>
+nnoremap <ESC>s<ESC>s <ESC>:wq!<CR>
 nnoremap <M-s> <ESC>:w!<CR>
+nnoremap <M-s><M-s> <ESC>:wq!<CR>
 " nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
 " nnoremap <M-w><M-w> <ESC>:q!<CR>
 nnoremap <C-w> <Nop>
