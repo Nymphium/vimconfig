@@ -81,7 +81,7 @@ if has('gui_running')
 	set guioptions=
 	set antialias
 	set nobackup
-	set guifont=Monaco\ 6
+	set guifont=Droid\Sans\ Mono\ 6
 	set cmdheight=2
 	set antialias=on
 	set mouse=c

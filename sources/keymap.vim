@@ -62,7 +62,6 @@ nnoremap <S-k> k<S-j>
 nnoremap <silent> <F11> <ESC>:Q<CR>
 nnoremap V <C-v>
 nnoremap Q <Nop>
-nnoremap ; a;<ESC><ESC>
 nnoremap <ESC>d de
 nnoremap <M-d> de
 nnoremap <ESC><S-d> dbx

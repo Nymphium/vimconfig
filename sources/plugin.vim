@@ -229,9 +229,9 @@ NeoBundleCheck
 	let g:syntastic_c_compiler_options = '-Wall -Wextra'
 	let g:syntastic_ignore_files = ['\.tex$']
 	let g:syntastic_lua_checkers = ["luac", "luacheck"]
-	let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u"]
+	let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u", "-r"]
 	let g:syntastic_moon_checkers = ['mooncheck']
-	let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u"]
+	let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u", "-r"]
 	let g:syntastic_sh_checkers = ['shellcheck']
 	let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
 	set statusline+=\ %#warningmsg#
