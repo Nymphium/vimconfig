@@ -58,6 +58,7 @@ nnoremap <ESC>o o<ESC>
 nnoremap <M-o> <Nop>
 nnoremap <M-o> o<ESC>
 nnoremap wo :new<Space><cfile><CR>
+nnoremap wO :new<Space><cfile><CR><C-w>b:q!<CR>
 nnoremap <S-k> k<S-j>
 nnoremap <silent> <F11> <ESC>:Q<CR>
 nnoremap V <C-v>

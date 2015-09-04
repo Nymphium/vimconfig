@@ -90,15 +90,23 @@ NeoBundleCheck
 "" deoplete {{{
 	let g:deoplete#enable_at_startup = 1
 
-	if !empty(neobundle#get('deoplete.vim'))
+	if !empty(neobundle#get('deoplete.nvim'))
 		let g:deoplete#enable_smart_case = 1
 		let g:deoplete#auto_completion_start_length=1
 		let g:deoplete#sources._ = ['buffer', 'tag']
+		let g:deoplete#keyword_patterns = {}
+		let g:deoplete#keyword_patterns._ = '\h\w*'
+		let g:deoplete#keyword_patterns.tex = '\\?[a-zA-Z_]\w*'
 
+		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : deoplete#mappings#manual_complete()
 		inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 
-		inoremap <expr><Tab>  deoplete#mappings#manual_complete()
-		inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
+		function! s:my_cr_function()
+			return pumvisible() ? deoplete#mappings#close_popup() : "\<CR>"
+		endfunction
+
+		inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 	endif
 "" }}}
 
@@ -132,9 +140,7 @@ NeoBundleCheck
 		if !exists('g:neocomplete#sources#omni#input_patterns')
 			let g:neocomplete#sources#omni#input_patterns = {}
 		endif
-		let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 		let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-		let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
 		inoremap <M-c> <Nop>
 		inoremap <expr><M-c> neocomplete#undo_completion()
@@ -142,11 +148,11 @@ NeoBundleCheck
 		inoremap <expr><ESC>c neocomplete#undo_completion()
 
 		"" <CR>: close popup and save indent.
-		inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-
 		function! s:my_cr_function()
 			return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 		endfunction
+
+		inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 
 		"" <TAB>: completion.
 		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
