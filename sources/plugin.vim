@@ -93,14 +93,18 @@ NeoBundleCheck
 	if !empty(neobundle#get('deoplete.nvim'))
 		let g:deoplete#enable_smart_case = 1
 		let g:deoplete#auto_completion_start_length=1
+		let g:deoplete#sources = {}
 		let g:deoplete#sources._ = ['buffer', 'tag']
-		let g:deoplete#keyword_patterns = {}
-		let g:deoplete#keyword_patterns._ = '\h\w*'
-		let g:deoplete#keyword_patterns.tex = '\\?[a-zA-Z_]\w*'
+		if !exists('g:deoplete#keyword_patterns')
+			let g:deoplete#keyword_patterns = {}
+		endif
+		let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\w*'
+		let g:deoplete#keyword_patterns.tex = ['\\?[a-zA-Z_]\w*', g:deoplete#keyword_patterns._]
 
-		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
-		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : deoplete#mappings#manual_complete()
+		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<Tab>"
+		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-Tab>"
 		inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
+		inoremap <expr><C-c> deoplete#mappings#cancel_popup()
 
 		function! s:my_cr_function()
 			return pumvisible() ? deoplete#mappings#close_popup() : "\<CR>"
@@ -161,15 +165,15 @@ NeoBundleCheck
 		inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 		"" Enable omni completion.
-		augroup OmniCompletion
-			autocmd!
-			autocmd FileType *.css setlocal omnifunc=csscomplete#CompleteCSS
-			autocmd FileType *.html,*.markdown setlocal omnifunc=htmlcomplete#CompleteTags
-			autocmd FileType *.javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-			autocmd FileType *.python setlocal omnifunc=pythoncomplete#Complete
-			autocmd FileType *.xml setlocal omnifunc=xmlcomplete#CompleteTags
-			autocmd FileType *.ruby setlocal omnifunc=rubycomplete#Complete
-		augroup END
+		" augroup OmniCompletion
+			" autocmd!
+			" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+			" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+			" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+			" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+			" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+			" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+		" augroup END
 	endif
 "" }}}
 

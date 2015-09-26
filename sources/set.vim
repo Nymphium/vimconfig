@@ -77,12 +77,9 @@ if &filetype == "lua"
 endif
 
 
-if has('gui_running')
+if has('gui_running') && ! has('nvim')
 	set guioptions=
-	set antialias
-	set nobackup
 	set guifont=Droid\Sans\ Mono\ 6
-	set cmdheight=2
 	set antialias=on
 	set mouse=c
 endif

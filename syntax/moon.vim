@@ -22,7 +22,7 @@ syn clear moonObjAssign
 syn clear moonDotAccess
 syn clear moonFunction
 
-syn match moonChar /[=%<>/+\*,\.]/ contained display
+syn match moonChar /[~=%<>/+\*,\.]/ contained display
 
 syn match moonKeyword ":"
 
