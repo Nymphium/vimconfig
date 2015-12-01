@@ -14,17 +14,15 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 	"" support by language
 	NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
-	NeoBundleLazy 'kannokanno/previm', {'autoload' : {'filetypes' : ['markdown']}}
 	NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
+	NeoBundleLazy 'nymphium/syntastic-moonscript', {
+	\    'build' : {'linux' : 'make neobundle'},
+	\    'autoload' : {'filetypes' : ['moon']},
+	\    'depends' : ['scrooloose/syntastic']}
 	NeoBundleLazy 'vim-scripts/javacomplete', {
-	\   'build': {
-	\       'cygwin': 'javac autoload/Reflection.java',
-	\       'mac': 'javac autoload/Reflection.java',
-	\       'unix': 'javac autoload/Reflection.java',
-	\   },
-	\}
+	\   'build': {'linux': 'javac autoload/Reflection.java'}}
 
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 	NeoBundle 'thinca/vim-quickrun'
@@ -54,7 +52,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\ }
 	NeoBundle 'tsukkee/unite-tag'
 	NeoBundle 'tpope/vim-fugitive'
-	NeoBundle 'nymphium/syntastic-moonscript', {'build' : {'linux' : 'make'}}
 "" }}}
 
 call neobundle#end()
@@ -99,7 +96,13 @@ NeoBundleCheck
 			let g:deoplete#keyword_patterns = {}
 		endif
 		let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\w*'
+		" let g:deoplete#keyword_patterns.tex = '\\?[a-zA-Z_]\w*'
 		let g:deoplete#keyword_patterns.tex = ['\\?[a-zA-Z_]\w*', g:deoplete#keyword_patterns._]
+
+		if !exists('g:deopletes#omni#input_patterns')
+			let g:deopletes#omni#input_patterns = {}
+		endif
+		let g:deopletes#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
 
 		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<Tab>"
 		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -224,29 +227,31 @@ NeoBundleCheck
 	if &enc == "utf8"
 		let g:syntastic_check_on_open = 1
 	endif
-	"" let g:syntastic_debug = 0
-	let g:syntastic_always_populate_loc_list = 1
-	let g:syntastic_check_on_wq = 0
-	let g:syntastic_loc_list_height = 3
-	let g:syntastic_echo_current_error = 1
-	let g:syntastic_enable_balloons = 1
-	let g:syntastic_enable_highlighting = 1
-	let g:syntastic_enable_signs=1
-	let g:syntastic_auto_loc_list=2
-	let g:syntastic_cpp_compiler = 'g++'
-	let g:syntastic_cpp_compiler_options = '-Wall -Wextra'
-	let g:syntastic_c_compiler = 'gcc'
-	let g:syntastic_c_compiler_options = '-Wall -Wextra'
-	let g:syntastic_ignore_files = ['\.tex$']
-	let g:syntastic_lua_checkers = ["luac", "luacheck"]
-	let g:syntastic_lua_luacheck_args = ["-d", "-a", "-u", "-r"]
-	let g:syntastic_moon_checkers = ['mooncheck']
-	let g:syntastic_moon_mooncheck_args = ["-d", "-a", "-u", "-r"]
-	let g:syntastic_sh_checkers = ['shellcheck']
-	let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
-	set statusline+=\ %#warningmsg#
-	set statusline+=%{SyntasticStatuslineFlag()}
-	set statusline+=%*
+
+	if !empty(neobundle#get("syntastic"))
+		let g:syntastic_always_populate_loc_list = 1
+		let g:syntastic_check_on_wq = 0
+		let g:syntastic_loc_list_height = 3
+		let g:syntastic_echo_current_error = 1
+		let g:syntastic_enable_balloons = 1
+		let g:syntastic_enable_highlighting = 1
+		let g:syntastic_enable_signs=1
+		let g:syntastic_auto_loc_list=2
+		let g:syntastic_cpp_compiler = 'g++'
+		let g:syntastic_cpp_compiler_options = '-Wall -Wextra'
+		let g:syntastic_c_compiler = 'gcc'
+		let g:syntastic_c_compiler_options = '-Wall -Wextra'
+		let g:syntastic_ignore_files = ['\.tex$']
+		let g:syntastic_lua_checkers = ["luac", "luacheck"]
+		let g:syntastic_lua_luacheck_args = ["-g", "-d", "-a", "-u", "-r"]
+		let g:syntastic_moon_checkers = ['mooncheck', 'moonc']
+		let g:syntastic_moon_mooncheck_args = ["-g", "-d", "-a", "-u", "-r"]
+		let g:syntastic_sh_checkers = ['shellcheck']
+		let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
+		set statusline+=\ %#warningmsg#
+		set statusline+=%{SyntasticStatuslineFlag()}
+		set statusline+=%*
+	endif
 "" }}}
 
 "" neosnippet {{{
@@ -272,16 +277,28 @@ NeoBundleCheck
 "" }}}
 
 "" previm {{{
-	let s:bundle = neobundle#get('previm')
-	function! s:bundle.hooks.onsource(bundle)
-		let g:previm_open_cmd = "open"
-		let g:previm_enable_realtime = 1
-	endfunction
+	if !empty(neobundle#get("previm"))
+		let s:bundle = neobundle#get('previm')
+		function! s:bundle.hooks.onsource(bundle)
+			let g:previm_open_cmd = "open"
+			let g:previm_enable_realtime = 1
+		endfunction
 
-	augroup PrevimSettings
-		autocmd!
-		autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-	augroup END
+		augroup PrevimSettings
+			autocmd!
+			autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+		augroup END
+	endif
+"" }}}
+
+"" javacomplete {{{
+	if !empty(neobundle#get('javacomplete'))
+		augroup Javacomplete
+			autocmd!
+			autocmd FileType java :setlocal omnifunc=javacomplete#Complete
+			autocmd FileType java :setlocal completefunc=javacomplete#CompleteParamsInfo
+		augroup END
+	endif
 "" }}}
 
 "" vim-gas {{{
@@ -292,39 +309,42 @@ NeoBundleCheck
 "" }}}
 
 "" vimtex {{{
-	let g:vimtex_view_method = 'general'
-	let g:vimtex_view_general_viewer ='evince'
-	let g:vimtex_fold_enabled = 0
-	let g:vimtex_latexmk_options = '-pdfdvi'
+	if !empty(neobundle#get('vimtex'))
+		let g:vimtex_view_method = 'general'
+		let g:vimtex_view_general_viewer ='evince'
+		let g:vimtex_fold_enabled = 0
+		let g:vimtex_latexmk_options = '-pdfdvi'
 
-	function! s:findInPdf(...)
-		let l:str = ''
+		function! s:findInPdf(...)
+			let l:str = ''
 
-		if a:0 < 1
-			let l:tmp = @x
-			normal "xye
-			let l:str = @x . ' '
-			let @x = l:tmp
-		else
-			let l:str = a:1 . ' '
+			if a:0 < 1
+				let l:tmp = @x
+				normal "xye
+				let l:str = @x . ' '
+				let @x = l:tmp
+			else
+				let l:str = a:1 . ' '
+			endif
+
+			if strlen(l:str) > 2
+				call system("evince -l ". l:str . g:vimtex_data[0].tex . " >/dev/null 2>&1 &")
+			endif
+		endfunction
+
+		if !exists('g:neocomplete#sources#omni#input_patterns')
+			let g:neocomplete#sources#omni#input_patterns = {}
 		endif
+		let g:neocomplete#sources#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
 
-		if strlen(l:str) > 2
-			call system("evince -l ". l:str . g:vimtex#data[b:vimtex.id].out() . " >/dev/null 2>&1 &")
-		endif
-	endfunction
 
-	if !exists('g:neocomplete#sources#omni#input_patterns')
-		let g:neocomplete#sources#omni#input_patterns = {}
+		augroup LatexSetup
+			autocmd!
+			autocmd BufNewFile,BufRead *.tex set ft=tex
+			autocmd BufNewFile,BufRead *.tex vmap <silent> <LocalLeader>lf :call <SID>findInPdf(@*)<CR>
+			autocmd BufNewFile,BufRead *.tex nmap <silent> <LocalLeader>lf :call <SID>findInPdf()<CR>
+		augroup END
 	endif
-	let g:neocomplete#sources#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
-
-	augroup LatexSetup
-		autocmd!
-		autocmd BufNewFile,BufRead *.tex set ft=tex
-		autocmd BufNewFile,Bufread *.tex vmap <silent> <LocalLeader>lf :call <SID>findInPdf(@*)<CR>
-		autocmd BufNewFile,Bufread *.tex nmap <silent> <LocalLeader>lf :call <SID>findInPdf()<CR>
-	augroup END
 "" }}}
 
 "" rdark {{{

@@ -48,7 +48,7 @@ if &term =~ "256color"
 endif
 set t_Co=256
 set t_ZH=[3m
-set t_ZR=[23m
+set t_ZR=[22m
 set lazyredraw
 set shell=$SHELL
 if !has('nvim')
@@ -68,7 +68,7 @@ set splitright
 
 set shellslash
 
-set viminfo='100,<1000,s50,h,n~/.viminfo
+" set viminfo='100,<1000,s50,h,n~/.viminfo
 
 " set conceallevel=2
 

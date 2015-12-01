@@ -2,6 +2,7 @@ runtime! archlinux.vim
 
 if has('nvim')
 	set runtimepath+=~/.vim/after
+	set mouse=
 endif
 
 source $HOME/.vim/sources/set.vim
