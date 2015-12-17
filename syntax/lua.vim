@@ -5,7 +5,6 @@
 
 hi luaFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf00
 hi luaLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
-hi link luaBracket Special
 hi luaCond cterm=bold gui=bold ctermfg=48 guifg=#00ff87
 hi link luaElse luaCond
 hi link luaCamma Special
@@ -41,6 +40,5 @@ syn region luaIfThen transparent matchgroup=luaCond start="\<if\>" end="\<then\>
 syn region luaElseifThen contained transparent matchgroup=luaCond start="\<elseif\>" end="\<then\>" contains=ALLBUT,luaTodo,luaSpecial,luaElseifThen,luaElse,luaThenEnd,luaIn
 
 syn match luaFunc /\<\w\+\>\(\s*=\s*function\>\)\@=/ display
-syn match luaBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
 syn match luaMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|idiv\|mod\|pow\|concat\|eq\|lt\|gt\|ipairs\|band\|bor\|bxor\|bnot\|shl\|shr\)\>/ display
 

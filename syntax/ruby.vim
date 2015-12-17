@@ -13,6 +13,7 @@ hi link rubySymbolName String
 hi link rubyColon Statement
 hi rubyLambda cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
 hi link rubyDefine rubyLambda
+hi link rubyEOL String
 
 
 syn match rubyOperator /\s\zs[:?]\ze\s\+/ display
@@ -26,9 +27,6 @@ syn match rubyColon ":" display
 syn match rubyLambda /->/ display
 syn match rubyCamma "," display
 
-syn match rubyBracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/
-
-
 syn clear rubyRegexpDot
 syn clear rubyRegexpEscape
 syn clear rubyRegexpParens
@@ -41,6 +39,8 @@ syn clear rubyRegexpQuantifier
 syn clear rubyRegexpSpecial
 syn clear rubyRegexp
 
+syn region rubyEOL matchgroup=Statement start="\(<<\)\@<=EOL\s*$" end="^EOL$" contains=rubyInterpolation
+syn region rubyEOL matchgroup=Statement start="\(<<-\)\@<=EOL\s*$" end="^\s*EOL$" contains=rubyInterpolation
 syn match rubyOperator "/" containedin=NONE display
 syn region rubyRegexpComment matchgroup=rubyRegexpSpecial start="(?#" skip="\\)" end=")" contained
 syn region rubyRegexpParens matchgroup=rubyRegexpSpecial start="(\(?:\|?<\=[=!]\|?>\|?<[a-z_]\w*>\|?[imx]*-[imx]*:\=\|\%(?#\)\@!\)" skip="\\)" end=")" contained transparent contains=@rubyRegexpSpecial
@@ -66,4 +66,3 @@ syn region rubyRegexp matchgroup=rubyRegexpDelimiter start="%r{" end="}[iomxneus
 syn region rubyRegexp matchgroup=rubyRegexpDelimiter start="%r<" end=">[iomxneus]*" skip="\\\\\|\\>" contains=@rubyRegexpSpecial,rubyNestedAngleBrackets,rubyDelimEscape fold
 syn region rubyRegexp matchgroup=rubyRegexpDelimiter start="%r\[" end="\][iomxneus]*" skip="\\\\\|\\\]" contains=@rubyRegexpSpecial fold
 syn region rubyRegexp matchgroup=rubyRegexpDelimiter start="%r(" end=")[iomxneus]*" skip="\\\\\|\\)" contains=@rubyRegexpSpecial fold
-

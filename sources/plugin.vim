@@ -348,10 +348,11 @@ NeoBundleCheck
 "" }}}
 
 "" rdark {{{
-	colorscheme rdark
 
 	if has('gui_running')
 		colorscheme evening
+	else
+		colorscheme rdark
 	endif
 
 "" }}}

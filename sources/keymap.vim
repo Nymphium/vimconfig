@@ -127,3 +127,6 @@ cnoremap <M-d> <C-w>
 cnoremap <ESC>x <C-r>
 cnoremap <M-x> <C-r>
 
+map <silent> <C-+> :call FontSizePlus()<CR>
+map <silent> <C-*> :call FontSizeMinus()<CR>
+

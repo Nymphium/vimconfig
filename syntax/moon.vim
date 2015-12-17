@@ -47,6 +47,7 @@ syn match moonLuaFunc /\<[_a-zA-Z]\w*\>\(\(:\|\(\s*=\)\)\(\s\{-}(\(\w\|,\|\s\|\.
 syn match moonLuaFunc /@\?[_a-zA-Z]\w\{-}\(\s*!\)\@=/ display
 syn match moonLuaFunc /\(\\\)\@<=\<[_a-zA-Z]\w\{-}\>/ display
 
+syn clear Bracket
 syn match moonBracket /[(){}]\|\[\|\]/ containedin=moonString,moonString2,moonBasic
 
 syn match moonMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|modd|pow\|concat\|eq\|lt\|gt\|class\|name\|inherited\)\>/ display
