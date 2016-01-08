@@ -79,22 +79,22 @@ endif
 if has('nvim')
 	" Neovim-qt Guifont command
 	command -nargs=? Guifont call rpcnotify(0, 'Gui', 'SetFont', "<args>") | let g:Guifont="<args>"
-	let g:nvim_qt_fontsize = 8
-	execute("Guifont Droid Sans Mono:h" . g:nvim_qt_fontsize)
+	let g:nvim_qt_fontsize = 7
+	execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
 
 	function! g:FontSizePlus()
 		let g:nvim_qt_fontsize = g:nvim_qt_fontsize + 1
-		execute("Guifont Droid Sans Mono:h" . g:nvim_qt_fontsize)
+		execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
 	endfunction
 
 	function! g:FontSizeMinus()
 		let g:nvim_qt_fontsize = g:nvim_qt_fontsize - 1
-		execute("Guifont Droid Sans Mono:h" . g:nvim_qt_fontsize)
+		execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
 	endfunction
 else
 	if has('gui_running')
 		set guioptions=
-		set guifont=Droid\Sans\ Mono\ 7
+		set guifont=Meslo\ LG\ L\ 7
 		set antialias=on
 		set mouse=c
 	endif

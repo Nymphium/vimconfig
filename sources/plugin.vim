@@ -23,8 +23,18 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\    'depends' : ['scrooloose/syntastic']}
 	NeoBundleLazy 'vim-scripts/javacomplete', {
 	\   'build': {'linux': 'javac autoload/Reflection.java'}}
-
+	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
+	NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
+	NeoBundleLazy 'phildawes/racer', {
+	\   'build' : {
+	\     'mac'  : 'cargo build --release',
+	\     'unix' : 'cargo build --release',
+	\   },
+	\   'autoload' : {
+	\     'filetypes' : 'rust',
+	\   },
+	\ }
 	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'osyo-manga/vim-over'
 	NeoBundle 'scrooloose/nerdcommenter'
@@ -345,6 +355,16 @@ NeoBundleCheck
 			autocmd BufNewFile,BufRead *.tex nmap <silent> <LocalLeader>lf :call <SID>findInPdf()<CR>
 		augroup END
 	endif
+"" }}}
+
+"" rust.vim {{{
+	let g:rustfmt_autosave = 1
+"" }}}
+
+"" racer {{{
+	set hidden
+	let g:racer_cmd = $HOME . "/.vim/bundle/racer/target/release/racer"
+	let $RUST_SRC_PATH = "/tmp"
 "" }}}
 
 "" rdark {{{

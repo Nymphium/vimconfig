@@ -29,7 +29,7 @@ syn match moonKeyword ":"
 syn match moonObjAssign /\<[_a-zA-Z]\w\{-}\>\(:\s*\(\((.\{-\})\)\?-\|=>\)\?\)\@=/ display
 syn match moonObjAssign /\(\s\+:\)\@<=\<[a-zA-Z]\w\{-}\>/ display
 
-syn match moonLength /#\(@\?[_a-zA-Z]\w\{-}[\.:]\?\)\+/ display
+syn match moonLength /#\(@\?[@_a-zA-Z]\w\{-}[\.:]\?\)\+/ display
 syn match moonLength /#{\(.\{-}\)\@=}/ display
 syn region moonTableLength matchgroup=moonLength start="#{" end="}" display transparent oneline
 
