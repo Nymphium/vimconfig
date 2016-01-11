@@ -362,9 +362,12 @@ NeoBundleCheck
 "" }}}
 
 "" racer {{{
-	set hidden
-	let g:racer_cmd = $HOME . "/.vim/bundle/racer/target/release/racer"
-	let $RUST_SRC_PATH = "/tmp"
+	if !empty(neobundle#get('rust.vim'))
+		set hidden
+		let g:racer_cmd = $HOME . "/.vim/bundle/racer/target/release/racer"
+		let $RUST_SRC_PATH = "/tmp"
+		" let g:syntastic_rust_rust_exec = $HOME.  "/.vim/bundle/rust.vim/syntax_checkers/rust/rust.vim"
+	endif
 "" }}}
 
 "" rdark {{{

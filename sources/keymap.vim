@@ -42,7 +42,16 @@ nnoremap r <C-r>
 " nnoremap <M-k> <C-u>
 nnoremap <silent> <F3> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
-nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
+" if &ft == "rust"
+	" nnoremap <silent> II :RustFmt
+" els
+	nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
+" endif
+augroup RustFmt
+	autocmd!
+	autocmd Filetype rust nnoremap <silent> II :RustFmt<CR>
+augroup END
+
 nnoremap ww <ESC>:vne<Space>
 nnoremap wv <ESC>:new<Space>
 nnoremap w<TAB> <C-w>w

@@ -1,26 +1,20 @@
 runtime! archlinux.vim
 
+augroup VimStart
+	autocmd!
+	autocmd Filetype * set formatoptions-=ro
+augroup END
+
 if has('nvim')
 	set runtimepath+=~/.vim/after
 	set mouse=
 endif
 
 source $HOME/.vim/sources/set.vim
-
 source $HOME/.vim/sources/keymap.vim
-
 source $HOME/.vim/sources/plugin.vim
-
 source $HOME/.vim/sources/func.vim
-
 filetype plugin indent on
-
 syntax on
-
 source $HOME/.vim/sources/color.vim
-
-augroup VimStart
-	autocmd!
-	autocmd Filetype * set formatoptions-=ro
-augroup END
 
