@@ -24,9 +24,10 @@ set matchtime=2
 
 set showcmd
 
-set shiftwidth=4
 set tabstop=4
 set autoindent
+set shiftwidth=4
+
 set wrap
 
 set scrolloff=20

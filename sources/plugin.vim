@@ -35,6 +35,9 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\     'filetypes' : 'rust',
 	\   },
 	\ }
+	NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
+	NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+
 	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'osyo-manga/vim-over'
 	NeoBundle 'scrooloose/nerdcommenter'
@@ -258,6 +261,7 @@ NeoBundleCheck
 		let g:syntastic_moon_mooncheck_args = ["-g", "-d", "-a", "-u", "-r"]
 		let g:syntastic_sh_checkers = ['shellcheck']
 		let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
+		let g:syntastic_haskell_checkers = ['ghc-mod']
 		set statusline+=\ %#warningmsg#
 		set statusline+=%{SyntasticStatuslineFlag()}
 		set statusline+=%*

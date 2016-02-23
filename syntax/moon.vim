@@ -44,7 +44,7 @@ syn match moonFunction /->\|=>/ display
 
 syn match moonLuaFunc /\<[_a-zA-Z]\w*\>\(\s*\s*(\)\@=/ display contains=ALLBUT,Normal
 syn match moonLuaFunc /\<[_a-zA-Z]\w*\>\(\(:\|\(\s*=\)\)\(\s\{-}(\(\w\|,\|\s\|\.\)\{-})\)\?\s\{-}\(=\|-\)>\)\@=/ display
-syn match moonLuaFunc /@\?[_a-zA-Z]\w\{-}\(\s*!\)\@=/ display
+syn match moonLuaFunc /@\?[_a-zA-Z]\w\{-}\(\s*!\(!\{1}\)\@!\)\@=/ display
 syn match moonLuaFunc /\(\\\)\@<=\<[_a-zA-Z]\w\{-}\>/ display
 
 syn clear Bracket
