@@ -23,6 +23,6 @@ augroup MyHighlighten
 	autocmd!
 	autocmd VimResized * :redraw!
 	autocmd Syntax,FileType * syn match Shebang /^#!\/.\{-\}bin\/.*$/
-	autocmd StdinReadPost,BufAdd,BufEnter,BufNew,FileType * syn match Bracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/ contains=Bracket
+	" autocmd StdinReadPost,BufAdd,BufEnter,BufNew,FileType * syn match Bracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/ contains=Bracket
 augroup END
 

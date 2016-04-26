@@ -13,8 +13,8 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundle 'vim-scripts/rdark'
 
 	"" support by language
-	NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
-	NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
+	" NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
+	" NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
 	NeoBundleLazy 'nymphium/syntastic-moonscript', {
@@ -25,18 +25,20 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\   'build': {'linux': 'javac autoload/Reflection.java'}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
-	NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
-	NeoBundleLazy 'phildawes/racer', {
-	\   'build' : {
-	\     'mac'  : 'cargo build --release',
-	\     'unix' : 'cargo build --release',
-	\   },
-	\   'autoload' : {
-	\     'filetypes' : 'rust',
-	\   },
-	\ }
-	NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
-	NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
+	" NeoBundleLazy 'phildawes/racer', {
+	" \   'build' : {
+	" \     'mac'  : 'cargo build --release',
+	" \     'unix' : 'cargo build --release',
+	" \   },
+	" \   'autoload' : {
+	" \     'filetypes' : 'rust',
+	" \   },
+	" \ }
+	" NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
+	" NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+
+	NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
 
 	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'osyo-manga/vim-over'
@@ -371,6 +373,15 @@ NeoBundleCheck
 		let g:racer_cmd = $HOME . "/.vim/bundle/racer/target/release/racer"
 		let $RUST_SRC_PATH = "/tmp"
 		" let g:syntastic_rust_rust_exec = $HOME.  "/.vim/bundle/rust.vim/syntax_checkers/rust/rust.vim"
+	endif
+"" }}}
+
+"" jedi-vim {{{
+	if !empty(neobundle#get('jedi-vim'))
+		command! -nargs=0 JediRename :call jedi#rename()
+
+		let g:jedi#rename_command = ""
+		let g:jedi#documentation_command = ""
 	endif
 "" }}}
 

@@ -16,13 +16,17 @@ hi link moonKeyword Statement
 hi link moonBracket Special
 hi link moonConditional Type
 hi link moonGlobal Boolean
+hi link moonRoundBrac Special
+hi link moonTable Special
+hi link moonSquareBrac Special
+hi link moonBlockString String
 
 syn clear moonShortHandAssign
 syn clear moonObjAssign
 syn clear moonDotAccess
 syn clear moonFunction
 
-syn match moonChar /[~=%<>/+\*,\.]/ contained display
+syn match moonChar /[~=%<>/+\*,\.]\|\(\-\)\@<!\-\(\-\|>\)\@!/ contained display
 
 syn match moonKeyword ":"
 
@@ -32,6 +36,8 @@ syn match moonObjAssign /\(\s\+:\)\@<=\<[a-zA-Z]\w\{-}\>/ display
 syn match moonLength /#\(@\?[@_a-zA-Z]\w\{-}[\.:]\?\)\+/ display
 syn match moonLength /#{\(.\{-}\)\@=}/ display
 syn region moonTableLength matchgroup=moonLength start="#{" end="}" display transparent oneline
+
+syn region moonBlockString start="\[\z(=*\)\[" end="\]\z1\]" contains=@Spell
 
 syn match moonTable /\zs\<[_a-zA-Z]\w\{-}\>\ze\.\(\.\)\@!/ display
 syn match moonTable /\<[_a-zA-Z]\w\{-}\>\(\[\)\@=/ display
@@ -51,4 +57,5 @@ syn clear Bracket
 syn match moonBracket /[(){}]\|\[\|\]/ containedin=moonString,moonString2,moonBasic
 
 syn match moonMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|modd|pow\|concat\|eq\|lt\|gt\|class\|name\|inherited\)\>/ display
-
+syn region moonParen transparent  matchgroup=moonRoundBrac start='(' end=')' contains=ALLBUT,luaParenError,luaTodo,luaSpecial,luaIfThen,luaElseifThen,luaElse,luaThenEnd,luaBlock,luaLoopBlock,luaIn,luaStatement
+syn region moonIndexing transparent  matchgroup=moonSquareBrac start=/\(=\|\[\)\@<!\[\(=\|\[\)\@!/ end=/\(=\|\]\)\@<!\]\(=\|\]\)\@!/ contains=ALLBUT,luaParenError,luaTodo,luaSpecial,luaIfThen,luaElseifThen,luaElse,luaThenEnd,luaBlock,luaLoopBlock,luaIn,luaStatement
