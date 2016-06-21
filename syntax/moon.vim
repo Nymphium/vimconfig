@@ -35,7 +35,7 @@ syn match moonObjAssign /\(\s\+:\)\@<=\<[a-zA-Z]\w\{-}\>/ display
 
 syn match moonLength /#\(@\?[@_a-zA-Z]\w\{-}[\.:]\?\)\+/ display
 syn match moonLength /#{\(.\{-}\)\@=}/ display
-syn region moonTableLength matchgroup=moonLength start="#{" end="}" display transparent oneline
+syn region moonTableLength matchgroup=moonLength start="#{" end="}" display transparent oneline contains=ALLBUT,moonBraceError,moonTodo,moonSpecial,moonIfThen,moonElseifThen,moonElse,moonThenEnd,moonBlock,moonLoopBlock,moonIn,moonStatement
 
 syn region moonBlockString start="\[\z(=*\)\[" end="\]\z1\]" contains=@Spell
 

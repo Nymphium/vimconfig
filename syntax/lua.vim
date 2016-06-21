@@ -24,7 +24,7 @@ syn match luaChar /-\(-\)\@!/ display
 " #table 
 syn match luaLength /#\(\w\+[\.:]\?\)\+/ display
 syn match luaLength /#{\(.*\)\@=}/ display
-syn region luaTableLength matchgroup=luaLength start="#{" end="}" contains=ALL
+syn region luaTableLength matchgroup=luaLength start="#{" end="}" contains=ALLBUT,luaBraceError,luaTodo,luaSpecial,luaIfThen,luaElseifThen,luaElse,luaThenEnd,luaBlock,luaLoopBlock,luaIn,luaStatement
 
 syn match luaTableName /\w\+\([\.:]\)\@=\(\.\)\@!/ display
 syn match luaTableName /\<\w\+\>\(\s*\[\)\@=/ display

@@ -8,8 +8,9 @@ vnoremap <M-e> <Nop>
 vnoremap <M-e> e
 vnoremap <TAB> >
 vnoremap <S-Tab> <
-vnoremap <silent> n "*y/<C-r>*<CR>
+vnoremap <silent> n "*y/<Bslash><<C-r>*<Bslash>><CR>
 vnoremap <S-y> "+y
+vnoremap <bar> "*y:vim /<C-r>*/ % <bar> cw<CR>
 
 nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
 nnoremap <ESC>s <ESC>:w!<CR>
@@ -51,6 +52,11 @@ augroup RustFmt
 	autocmd!
 	autocmd Filetype rust nnoremap <silent> II :RustFmt<CR>
 augroup END
+
+nnoremap <bar> :vim  // % <bar> cw<left><left><left><left><left><left><left><left>
+nnoremap <silent> cn :cn<CR>
+nnoremap <silent> CN :cN<CR>
+nnoremap <silent> cq :lcl<CR>
 
 nnoremap ww <ESC>:vne<Space>
 nnoremap wv <ESC>:new<Space>

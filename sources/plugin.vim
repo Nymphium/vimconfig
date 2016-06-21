@@ -21,8 +21,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\    'build' : {'linux' : 'make neobundle'},
 	\    'autoload' : {'filetypes' : ['moon']},
 	\    'depends' : ['scrooloose/syntastic']}
-	NeoBundleLazy 'vim-scripts/javacomplete', {
-	\   'build': {'linux': 'javac autoload/Reflection.java'}}
+	NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
@@ -40,7 +39,10 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 	NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
 
-	NeoBundle 'thinca/vim-quickrun'
+	" NeoBundle 'thinca/vim-quickrun'
+	NeoBundle 'osyo-manga/vim-watchdogs', {
+	\ 'depends' : ['osyo-manga/shabadou.vim', 'thinca/vim-quickrun', 'jceb/vim-hier', 'dannyob/quickfixstatus']
+	\ }
 	NeoBundle 'osyo-manga/vim-over'
 	NeoBundle 'scrooloose/nerdcommenter'
 	NeoBundle 'tpope/vim-surround'
@@ -61,7 +63,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\     'windows' : 'tools\\update-dll-mingw',
 	\     'cygwin' : 'make -f make_cygwin.mak',
 	\     'mac' : 'make -f make_mac.mak',
-	\     'linux' : 'make',
+	\     'linux' : 'make -j4',
 	\     'unix' : 'gmake',
 	\    },
 	\ }
@@ -205,39 +207,43 @@ NeoBundleCheck
 "" }}}
 
 "" vim-quickrun {{{
-	" let g:quickrun_config = {}
+	if !empty(neobundle#get("vim-quickrun"))
+		" let g:quickrun_config = {}
 
-	" let g:quickrun_config['*'] = {
-				" \ 'outputter/buffer/close_on_empty' : 1 ,
-				" \ }
+		" let g:quickrun_config['*'] = {
+					" \ 'outputter/buffer/close_on_empty' : 1 ,
+					" \ }
 
-	let g:quickrun_config = get(g:, 'quickrun_config', {})
-	let g:quickrun_config._ = {
-		\ 'runner'    : 'vimproc',
-		\ 'runner/vimproc/updatetime' : 60,
-		\ 'outputter' : 'error',
-		\ 'outputter/error/success' : 'buffer',
-		\ 'outputter/error/error'   : 'quickfix',
-		\ 'outputter/buffer/split'  : ':rightbelow 8sp',
-		\ 'outputter/buffer/close_on_empty' : 1,
-		\ }
+		let g:quickrun_config = get(g:, 'quickrun_config', {})
+		let g:quickrun_config._ = {
+			\ 'runner'    : 'vimproc',
+			\ 'runner/vimproc/updatetime' : 60,
+			\ 'outputter' : 'error',
+			\ 'outputter/error/success' : 'buffer',
+			\ 'outputter/error/error'   : 'quickfix',
+			\ 'outputter/buffer/split'  : ':rightbelow 8sp',
+			\ 'outputter/buffer/close_on_empty' : 1,
+			\ }
 
-	"" let g:quickrun_config.tex = {
-	"" \ 'command' : 'latexmk',
-	"" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
-	"" \ 'outputter/error/error' : 'quickfix',
-	"" \ }
+		"" let g:quickrun_config.tex = {
+		"" \ 'command' : 'latexmk',
+		"" \ 'exec' : ['%c -halt-on-error | egrep -i "error|can.t use" -A 2'],
+		"" \ 'outputter/error/error' : 'quickfix',
+		"" \ }
 
-	let g:quickrun_config.cpp = {
-				\ 'command' : 'g++',
-				\ }
-	let g:quickrun_config.c = {
-				\ 'command' : 'gcc',
-				\ }
+		let g:quickrun_config.cpp = {
+					\ 'command' : 'g++',
+					\ }
+		let g:quickrun_config.c = {
+					\ 'command' : 'gcc',
+					\ }
 
-	let g:quickrun_config.moon = {
-				\ 'command' : 'moon'
-				\ }
+		let g:quickrun_config.moon = {
+					\ 'command' : 'moon'
+					\ }
+
+		nmap <silent> <F11> :QuickRun<CR>
+	endif
 "" }}}
 
 "" matchit {{{
@@ -319,7 +325,7 @@ NeoBundleCheck
 "" }}}
 
 "" javacomplete {{{
-	if !empty(neobundle#get('javacomplete'))
+	if !empty(neobundle#get('vim-javacomplete2'))
 		augroup Javacomplete
 			autocmd!
 			autocmd FileType java :setlocal omnifunc=javacomplete#Complete
