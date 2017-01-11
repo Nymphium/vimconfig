@@ -15,6 +15,12 @@ hi Constant cterm=bold gui=bold
 hi Shebang cterm=bold,italic gui=bold,italic ctermbg=126 ctermfg=0 guibg=#af00af guifg=black
 hi link Bracket Special
 
+"" http://qiita.com/takaakikasai/items/b46a0b8c94e476e57e31<Paste>
+highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=22
+highlight DiffDelete cterm=bold ctermfg=10 ctermbg=52
+highlight DiffChange cterm=bold ctermfg=10 ctermbg=17
+highlight DiffText   cterm=bold ctermfg=10 ctermbg=21
+
 " hi Normal ctermfg=46 ctermbg=NONE guifg=#1fff40 guibg=#000000
 " hi Identifier term=underline cterm=bold gui=bold ctermfg=14 guifg=#00ffff
 " hi Constant term=underline cterm=bold gui=bold ctermfg=13 guifg=#ff4fff

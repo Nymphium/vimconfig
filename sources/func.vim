@@ -13,18 +13,16 @@
 	" vnoremap <M-z> <ESC>:call CommentInLine()<CR>
 "" }
 
-
-
-"" highlighting *.swi as Prolog {
+"" highlighting *.swi as Prolog {{{
 	augroup SyntaxProlog
 		autocmd!
 		autocmd BufNewFile *.swi set filetype=prolog
 		" autocmd BufReadPost *.swi set filetype=prolog
 	augroup END
-"" }
+"" }}}
 
 
-"" edit TeX file {
+"" edit TeX file {{{
 	augroup LatexEnv
 		autocmd!
 		autocmd BufNewFile *.tex let g:tex_flavor = "latex"
@@ -38,16 +36,15 @@
 		" autocmd BufWritePre *.tex silent :%s/\([lL][eE][fF][tT]\)\@<!(/（/ge
 		" autocmd BufWritePre *.tex silent :%s/\([rR][iI][gG][hH][tT]\)\@<!)/）/ge
 	augroup END
-"" }
+"" }}}
 
-
-"" highlight Zenkaku-space {
+"" highlight Zenkaku-space {{{
 	augroup ZenkakuSpaceHighlight
 		autocmd!
 		autocmd ColorScheme * hi ZenkakuSpace cterm=underline ctermbg=196 gui=underline guifg=darkgrey
 		autocmd BufReadPost,FileReadPost * match ZenkakuSpace /　/
 	augroup END
-"" }
+"" }}}
 
 
 "" insertmode highlight {{{
@@ -123,3 +120,4 @@
 	command! TagUpdate call system("ctags --languages=" . &filetype .  " " . expand("%.p"))
 	command! RemoveTag call system("rm tags")
 "" }}}
+

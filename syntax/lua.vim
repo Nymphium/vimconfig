@@ -45,4 +45,4 @@ syn region luaElseifThen contained transparent matchgroup=luaCond start="\<elsei
 syn match luaFunc /\<\w\+\>\(\s*=\s*function\>\)\@=/ display
 syn match luaMetatable  /\<__\(index\|newindex\|mode\|call\|metatable\|tostring\|len\|gc\|unm\|add\|sub\|mul\|div\|idiv\|mod\|pow\|concat\|eq\|lt\|gt\|ipairs\|band\|bor\|bxor\|bnot\|shl\|shr\)\>/ display
 syn region luaParen transparent  matchgroup=luaRoundBrac start='(' end=')' contains=ALLBUT,luaParenError,luaTodo,luaSpecial,luaIfThen,luaElseifThen,luaElse,luaThenEnd,luaBlock,luaLoopBlock,luaIn,luaStatement
-syn region luaIndexing transparent  matchgroup=luaSquareBrac start=/\(=\|\[\)\@<!\[\(=\|\[\)\@!/ end=/\(=\|\]\)\@<!\]\(=\|\]\)\@!/ contains=ALLBUT,luaParenError,luaTodo,luaSpecial,luaIfThen,luaElseifThen,luaElse,luaThenEnd,luaBlock,luaLoopBlock,luaIn,luaStatement
+" syn region luaIndexing transparent  matchgroup=luaSquareBrac start=/\(=\|\[\)\@<!\[\(=\|\[\)\@!/ end=/\(=\|\]\)\@<!\]\(=\|\]\)\@!/ contains=ALLBUT,luaParenError,luaTodo,luaSpecial,luaIfThen,luaElseifThen,luaElse,luaThenEnd,luaBlock,luaLoopBlock,luaIn,luaStatement

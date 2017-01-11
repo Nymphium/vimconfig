@@ -8,7 +8,7 @@ vnoremap <M-e> <Nop>
 vnoremap <M-e> e
 vnoremap <TAB> >
 vnoremap <S-Tab> <
-vnoremap <silent> n "*y/<Bslash><<C-r>*<Bslash>><CR>
+vnoremap <silent> n "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
 vnoremap <S-y> "+y
 vnoremap <bar> "*y:vim /<C-r>*/ % <bar> cw<CR>
 
@@ -18,7 +18,7 @@ nnoremap <ESC>s<ESC>s <ESC>:wq!<CR>
 nnoremap <M-s> <ESC>:w!<CR>
 nnoremap <M-s><M-s> <ESC>:wq!<CR>
 " nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
-" nnoremap <M-w><M-w> <ESC>:q!<CR>
+" nnoremap <M-w><M-w> <ESC>:q!CR>
 nnoremap <C-w> <Nop>
 nnoremap <C-w><C-w> :q!<CR>
 nnoremap <ESC>w b
@@ -30,6 +30,7 @@ nnoremap <ESC>1 <C-x>
 nnoremap <M-1> <C-x>
 nnoremap <ESC>2 <C-a>
 nnoremap <M-2> <C-a>
+nnoremap <F5> :e!<CR>
 nnoremap j gj
 nnoremap k gk
 " nnoremap E <Nop>
@@ -41,12 +42,12 @@ nnoremap r <C-r>
 " nnoremap <M-j> <C-d>
 " nnoremap <ESC>k <C-u>
 " nnoremap <M-k> <C-u>
-nnoremap <silent> <F3> :setlocal relativenumber!<CR>
+nnoremap <silent> <F4> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
 " if &ft == "rust"
 	" nnoremap <silent> II :RustFmt
 " els
-	nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
+nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
 " endif
 augroup RustFmt
 	autocmd!
@@ -61,6 +62,10 @@ nnoremap <silent> cq :lcl<CR>
 nnoremap ww <ESC>:vne<Space>
 nnoremap wv <ESC>:new<Space>
 nnoremap w<TAB> <C-w>w
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 nnoremap wl <ESC><C-w><<C-w><<C-w><<C-w><<C-w><
 nnoremap wh <ESC><C-w>><C-w>><C-w>><C-w>><C-w>>
 nnoremap wj <ESC><C-w>+<C-w>+<C-w>+<C-w>+<C-w>+
@@ -84,6 +89,8 @@ nnoremap <ESC><S-d> dbx
 nnoremap <M-D> dbx
 nnoremap <ESC>x "
 nnoremap <M-x> "
+nnoremap <F6> mq
+nnoremap <F7> `q
 
 " tag jump
 function TagUpdateOrTagJump()
@@ -95,6 +102,7 @@ function TagUpdateOrTagJump()
 endfunction
 nnoremap tn :call TagUpdateOrTagJump()<CR>
 nnoremap tt <C-t>
+nnoremap q: <Nop>
 
 inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
 inoremap <ESC>v <Nop>
@@ -113,7 +121,7 @@ inoremap <M-w> <S-Left>
 inoremap <ESC>e <S-Right>
 inoremap <M-e> <S-Right>
 inoremap <C-q> <ESC>:q!<CR>
-inoremap <F3> <ESC><ESC>:setlocal relativenumber!<CR>a
+inoremap <F4> <ESC><ESC>:setlocal relativenumber!<CR>a
 inoremap <ESC>D <C-W>
 inoremap <M-D> <C-W>
 inoremap <ESC>d <S-Right><C-W>
@@ -141,6 +149,7 @@ cnoremap <ESC>d <C-w>
 cnoremap <M-d> <C-w>
 cnoremap <ESC>x <C-r>
 cnoremap <M-x> <C-r>
+cnoremap w!! w !sudo tee > /dev/null %
 
 map <silent> <C-+> :call FontSizePlus()<CR>
 map <silent> <C-*> :call FontSizeMinus()<CR>

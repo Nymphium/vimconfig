@@ -1,3 +1,19 @@
+let g:loaded_gzip=1
+let g:loaded_tar = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_zip = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_rrhelper = 1
+let g:loaded_2html_plugin = 1
+let g:loaded_vimball=1
+let g:loaded_vimballPlugin = 1
+let g:loaded_getscript = 1
+let g:loaded_getscriptPlugin = 1
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1
+let g:loaded_netrwSettings = 1
+let g:loaded_netrwFileHeadlers = 1
+
 set encoding=utf-8
 scriptencoding utf-8
 set fileencoding=utf-8
@@ -18,6 +34,7 @@ set ignorecase
 set smartcase
 set hlsearch
 set incsearch
+set hidden
 
 set showmatch
 set matchtime=2
@@ -25,7 +42,9 @@ set matchtime=2
 set showcmd
 
 set tabstop=4
+set softtabstop=4
 set autoindent
+set smartindent
 set shiftwidth=4
 
 set wrap
@@ -33,10 +52,10 @@ set wrap
 set scrolloff=20
 set backspace=indent,eol,start
 set list
-" set listchars=tab:>_,trail:.,extends:>,precedes:<,nbsp:%,eol:<
-set listchars=tab:>―,trail:.,extends:>,precedes:<,nbsp:%,eol:◁
+set listchars=tab:>-,trail:.,extends:>,precedes:<,nbsp:%,eol:<
+" set listchars=tab:>―,trail:.,extends:>,precedes:<,nbsp:%,eol:◁
 set matchpairs& matchpairs+=<:>
-" set ambw=double
+set ambiwidth=double
 " set formatoptions+=mM
 set formatoptions=lmoq
 set wildmenu
@@ -44,12 +63,12 @@ set number
 set relativenumber
 set cursorcolumn
 set cursorline
-if &term =~ "256color"
-	set t_ut=
-endif
-set t_Co=256
-set t_ZH=[3m
-set t_ZR=[22m
+" if &term =~ "256color"
+	" set t_ut=
+" endif
+" set t_Co=256
+" set t_ZH=[3m
+" set t_ZR=[22m
 set lazyredraw
 set shell=$SHELL
 if !has('nvim')

@@ -20,10 +20,12 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundleLazy 'nymphium/syntastic-moonscript', {
 	\    'build' : {'linux' : 'make neobundle'},
 	\    'autoload' : {'filetypes' : ['moon']},
-	\    'depends' : ['scrooloose/syntastic']}
+	\    'depends' : ['scrooloose/syntastic'],
+	\    'rev' : 'typedlua'}
 	NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
+	NeoBundleLazy 'rhysd/nyaovim-markdown-preview', {'autoload' : {'filetypes' : ['md', 'markdown', 'mkd']}}
 	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
 	" NeoBundleLazy 'phildawes/racer', {
 	" \   'build' : {
@@ -40,9 +42,10 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
 
 	" NeoBundle 'thinca/vim-quickrun'
-	NeoBundle 'osyo-manga/vim-watchdogs', {
-	\ 'depends' : ['osyo-manga/shabadou.vim', 'thinca/vim-quickrun', 'jceb/vim-hier', 'dannyob/quickfixstatus']
-	\ }
+	" NeoBundle 'osyo-manga/vim-watchdogs', {
+	" \ 'depends' : ['osyo-manga/shabadou.vim', 'thinca/vim-quickrun', 'jceb/vim-hier', 'dannyob/quickfixstatus']
+	" \ }
+	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'osyo-manga/vim-over'
 	NeoBundle 'scrooloose/nerdcommenter'
 	NeoBundle 'tpope/vim-surround'
@@ -69,6 +72,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\ }
 	NeoBundle 'tsukkee/unite-tag'
 	NeoBundle 'tpope/vim-fugitive'
+	NeoBundle 'szw/vim-maximizer'
 "" }}}
 
 call neobundle#end()
@@ -242,7 +246,7 @@ NeoBundleCheck
 					\ 'command' : 'moon'
 					\ }
 
-		nmap <silent> <F11> :QuickRun<CR>
+		" nmap <silent> <F4> :QuickRun<CR>
 	endif
 "" }}}
 
@@ -256,11 +260,8 @@ NeoBundleCheck
 "" }}}
 "" 
 "" syntastic {{{
-	if &enc == "utf8"
-		let g:syntastic_check_on_open = 1
-	endif
-
 	if !empty(neobundle#get("syntastic"))
+		let g:syntastic_check_on_open = 1
 		let g:syntastic_always_populate_loc_list = 1
 		let g:syntastic_check_on_wq = 0
 		let g:syntastic_loc_list_height = 3
@@ -277,7 +278,7 @@ NeoBundleCheck
 		let g:syntastic_lua_checkers = ["luac", "luacheck"]
 		let g:syntastic_lua_luacheck_args = ["-g", "-d", "-a", "-u", "-r"]
 		let g:syntastic_moon_checkers = ['mooncheck', 'moonc']
-		let g:syntastic_moon_mooncheck_args = ["-g", "-d", "-a", "-u", "-r"]
+		let g:syntastic_moon_mooncheck_args = ["-g", "-d", "--typecheck sw", "-a", "-u", "-r"]
 		let g:syntastic_sh_checkers = ['shellcheck']
 		let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
 		let g:syntastic_haskell_checkers = ['ghc-mod']
@@ -347,35 +348,18 @@ NeoBundleCheck
 		let g:vimtex_view_general_viewer ='evince'
 		let g:vimtex_fold_enabled = 0
 		let g:vimtex_latexmk_options = '-pdfdvi'
-
-		function! s:findInPdf(...)
-			let l:str = ''
-
-			if a:0 < 1
-				let l:tmp = @x
-				normal "xye
-				let l:str = @x . ' '
-				let @x = l:tmp
-			else
-				let l:str = a:1 . ' '
-			endif
-
-			if strlen(l:str) > 2
-				call system("evince -l ". l:str . g:vimtex_data[0].tex . " >/dev/null 2>&1 &")
-			endif
-		endfunction
+		let g:vimtex_latexmk_callback = 0
 
 		if !exists('g:neocomplete#sources#omni#input_patterns')
 			let g:neocomplete#sources#omni#input_patterns = {}
 		endif
 		let g:neocomplete#sources#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
 
-
 		augroup LatexSetup
 			autocmd!
 			autocmd BufNewFile,BufRead *.tex set ft=tex
-			autocmd BufNewFile,BufRead *.tex vmap <silent> <LocalLeader>lf :call <SID>findInPdf(@*)<CR>
-			autocmd BufNewFile,BufRead *.tex nmap <silent> <LocalLeader>lf :call <SID>findInPdf()<CR>
+			autocmd BufNewFile,BufRead *.tex vnoremap <silent> <LocalLeader>lf "ey
+				\:call system("evince -l \"$(echo '" . @e . "' <bar> detex)\" " . fnamemodify(g:vimtex_data[0].tex, ":t:r") . ".pdf > /dev/null 2>&1")<CR>
 		augroup END
 	endif
 "" }}}
@@ -399,6 +383,14 @@ NeoBundleCheck
 
 		let g:jedi#rename_command = ""
 		let g:jedi#documentation_command = ""
+	endif
+"" }}}
+
+"" vim-maximizer {{{
+	if !empty(neobundle#get('vim-maximizer'))
+		nnoremap <silent><F11> :MaximizerToggle<CR>
+		vnoremap <silent><F11> :MaximizerToggle<CR>gv
+		inoremap <silent><F11> <C-o>:MaximizerToggle<CR>
 	endif
 "" }}}
 
