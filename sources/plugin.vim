@@ -16,30 +16,31 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	" NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
 	" NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
-	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon'] }}
+	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon', 'moonscript'] }}
 	NeoBundleLazy 'nymphium/syntastic-moonscript', {
 	\    'build' : {'linux' : 'make neobundle'},
 	\    'autoload' : {'filetypes' : ['moon']},
 	\    'depends' : ['scrooloose/syntastic'],
 	\    'rev' : 'typedlua'}
-	NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
+	" NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 	NeoBundleLazy 'rhysd/nyaovim-markdown-preview', {'autoload' : {'filetypes' : ['md', 'markdown', 'mkd']}}
-	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
-	" NeoBundleLazy 'phildawes/racer', {
-	" \   'build' : {
-	" \     'mac'  : 'cargo build --release',
-	" \     'unix' : 'cargo build --release',
-	" \   },
-	" \   'autoload' : {
-	" \     'filetypes' : 'rust',
-	" \   },
-	" \ }
+	NeoBundleLazy 'wlangstroth/vim-racket', {'autoload' : {'filetypes' : ['racket']}}
+	NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
+	NeoBundleLazy 'phildawes/racer', {
+	\   'build' : {
+	\     'mac'  : 'cargo build --release',
+	\     'unix' : 'cargo build --release',
+	\   },
+	\   'autoload' : {
+	\     'filetypes' : 'rust',
+	\   },
+	\ }
 	" NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
 	" NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
 
-	NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
+	" NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
 
 	" NeoBundle 'thinca/vim-quickrun'
 	" NeoBundle 'osyo-manga/vim-watchdogs', {
@@ -71,7 +72,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\    },
 	\ }
 	NeoBundle 'tsukkee/unite-tag'
-	NeoBundle 'tpope/vim-fugitive'
+	" NeoBundle 'tpope/vim-fugitive'
 	NeoBundle 'szw/vim-maximizer'
 "" }}}
 
@@ -383,6 +384,16 @@ NeoBundleCheck
 
 		let g:jedi#rename_command = ""
 		let g:jedi#documentation_command = ""
+	endif
+"" }}}
+
+"" vim-racket {{{
+	if !empty(neobundle#get('vim-racket'))
+		augroup RacketSetup
+			    au BufReadPost *.rkt,*.rktl set filetype=racket
+				au filetype racket set lisp
+				au filetype racket let g:syntastic_enable_racket_racket_checker=1
+		augroup END
 	endif
 "" }}}
 
