@@ -21,3 +21,10 @@ if [[ ! -a "${TARGET}/.vim/bundle/neobundle.vim" ]]; then
 	git clone https://github.com/Shougo/neobundle.vim "${TARGET}/.vim/bundle/neobundle.vim"
 fi
 
+case "${EDITOR:-vim}" in
+	vim)
+		vim -c :NeoBundleUpdate -c :q;;
+	nvim)
+		nvim --headless -c :NeoBundleUpdate -c :UpdateRemotePlugins -c :q
+esac
+

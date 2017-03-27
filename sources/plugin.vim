@@ -18,27 +18,29 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon', 'moonscript'] }}
 	NeoBundleLazy 'nymphium/syntastic-moonscript', {
-	\    'build' : {'linux' : 'make neobundle'},
+	\    'build' : {'linux' : 'make neobundle VIM=nvim'},
 	\    'autoload' : {'filetypes' : ['moon']},
-	\    'depends' : ['scrooloose/syntastic'],
-	\    'rev' : 'typedlua'}
+	\    'depends' : ['scrooloose/syntastic']
+	\    }
 	" NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 	NeoBundleLazy 'rhysd/nyaovim-markdown-preview', {'autoload' : {'filetypes' : ['md', 'markdown', 'mkd']}}
 	NeoBundleLazy 'wlangstroth/vim-racket', {'autoload' : {'filetypes' : ['racket']}}
-	NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
-	NeoBundleLazy 'phildawes/racer', {
-	\   'build' : {
-	\     'mac'  : 'cargo build --release',
-	\     'unix' : 'cargo build --release',
-	\   },
-	\   'autoload' : {
-	\     'filetypes' : 'rust',
-	\   },
-	\ }
-	" NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
-	" NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
+	" NeoBundleLazy 'phildawes/racer', {
+	" \   'build' : {
+	" \     'mac'  : 'cargo build --release',
+	" \     'unix' : 'cargo build --release',
+	" \   },
+	" \   'autoload' : {
+	" \     'filetypes' : 'rust',
+	" \   },
+	" \ }
+	NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
+	NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+	NeoBundleLazy 'eagletmt/ghcmod-vim', {'autoload' : {'filetypes' : ['haskell']}}
+
 
 	" NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
 
@@ -47,7 +49,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	" \ 'depends' : ['osyo-manga/shabadou.vim', 'thinca/vim-quickrun', 'jceb/vim-hier', 'dannyob/quickfixstatus']
 	" \ }
 	NeoBundle 'thinca/vim-quickrun'
-	NeoBundle 'osyo-manga/vim-over'
 	NeoBundle 'scrooloose/nerdcommenter'
 	NeoBundle 'tpope/vim-surround'
 	NeoBundle 'tpope/vim-endwise'
@@ -57,6 +58,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	if has('nvim')
 		NeoBundle "Shougo/deoplete.nvim"
 	elseif has('lua')
+		NeoBundle 'osyo-manga/vim-over'
 		NeoBundle 'Shougo/neocomplete.vim'
 		"" NeoBundle 'Shougo/neosnippet'
 		"" NeoBundle 'Shougo/neosnippet-snippets'
@@ -125,6 +127,7 @@ NeoBundleCheck
 			let g:deopletes#omni#input_patterns = {}
 		endif
 		let g:deopletes#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
+		let g:deopletes#omni#input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 		inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<Tab>"
 		inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -203,12 +206,16 @@ NeoBundleCheck
 "" }}}
 
 "" vim-over {{{
-	let g:over_command_line_prompt = "Over > "
-	hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
-	hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
+	if !empty(neobundle#get("vim-over"))
+		let g:over_command_line_prompt = "Over > "
+		hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
+		hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
 
-	nnoremap <silent> %% :OverCommandLine<CR>%s/
-	nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
+		nnoremap <silent> %% :OverCommandLine<CR>%s/
+		nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
+	else
+		nnoremap %% :%s/
+	endif
 "" }}}
 
 "" vim-quickrun {{{
@@ -277,12 +284,13 @@ NeoBundleCheck
 		let g:syntastic_c_compiler_options = '-Wall -Wextra'
 		let g:syntastic_ignore_files = ['\.tex$']
 		let g:syntastic_lua_checkers = ["luac", "luacheck"]
-		let g:syntastic_lua_luacheck_args = ["-g", "-d", "-a", "-u", "-r"]
+		let g:syntastic_lua_luacheck_options = "-g -d -a -u -r"
 		let g:syntastic_moon_checkers = ['mooncheck', 'moonc']
-		let g:syntastic_moon_mooncheck_args = ["-g", "-d", "--typecheck sw", "-a", "-u", "-r"]
+		let g:syntastic_moon_mooncheck_options = "-g -d -a -u -r"
 		let g:syntastic_sh_checkers = ['shellcheck']
 		let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
 		let g:syntastic_haskell_checkers = ['ghc-mod']
+		let g:syntastic_ocaml_checkers = ['merlin']
 		set statusline+=\ %#warningmsg#
 		set statusline+=%{SyntasticStatuslineFlag()}
 		set statusline+=%*
@@ -370,7 +378,7 @@ NeoBundleCheck
 "" }}}
 
 "" racer {{{
-	if !empty(neobundle#get('rust.vim'))
+	if !empty(neobundle#get('phildawes/racer'))
 		set hidden
 		let g:racer_cmd = $HOME . "/.vim/bundle/racer/target/release/racer"
 		let $RUST_SRC_PATH = "/tmp"
@@ -405,6 +413,45 @@ NeoBundleCheck
 	endif
 "" }}}
 
+"" ghcmod.vim {{{
+	if !empty(neobundle#get('ghcmod-vim'))
+		hi ghcmodType ctermbg=yellow
+		let g:ghcmod_type_highlight = 'ghcmodType'
+		let g:ghcmod_hlint_options = ['--ignore=Redundant $']
+		let g:ghcmod_open_quickfix_function = 'GhcModQuickFix'
+		function! GhcModQuickFix()
+		  " for unite.vim and unite-quickfix
+		  :Unite -no-empty quickfix
+
+		  " for ctrlp
+		  ":CtrlPQuickfix
+
+		  " for FuzzyFinder
+		  ":FufQuickfix
+		endfunction
+	endif
+"" }}}
+
+"" merlin (it is not a plugin) {{{
+	let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+	execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
+"" }}}
+
+"" ocp-indent (it is not a plugin) {{{
+	execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
+
+	function! s:ocaml_format()
+		let now_line = line('.')
+		exec ':%! ocp-indent'
+		exec ':' . now_line
+	endfunction
+
+	augroup OcamlFormat
+		autocmd!
+		autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
+	augroup END
+"" }}}
+
 "" rdark {{{
 
 	if has('gui_running')
@@ -413,6 +460,5 @@ NeoBundleCheck
 		colorscheme rdark
 	endif
 
-"" }}}
 "" }}}
 

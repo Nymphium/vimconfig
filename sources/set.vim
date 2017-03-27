@@ -36,6 +36,11 @@ set hlsearch
 set incsearch
 set hidden
 
+if has('nvim')
+	" interactive replacement
+	set inccommand=split
+endif
+
 set showmatch
 set matchtime=2
 
@@ -69,6 +74,10 @@ set cursorline
 " set t_Co=256
 " set t_ZH=[3m
 " set t_ZR=[22m
+" if has('nvim')
+	" set termguicolors
+" endif
+
 set lazyredraw
 set shell=$SHELL
 if !has('nvim')
