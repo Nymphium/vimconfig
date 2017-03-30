@@ -27,6 +27,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 	NeoBundleLazy 'rhysd/nyaovim-markdown-preview', {'autoload' : {'filetypes' : ['md', 'markdown', 'mkd']}}
 	NeoBundleLazy 'wlangstroth/vim-racket', {'autoload' : {'filetypes' : ['racket']}}
+	NeoBundleLazy 'kovisoft/slimv', {'autoload' : {'filetypes' : ['racket']}}
 	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
 	" NeoBundleLazy 'phildawes/racer', {
 	" \   'build' : {
@@ -400,7 +401,10 @@ NeoBundleCheck
 		augroup RacketSetup
 			    au BufReadPost *.rkt,*.rktl set filetype=racket
 				au filetype racket set lisp
+				au filetype racket set expandtab
+				au filetype racket set softtabstop=2
 				au filetype racket let g:syntastic_enable_racket_racket_checker=1
+				au filetype racket set lispwords+=public-method,override-method,private-method,syntax-case,syntax-rules
 		augroup END
 	endif
 "" }}}
@@ -432,24 +436,26 @@ NeoBundleCheck
 	endif
 "" }}}
 
-"" merlin (it is not a plugin) {{{
-	let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-	execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
-"" }}}
+"" merlin and ocp-indent (it is not a plugin) {{{
+	let has_merlin = substitute(system("which ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
 
-"" ocp-indent (it is not a plugin) {{{
-	execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
+	if has_merlin == "0"
+		let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+		execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
 
-	function! s:ocaml_format()
-		let now_line = line('.')
-		exec ':%! ocp-indent'
-		exec ':' . now_line
-	endfunction
+		execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
 
-	augroup OcamlFormat
-		autocmd!
-		autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
-	augroup END
+		function! s:ocaml_format()
+			let now_line = line('.')
+			exec ':%! ocp-indent'
+			exec ':' . now_line
+		endfunction
+
+		augroup OcamlFormat
+			autocmd!
+			autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
+		augroup END
+	endif
 "" }}}
 
 "" rdark {{{
