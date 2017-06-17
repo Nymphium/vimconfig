@@ -411,9 +411,10 @@ NeoBundleCheck
 
 "" vim-maximizer {{{
 	if !empty(neobundle#get('vim-maximizer'))
-		nnoremap <silent><F11> :MaximizerToggle<CR>
-		vnoremap <silent><F11> :MaximizerToggle<CR>gv
-		inoremap <silent><F11> <C-o>:MaximizerToggle<CR>
+		let g:maximizer_default_mapping_key = '<F11>'
+		" nnoremap <silent><F11> :MaximizerToggle<CR>
+		" vnoremap <silent><F11> :MaximizerToggle<CR>gv
+		" inoremap <silent><F11> <C-o>:MaximizerToggle<CR>
 	endif
 "" }}}
 
@@ -437,7 +438,7 @@ NeoBundleCheck
 "" }}}
 
 "" merlin and ocp-indent (it is not a plugin) {{{
-	let has_merlin = substitute(system("which ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+	let has_merlin = substitute(system("command -v ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
 
 	if has_merlin == "0"
 		let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
