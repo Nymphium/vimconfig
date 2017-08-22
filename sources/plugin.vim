@@ -41,6 +41,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
 	NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
 	NeoBundleLazy 'eagletmt/ghcmod-vim', {'autoload' : {'filetypes' : ['haskell']}}
+	NeoBundleLazy 'plasticboy/vim-markdown', {'autoload' : {'filetypes' : ['markdown']}}
 
 
 	" NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
@@ -206,6 +207,16 @@ NeoBundleCheck
 	endif
 "" }}}
 
+"" vim-markdown {{{
+	if !empty(neobundle#get("vim-markdown"))
+		let g:vim_markdown_folding_disabled = 1
+		let g:vim_markdown_conceal = 0
+		let g:tex_conceal = ""
+		let g:vim_markdown_math = 1
+		let g:vim_markdown_frontmatter = 1
+	endif
+"" }}}
+
 "" vim-over {{{
 	if !empty(neobundle#get("vim-over"))
 		let g:over_command_line_prompt = "Over > "
@@ -320,21 +331,6 @@ NeoBundleCheck
 	nmap <silent> <LocalLeader>p :call g:SrcExpl_PrevDef()<CR>
 "" }}}
 
-"" previm {{{
-	if !empty(neobundle#get("previm"))
-		let s:bundle = neobundle#get('previm')
-		function! s:bundle.hooks.onsource(bundle)
-			let g:previm_open_cmd = "open"
-			let g:previm_enable_realtime = 1
-		endfunction
-
-		augroup PrevimSettings
-			autocmd!
-			autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-		augroup END
-	endif
-"" }}}
-
 "" javacomplete {{{
 	if !empty(neobundle#get('vim-javacomplete2'))
 		augroup Javacomplete
@@ -444,18 +440,25 @@ NeoBundleCheck
 		let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
 		execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
 
-		execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
 
-		function! s:ocaml_format()
-			let now_line = line('.')
-			exec ':%! ocp-indent'
-			exec ':' . now_line
-		endfunction
+		let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+		if has_ocp_indent == "0"
+			execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
+			let g:ocp_indent_on = 1
 
-		augroup OcamlFormat
-			autocmd!
-			autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
-		augroup END
+			function! s:ocaml_format()
+				if g:ocp_indent_on == 1
+					let now_line = line('.')
+					exec ':%! ocp-indent'
+					exec ':' . now_line
+				endif
+			endfunction
+
+			augroup OcamlFormat
+				autocmd!
+				autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
+			augroup END
+		endif
 	endif
 "" }}}
 
