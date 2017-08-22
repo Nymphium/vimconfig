@@ -353,7 +353,7 @@ NeoBundleCheck
 		let g:vimtex_view_method = 'general'
 		let g:vimtex_view_general_viewer ='evince'
 		let g:vimtex_fold_enabled = 0
-		let g:vimtex_latexmk_options = '-pdfdvi'
+		" let g:vimtex_latexmk_options = '-pdfdvi'
 		let g:vimtex_latexmk_callback = 0
 
 		if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -361,9 +361,14 @@ NeoBundleCheck
 		endif
 		let g:neocomplete#sources#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
 
+		if !exists('g:deoplete#omni#input_patterns')
+			let g:deoplete#omni#input_patterns = {}
+		endif
+
 		augroup LatexSetup
 			autocmd!
 			autocmd BufNewFile,BufRead *.tex set ft=tex
+			autocmd BufNewFile,BufRead tex let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
 			autocmd BufNewFile,BufRead *.tex vnoremap <silent> <LocalLeader>lf "ey
 				\:call system("evince -l \"$(echo '" . @e . "' <bar> detex)\" " . fnamemodify(g:vimtex_data[0].tex, ":t:r") . ".pdf > /dev/null 2>&1")<CR>
 		augroup END
@@ -407,10 +412,10 @@ NeoBundleCheck
 
 "" vim-maximizer {{{
 	if !empty(neobundle#get('vim-maximizer'))
-		let g:maximizer_default_mapping_key = '<F11>'
-		" nnoremap <silent><F11> :MaximizerToggle<CR>
-		" vnoremap <silent><F11> :MaximizerToggle<CR>gv
-		" inoremap <silent><F11> <C-o>:MaximizerToggle<CR>
+		" let g:maximizer_default_mapping_key = '<F11>'
+		nnoremap <silent><F11> :MaximizerToggle<CR>
+		vnoremap <silent><F11> :MaximizerToggle<CR>gv
+		inoremap <silent><F11> <C-o>:MaximizerToggle<CR>
 	endif
 "" }}}
 

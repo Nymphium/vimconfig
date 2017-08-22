@@ -154,3 +154,7 @@ cnoremap w!! w !sudo tee > /dev/null %
 map <silent> <C-+> :call FontSizePlus()<CR>
 map <silent> <C-*> :call FontSizeMinus()<CR>
 
+if has('nvim')
+	tnoremap <ESC> <C-\><C-n>
+endif
+
