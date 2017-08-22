@@ -29,6 +29,7 @@
 		autocmd BufNewFile *.tex let java_highlight_all = 1
 		autocmd BufNewFile *.tex let java_highlight_debug = 1
 		autocmd BufNewFile *.tex let java_highlight_functions = 1
+		autocmd BufNewFile *.tex silent :set expandtab
 		autocmd BufWritePre *.tex silent :%s/｡/。/ge
 		autocmd BufWritePre *.tex silent :%s/､/、/ge
 		autocmd BufWritePre *.tex silent :%s/｢/「/ge
