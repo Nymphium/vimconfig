@@ -1,18 +1,16 @@
-"" set nocompatible
-
 if has('vim_starting')
 	set runtimepath+=~/.vim/bundle/neobundle.vim
 endif
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-NeoBundleFetch 'Shougo/neobundle.vim'
-
 "" plugins {{{
-	"" colorscheme
-	NeoBundle 'vim-scripts/rdark'
+	call neobundle#begin(expand('~/.vim/bundle/'))
+	NeoBundleFetch 'Shougo/neobundle.vim'
 
-	"" support by language
+	"" colorscheme {{{
+	NeoBundle 'vim-scripts/rdark'
+	"" }}}
+
+	"" support by language {{{
 	" NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
 	" NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
@@ -42,14 +40,10 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
 	NeoBundleLazy 'eagletmt/ghcmod-vim', {'autoload' : {'filetypes' : ['haskell']}}
 	NeoBundleLazy 'plasticboy/vim-markdown', {'autoload' : {'filetypes' : ['markdown']}}
-
-
 	" NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
+	" }}}
 
-	" NeoBundle 'thinca/vim-quickrun'
-	" NeoBundle 'osyo-manga/vim-watchdogs', {
-	" \ 'depends' : ['osyo-manga/shabadou.vim', 'thinca/vim-quickrun', 'jceb/vim-hier', 'dannyob/quickfixstatus']
-	" \ }
+	"" utils {{{
 	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'scrooloose/nerdcommenter'
 	NeoBundle 'tpope/vim-surround'
@@ -75,14 +69,15 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 	\     'unix' : 'gmake',
 	\    },
 	\ }
-	NeoBundle 'tsukkee/unite-tag'
-	" NeoBundle 'tpope/vim-fugitive'
+	NeoBundle 'tsukkee/unite-tag', {
+	\ 'depends' : ['Shougo/unite.vim'],
+	\ }
 	NeoBundle 'szw/vim-maximizer'
+	"" }}}
+
+	call neobundle#end()
+	NeoBundleCheck
 "" }}}
-
-call neobundle#end()
-NeoBundleCheck
-
 
 "" ----plugins' settings & keymaps----{{{
 "" vim-surround {{{
@@ -108,7 +103,7 @@ NeoBundleCheck
 	nmap <ESC>C <Plug>NERDCommenterToggle
 	vmap <ESC>C <Nop>
 	vmap <ESC>C <Plug>NERDCommenterToggle
-""}}}
+"" }}}
 
 "" deoplete {{{
 	let g:deoplete#enable_at_startup = 1
@@ -215,6 +210,11 @@ NeoBundleCheck
 		let g:vim_markdown_math = 1
 		let g:vim_markdown_frontmatter = 1
 	endif
+
+	augroup MarkdownSettings
+		autocmd!
+		autocmd filetype markdown silent set expandtab
+	augroup END
 "" }}}
 
 "" vim-over {{{
@@ -278,7 +278,7 @@ NeoBundleCheck
 		autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 	augroup END
 "" }}}
-"" 
+
 "" syntastic {{{
 	if !empty(neobundle#get("syntastic"))
 		let g:syntastic_check_on_open = 1
@@ -335,8 +335,8 @@ NeoBundleCheck
 	if !empty(neobundle#get('vim-javacomplete2'))
 		augroup Javacomplete
 			autocmd!
-			autocmd FileType java :setlocal omnifunc=javacomplete#Complete
-			autocmd FileType java :setlocal completefunc=javacomplete#CompleteParamsInfo
+			autocmd filetype java setlocal omnifunc=javacomplete#Complete
+			autocmd filetype java setlocal completefunc=javacomplete#CompleteParamsInfo
 		augroup END
 	endif
 "" }}}
@@ -367,9 +367,9 @@ NeoBundleCheck
 
 		augroup LatexSetup
 			autocmd!
-			autocmd BufNewFile,BufRead *.tex set ft=tex
-			autocmd BufNewFile,BufRead tex let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
-			autocmd BufNewFile,BufRead *.tex vnoremap <silent> <LocalLeader>lf "ey
+			autocmd filetype tex set ft=tex
+			autocmd filetype tex let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
+			autocmd filetype tex vnoremap <silent> <LocalLeader>lf "ey
 				\:call system("evince -l \"$(echo '" . @e . "' <bar> detex)\" " . fnamemodify(g:vimtex_data[0].tex, ":t:r") . ".pdf > /dev/null 2>&1")<CR>
 		augroup END
 	endif
@@ -476,4 +476,4 @@ NeoBundleCheck
 	endif
 
 "" }}}
-
+"" }}}

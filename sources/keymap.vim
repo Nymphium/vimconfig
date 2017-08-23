@@ -38,6 +38,7 @@ nnoremap k gk
 " nnoremap W <Nop>
 " nnoremap W b
 nnoremap r <C-r>
+nnoremap <C-r> r
 " nnoremap <ESC>j <C-d>
 " nnoremap <M-j> <C-d>
 " nnoremap <ESC>k <C-u>

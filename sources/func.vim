@@ -25,11 +25,11 @@
 "" edit TeX file {{{
 	augroup LatexEnv
 		autocmd!
-		autocmd BufNewFile *.tex let g:tex_flavor = "latex"
-		autocmd BufNewFile *.tex let java_highlight_all = 1
-		autocmd BufNewFile *.tex let java_highlight_debug = 1
-		autocmd BufNewFile *.tex let java_highlight_functions = 1
-		autocmd BufNewFile *.tex silent :set expandtab
+		autocmd filetype tex let g:tex_flavor = "latex"
+		autocmd filetype tex let java_highlight_all = 1
+		autocmd filetype tex let java_highlight_debug = 1
+		autocmd filetype tex let java_highlight_functions = 1
+		autocmd filetype tex silent set expandtab
 		autocmd BufWritePre *.tex silent :%s/｡/。/ge
 		autocmd BufWritePre *.tex silent :%s/､/、/ge
 		autocmd BufWritePre *.tex silent :%s/｢/「/ge
@@ -49,7 +49,6 @@
 
 
 "" insertmode highlight {{{
-
 	if has('syntax')
 		let g:hi_insert = 'StatusLine cterm=bold ctermfg=0 ctermbg=255 guifg=#000000 guibg=#ffffff'
 		let g:hi_normal = ""

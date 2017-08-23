@@ -27,7 +27,6 @@ set autoread
 
 set grepprg=ag\ --vimgrep\ --hidden\ -S\ --stats\ $*
 set grepformat=%f:%l:%c:%m
-" set nocompatible
 set history=2000
 
 set ignorecase
@@ -36,9 +35,13 @@ set hlsearch
 set incsearch
 set hidden
 
+set fdm=marker
+
 if has('nvim')
 	" interactive replacement
 	set inccommand=split
+
+	set nocompatible
 endif
 
 set showmatch
