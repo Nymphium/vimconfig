@@ -13,6 +13,10 @@
 	" vnoremap <M-z> <ESC>:call CommentInLine()<CR>
 "" }
 
+" go to where the file is located {{{
+command Here cd %:p:h
+" }}}
+
 "" highlighting *.swi as Prolog {{{
 	augroup SyntaxProlog
 		autocmd!
@@ -30,10 +34,10 @@
 		autocmd filetype tex let java_highlight_debug = 1
 		autocmd filetype tex let java_highlight_functions = 1
 		autocmd filetype tex silent set expandtab
-		autocmd BufWritePre filetype tex silent :%s/｡/。/ge
-		autocmd BufWritePre filetype tex silent :%s/､/、/ge
-		autocmd BufWritePre filetype tex silent :%s/｢/「/ge
-		autocmd BufWritePre filetype tex silent :%s/｣/」/ge
+		autocmd BufWritePre *.tex silent :%s/｡/。/ge
+		autocmd BufWritePre *.tex silent :%s/､/、/ge
+		autocmd BufWritePre *.tex silent :%s/｢/「/ge
+		autocmd BufWritePre *.tex silent :%s/｣/」/ge
 		" autocmd BufWritePre *.tex silent :%s/\([lL][eE][fF][tT]\)\@<!(/（/ge
 		" autocmd BufWritePre *.tex silent :%s/\([rR][iI][gG][hH][tT]\)\@<!)/）/ge
 	augroup END

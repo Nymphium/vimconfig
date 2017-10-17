@@ -434,26 +434,27 @@ endif
 
 	if has_merlin == "0"
 		let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-		execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
+		if !empty(matchstr(g:opamshare, '\(/[^/]\+\)\+/\?'))
+			execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
 
+			let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+			if has_ocp_indent == "0"
+				execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
+				let g:ocp_indent_on = 1
 
-		let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
-		if has_ocp_indent == "0"
-			execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
-			let g:ocp_indent_on = 1
+				function! s:ocaml_format()
+					if g:ocp_indent_on == 1
+						let now_line = line('.')
+						exec ':%! ocp-indent'
+						exec ':' . now_line
+					endif
+				endfunction
 
-			function! s:ocaml_format()
-				if g:ocp_indent_on == 1
-					let now_line = line('.')
-					exec ':%! ocp-indent'
-					exec ':' . now_line
-				endif
-			endfunction
-
-			augroup OcamlFormat
-				autocmd!
-				autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
-			augroup END
+				augroup OcamlFormat
+					autocmd!
+					autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
+				augroup END
+			endif
 		endif
 	endif
 "" }}}

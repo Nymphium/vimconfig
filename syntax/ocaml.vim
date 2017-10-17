@@ -16,7 +16,7 @@ hi ocamlWild cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
 
 syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
 syn match ocamlDoubleSemicolon /\<;;\>/
-syn match ocamlOp /|>\|=\|&&\||\|->\|-\|\(;\)\@<!;\(;\)\@!\|>=\|<=\|::\|@\|<>\|,\|\^\|\/\|*\|+/
+syn match ocamlOp /[^'#0-9A-Za-z_\s"\((*\)\(*)\)\(\[\s*\]\)]\+/
 syn match ocamlFunc /\(\<let\s\+\(rec\s\+\)\{0,1\}\)\@<=\w\+\>/
 syn match ocamlFunc /\(\<and\s\+\)\@<=\w\+\>/
 syn match ocamlBracket /[(){}\[]\]/
