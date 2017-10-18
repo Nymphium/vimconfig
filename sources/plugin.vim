@@ -365,9 +365,8 @@ endif
 			let g:deoplete#omni#input_patterns = {}
 		endif
 
-		augroup LatexSetup
+		augroup VimtexSetup
 			autocmd!
-			autocmd filetype tex set ft=tex
 			autocmd filetype tex let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
 			autocmd filetype tex vnoremap <silent> <LocalLeader>lf "ey
 				\:call system("evince -l \"$(echo '" . @e . "' <bar> detex)\" " . fnamemodify(g:vimtex_data[0].tex, ":t:r") . ".pdf > /dev/null 2>&1")<CR>
@@ -399,14 +398,6 @@ endif
 
 "" vim-racket {{{
 	if !empty(neobundle#get('vim-racket'))
-		augroup RacketSetup
-			    au BufReadPost *.rkt,*.rktl set filetype=racket
-				au filetype racket set lisp
-				au filetype racket set expandtab
-				au filetype racket set softtabstop=2
-				au filetype racket let g:syntastic_enable_racket_racket_checker=1
-				au filetype racket set lispwords+=public-method,override-method,private-method,syntax-case,syntax-rules
-		augroup END
 	endif
 "" }}}
 
@@ -443,26 +434,27 @@ endif
 
 	if has_merlin == "0"
 		let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-		execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
+		if !empty(matchstr(g:opamshare, '\(/[^/]\+\)\+/\?'))
+			execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
 
+			let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+			if has_ocp_indent == "0"
+				execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
+				let g:ocp_indent_on = 1
 
-		let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
-		if has_ocp_indent == "0"
-			execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
-			let g:ocp_indent_on = 1
+				function! s:ocaml_format()
+					if g:ocp_indent_on == 1
+						let now_line = line('.')
+						exec ':%! ocp-indent'
+						exec ':' . now_line
+					endif
+				endfunction
 
-			function! s:ocaml_format()
-				if g:ocp_indent_on == 1
-					let now_line = line('.')
-					exec ':%! ocp-indent'
-					exec ':' . now_line
-				endif
-			endfunction
-
-			augroup OcamlFormat
-				autocmd!
-				autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
-			augroup END
+				augroup OcamlFormat
+					autocmd!
+					autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
+				augroup END
+			endif
 		endif
 	endif
 "" }}}
