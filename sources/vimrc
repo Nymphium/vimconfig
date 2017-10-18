@@ -16,5 +16,11 @@ source $HOME/.vim/sources/keymap.vim
 source $HOME/.vim/sources/func.vim
 filetype plugin indent on
 syntax on
+
+autocmd FileType *
+\   if &l:omnifunc == ''
+\ |   setlocal omnifunc=syntaxcomplete#Complete
+\ | endif
+
 source $HOME/.vim/sources/color.vim
 

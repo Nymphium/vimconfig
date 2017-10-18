@@ -90,8 +90,6 @@ set timeoutlen=250
 set display=uhex,lastline
 set whichwrap=b,s,h,l,<,>,[,]
 
-set omnifunc=syntaxcomplete#Complete
-
 "" StatusLine settings
 set statusline=[file:\"%t%m\"\|Type:\"%Y\"\|%{'Enc:\"'.(&fenc!=''?&fenc:&enc).'\"]'}\ %h%w\L%l\/%L\ %v
 set laststatus=2
