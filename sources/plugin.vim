@@ -430,31 +430,30 @@ endif
 "" }}}
 
 "" merlin and ocp-indent (it is not a plugin) {{{
-	let has_merlin = substitute(system("command -v ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
-
-	if has_merlin == "0"
-		let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-		if !empty(matchstr(g:opamshare, '\(/[^/]\+\)\+/\?'))
+	let g:opamshare = matchstr(substitute(system('opam config var share'), '\([^\n]\+\)\@<=\n.*$', '', ''), '^\(/[^/]\+\)\+/\?')
+	if !empty(g:opamshare)
+		let has_merlin = substitute(system("command -v ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+		if has_merlin == "0"
 			execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
+		endif
 
-			let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
-			if has_ocp_indent == "0"
-				execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
-				let g:ocp_indent_on = 1
+		let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+		if has_ocp_indent == "0"
+			execute 'set runtimepath^=' . g:opamshare . '/ocp-indent/vim'
+			let g:ocp_indent_on = 1
 
-				function! s:ocaml_format()
-					if g:ocp_indent_on == 1
-						let now_line = line('.')
-						exec ':%! ocp-indent'
-						exec ':' . now_line
-					endif
-				endfunction
+			function! s:ocaml_format()
+				if g:ocp_indent_on == 1
+					let now_line = line('.')
+					exec ':%! ocp-indent'
+					exec ':' . now_line
+				endif
+			endfunction
 
-				augroup OcamlFormat
-					autocmd!
-					autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
-				augroup END
-			endif
+			augroup OcamlFormat
+				autocmd!
+				autocmd BufWrite,FileWritePre,FileAppendPre *.mli\= call s:ocaml_format()
+			augroup END
 		endif
 	endif
 "" }}}
