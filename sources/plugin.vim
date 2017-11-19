@@ -435,6 +435,7 @@ endif
 		let has_merlin = substitute(system("command -v ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
 		if has_merlin == "0"
 			execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
+			nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>:call merlin#StopHighlight()<CR>
 		endif
 
 		let has_ocp_indent = substitute(system("command -v ocp-indent 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
