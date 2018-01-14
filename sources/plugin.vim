@@ -433,6 +433,7 @@ endif
 	let g:opamshare = matchstr(substitute(system('opam config var share'), '\([^\n]\+\)\@<=\n.*$', '', ''), '^\(/[^/]\+\)\+/\?')
 	if !empty(g:opamshare)
 		let has_merlin = substitute(system("command -v ocamlmerlin 2>&1 >/dev/null; echo $?"), '\n\+$', '', '')
+
 		if has_merlin == "0"
 			execute 'set runtimepath+=' . g:opamshare . '/merlin/vim'
 			nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>:call merlin#StopHighlight()<CR>
