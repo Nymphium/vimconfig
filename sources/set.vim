@@ -121,6 +121,20 @@ if has('nvim')
 		let g:nvim_qt_fontsize = g:nvim_qt_fontsize - 1
 		execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
 	endfunction
+
+	augroup NVimTerminal
+		autocmd!
+		autocmd TermOpen                      *        setlocal nonumber
+		\|                                             setlocal norelativenumber
+		\|                                             setlocal nocursorcolumn
+		\|                                             setlocal nocursorline
+		\|                                             startinsert
+		autocmd TermClose                     *        setlocal number
+		\|                                             setlocal relativenumber
+		\|                                             setlocal cursorcolumn
+		\|                                             setlocal cursorline
+	augroup END
+
 else
 	if has('gui_running')
 		set guioptions=
