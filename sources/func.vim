@@ -1,20 +1,9 @@
-"" make block comment {
-	" function! CommentInLine()
-		" if &filetype =~ "lua"
-			" normal `<i--[[ 
-			" normal `>5la ]]
-		" else
-			" normal `<i/* 
-			" normal `>3la */
-		" endif
-	" endfunction
-
-	" vnoremap <ESC>z <ESC>:call CommentInLine()<CR>
-	" vnoremap <M-z> <ESC>:call CommentInLine()<CR>
-"" }
-
 " go to where the file is located {{{
 command Here cd %:p:h
+" }}}
+
+" go to window {{{
+command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 " }}}
 
 "" highlighting *.swi as Prolog {{{
@@ -34,6 +23,7 @@ command Here cd %:p:h
 		autocmd filetype tex let java_highlight_debug = 1
 		autocmd filetype tex let java_highlight_functions = 1
 		autocmd filetype tex silent set expandtab
+		autocmd filetype tex set foldmarker=[[[,]]]
 		autocmd BufWritePre *.tex silent :%s/｡/。/ge
 		autocmd BufWritePre *.tex silent :%s/､/、/ge
 		autocmd BufWritePre *.tex silent :%s/｢/「/ge

@@ -116,7 +116,8 @@ inoremap <ESC>2 <ESC><C-a>i
 inoremap <M-2> <ESC><C-a>i
 inoremap <M-p> <ESC>pi
 inoremap <ESC>p <ESC>pi
-inoremap <ESC>d <ESC>ddi
+inoremap <ESC>d <S-Left><C-w>
+inoremap <ESC>D <C-w>
 inoremap <ESC>w <S-Left>
 inoremap <M-w> <S-Left>
 inoremap <ESC>e <S-Right>
