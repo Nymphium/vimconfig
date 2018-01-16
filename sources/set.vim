@@ -92,7 +92,7 @@ set whichwrap=b,s,h,l,<,>,[,]
 
 "" StatusLine settings
 set statusline=[
-set statusline+=\|File:\"%t%m\" " filename[modified?]
+set statusline+=File:\"%t%m\" " filename[modified?]
 set statusline+=\|Type:\"%Y\" " filetype
 set statusline+=\|Enc:\"%{(&fenc!=''?&fenc:&enc)}\" " file encoding
 set statusline+=]
