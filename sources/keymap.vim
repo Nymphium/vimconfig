@@ -17,10 +17,12 @@ nnoremap <ESC>s <ESC>:w!<CR>
 nnoremap <ESC>s<ESC>s <ESC>:wq!<CR>
 nnoremap <M-s> <ESC>:w!<CR>
 nnoremap <M-s><M-s> <ESC>:wq!<CR>
-" nnoremap <ESC>w<ESC>w <ESC>:q!<CR>
-" nnoremap <M-w><M-w> <ESC>:q!CR>
-nnoremap <C-w> <Nop>
+nnoremap <C-q> :bd!<CR>
 nnoremap <C-w><C-w> :q!<CR>
+nnoremap <Left> <C-w><Left>
+nnoremap <Right> <C-w><Right>
+nnoremap <Up> <C-w><Up>
+nnoremap <Down> <C-w><Down>
 nnoremap <ESC>w b
 nnoremap <M-w> b
 nnoremap <ESC>e w
