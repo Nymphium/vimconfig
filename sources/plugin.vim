@@ -11,7 +11,7 @@ endif
 	"" }}}
 
 	"" support by language {{{
-	" NeoBundleLazy 'OCamlPro/ocp-indent', {'autoload' : {'filetypes' : ['ocaml']}}
+	NeoBundleLazy 'rgrinberg/vim-ocaml', {'autoload' : {'filetypes' : ['ocaml', 'jbuild', 'opam', 'oasis', 'omake']}}
 	" NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon', 'moonscript'] }}
@@ -22,11 +22,14 @@ endif
 	\    }
 	" NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
-	NeoBundleLazy 'wesleyche/SrcExpl', {'autoload' : {'commands': ['SrcExplToggle']}}
 	NeoBundleLazy 'rhysd/nyaovim-markdown-preview', {'autoload' : {'filetypes' : ['md', 'markdown', 'mkd']}}
 	NeoBundleLazy 'wlangstroth/vim-racket', {'autoload' : {'filetypes' : ['racket']}}
 	NeoBundleLazy 'kovisoft/slimv', {'autoload' : {'filetypes' : ['racket']}}
-	" NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
+	NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
+	NeoBundleLazy 'racer-rust/vim-racer', {'autoload' : {'filetypes': ['rust']}}
+	NeoBundleLazy 'derekwyatt/vim-scala', {'autoload' : {'filetypes': ['scala']}}
+	NeoBundleLazy 'ensime/ensime-vim', {'autoload' : {'filetypes' : ['scala']}}
+
 	" NeoBundleLazy 'phildawes/racer', {
 	" \   'build' : {
 	" \     'mac'  : 'cargo build --release',
@@ -51,6 +54,7 @@ endif
 	NeoBundle 'Townk/vim-autoclose'
 	NeoBundle 'tmhedberg/matchit'
 	NeoBundle 'scrooloose/syntastic'
+	NeoBundle 'sbdchd/neoformat'
 	if has('nvim')
 		NeoBundle "Shougo/deoplete.nvim"
 	elseif has('lua')
@@ -59,6 +63,9 @@ endif
 		"" NeoBundle 'Shougo/neosnippet'
 		"" NeoBundle 'Shougo/neosnippet-snippets'
 	endif
+	NeoBundle 'prabirshrestha/async.vim'
+	NeoBundle 'prabirshrestha/asyncomplete.vim'
+	NeoBundle 'wellle/tmux-complete.vim'
 	NeoBundle 'Shougo/unite.vim'
 	NeoBundle 'Shougo/vimproc.vim', {
 	\ 'build' : {
@@ -138,6 +145,24 @@ endif
 		inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 	endif
 "" }}}
+
+" tmux-complete {{{
+	if !empty(neobundle#get('tmux-complete.vim'))
+		let g:tmuxcomplete#asyncomplete_source_options = {
+					\ 'name':      'tmuxcomplete',
+					\ 'whitelist': ['*'],
+					\ 'config': {
+					\     'splitmode':      'words',
+					\     'filter_prefix':   1,
+					\     'show_incomplete': 1,
+					\     'sort_candidates': 0,
+					\     'scrollback':      0,
+					\     'truncate':        0
+					\     }
+					\ }
+		let g:tmuxcomplete#trigger = ''
+	endif
+" }}}
 
 "" neocomplete {{{
 	"" Use neocomplete.
@@ -303,9 +328,19 @@ endif
 		let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
 		let g:syntastic_haskell_checkers = ['ghc-mod']
 		let g:syntastic_ocaml_checkers = ['merlin']
+		let g:syntastic_scala_checkers = []
 		set statusline+=\ %#warningmsg#
 		set statusline+=%{SyntasticStatuslineFlag()}
 		set statusline+=%*
+	endif
+"" }}}
+
+"" neoformat {{{
+	if !empty(neobundle#get("syntastic"))
+		let g:neoformat_scala_scalafmt = {
+					\ 'exe': 'scalafmt',
+					\ 'replace': 1,
+					\ }
 	endif
 "" }}}
 
@@ -314,21 +349,6 @@ endif
 	"" imap <M-s> <Plug>(neosnippet_expand_or_jump)
 	"" smap <ESC>s <Plug>(neosnippet_expand_or_jump)
 	"" smap <M-s> <Plug>(neosnippet_expand_or_jump)
-"" }}}
-
-"" SrcExpl {{{
-	"" Set refresh time in ms
-	let g:SrcExpl_RefreshTime = 1000
-	"" Is update tags when SrcExpl is opened
-	let g:SrcExpl_isUpdateTags = 0
-	"" Tag update command
-	" let g:SrcExpl_updateTagsCmd = 'ctags --sort=foldcase ' . expand("%:p")
-	"" Source Explorer Window Height
-	let g:SrcExpl_winHeight = 24
-
-	nmap <silent> <LocalLeader>t :SrcExplToggle<CR>
-	nmap <silent> <LocalLeader>n :call g:SrcExpl_NextDef()<CR>
-	nmap <silent> <LocalLeader>p :call g:SrcExpl_PrevDef()<CR>
 "" }}}
 
 "" javacomplete {{{
@@ -379,11 +399,20 @@ endif
 "" }}}
 
 "" racer {{{
-	if !empty(neobundle#get('phildawes/racer'))
+	if !empty(neobundle#get('racer-rust/vim-racer'))
 		set hidden
-		let g:racer_cmd = $HOME . "/.vim/bundle/racer/target/release/racer"
-		let $RUST_SRC_PATH = "/tmp"
-		" let g:syntastic_rust_rust_exec = $HOME.  "/.vim/bundle/rust.vim/syntax_checkers/rust/rust.vim"
+		let g:racer_cmd = "/usr/bin/racer"
+	endif
+"" }}}
+
+"" ensime-vim {{{
+	if !empty(neobundle#get('ensime/ensime-vim'))
+		augroup EnsimeVim
+			autocmd!
+			autocmd BufWritePost *.scala silent :EnTypeCheck
+		augroup END
+
+		nnoremap <silent><localleader>t :EnType<CR>
 	endif
 "" }}}
 
