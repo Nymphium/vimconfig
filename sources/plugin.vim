@@ -8,10 +8,11 @@ endif
 
 	"" colorscheme {{{
 	NeoBundle 'vim-scripts/rdark'
+	NeoBundle 'w0ng/vim-hybrid'
 	"" }}}
 
 	"" support by language {{{
-	NeoBundleLazy 'rgrinberg/vim-ocaml', {'autoload' : {'filetypes' : ['ocaml', 'jbuild', 'opam', 'oasis', 'omake']}}
+	NeoBundleLazy 'rgrinberg/vim-ocaml', {'autoload' : {'filetypes' : ['ocaml', 'dune', 'jbuild', 'opam', 'oasis', 'omake']}}
 	" NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon', 'moonscript'] }}
@@ -23,6 +24,7 @@ endif
 	" NeoBundleLazy 'artur-shaik/vim-javacomplete2', {'autoload' : {'filetypes' : ['java']}}
 	NeoBundleLazy 'raymond-w-ko/vim-lua-indent', {'autoload' : {'filetypes' : ['lua']}}
 	NeoBundleLazy 'rhysd/nyaovim-markdown-preview', {'autoload' : {'filetypes' : ['md', 'markdown', 'mkd']}}
+	NeoBundle 'nymphium/nyaovim-dynfont'
 	NeoBundleLazy 'wlangstroth/vim-racket', {'autoload' : {'filetypes' : ['racket']}}
 	NeoBundleLazy 'kovisoft/slimv', {'autoload' : {'filetypes' : ['racket']}}
 	NeoBundleLazy 'rust-lang/rust.vim', {'autoload' : {'filetypes': ['rust']}}
@@ -47,6 +49,7 @@ endif
 	" }}}
 
 	"" utils {{{
+	NeoBundle 'Nymphium/luafiler'
 	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'scrooloose/nerdcommenter'
 	NeoBundle 'tpope/vim-surround'
@@ -406,13 +409,14 @@ endif
 "" }}}
 
 "" ensime-vim {{{
-	if !empty(neobundle#get('ensime/ensime-vim'))
+	if !empty(neobundle#get('ensime-vim'))
 		augroup EnsimeVim
 			autocmd!
 			autocmd BufWritePost *.scala silent :EnTypeCheck
 		augroup END
 
-		nnoremap <silent><localleader>t :EnType<CR>
+		nnoremap <buffer> <silent> <localleader>t :EnType<CR>
+		vnoremap <buffer> <silent> <localleader>t :EnType<CR>
 	endif
 "" }}}
 
@@ -490,12 +494,28 @@ endif
 "" }}}
 
 "" rdark {{{
-
-	if has('gui_running')
-		colorscheme evening
-	else
-		colorscheme rdark
+	if !empty(neobundle#get('rdark'))
+		if has('gui_running')
+			colorscheme evening
+		else
+			colorscheme rdark
+		endif
 	endif
+"" }}}
 
+"" luafiler {{{
+	if !empty(neobundle#get('luafiler'))
+		let g:luafiler_do_not_warn_on_start = 1
+
+		augroup LuaFiler
+			autocmd!
+			autocmd FileType *
+				\ if isdirectory(@%)
+				\|   call luaeval("plugin.luafiler.render_dirs([[" . @% . "]])")
+				\|   nnoremap <silent> WO :call<Space>luaeval('plugin.luafiler.open()')<CR>
+				\|   nnoremap <silent> WV :call<Space>luaeval('plugin.luafiler.open("v")')<CR>
+				\| endif
+		augroup END
+	endif
 "" }}}
 "" }}}

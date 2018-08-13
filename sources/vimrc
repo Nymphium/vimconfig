@@ -8,9 +8,16 @@ augroup END
 if has('nvim')
 	set runtimepath+=~/.vim/after
 	set mouse=
+
+	lua <<LUA
+	local version = _VERSION:match("%d+%.%d+")
+	package.path = package.path:gsub("/%d+%.%d+/", ("/%s/"):format(version))
+	package.cpath = package.cpath:gsub("/%d+%.%d+/", ("/%s/"):format(version))
+LUA
 endif
 
 source $HOME/.vim/sources/set.vim
+source $HOME/.vim/sources/color.vim
 source $HOME/.vim/sources/keymap.vim
 source $HOME/.vim/sources/plugin.vim
 source $HOME/.vim/sources/func.vim
@@ -22,5 +29,4 @@ autocmd FileType *
 \ |   setlocal omnifunc=syntaxcomplete#Complete
 \ | endif
 
-source $HOME/.vim/sources/color.vim
 
