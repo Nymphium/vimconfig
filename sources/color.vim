@@ -25,7 +25,8 @@ augroup MyHighlighten
 	autocmd ColorScheme * hi PmenuSel ctermbg=4 cterm=bold ctermfg=white
 	autocmd ColorScheme * hi PmenuSbar ctermbg=2
 	autocmd ColorScheme * hi PmenuThumb ctermfg=3 cterm=bold ctermfg=white
-	autocmd ColorScheme * hi NonText ctermfg=12 guifg=#339fff guibg=none
+	autocmd ColorScheme * hi NonText ctermfg=12 guifg=#339fff guibg=NONE
+	autocmd ColorScheme * hi Visual ctermbg=242 guibg=gray
 
 	autocmd Syntax,FileType * syn match Shebang /^#!\/.\{-\}bin\/.*$/
 	" autocmd StdinReadPost,BufAdd,BufEnter,BufNew,FileType * syn match Bracket /[(){}]\|\[\(\[\)\@!\|\]\(\]\)\@!/ contains=Bracket

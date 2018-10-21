@@ -18,13 +18,13 @@ ln -s "${TARGET}/.vim/syntax_checkers/" "${TARGET}/.config/nvim/syntax_checkers"
 
 # neobundle
 if [[ ! -a "${TARGET}/.vim/bundle/neobundle.vim" ]]; then
-	git clone https://github.com/Shougo/neobundle.vim "${TARGET}/.vim/bundle/neobundle.vim"
+	curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
 fi
 
 case "${EDITOR:-vim}" in
 	vim)
 		vim -c :NeoBundleUpdate -c :q;;
 	nvim)
-		nvim -c :NeoBundleUpdate -c :UpdateRemotePlugins -c :q
+		nvim +NeoBundleUpdate +UpdateRemotePlugins +q
 esac
 

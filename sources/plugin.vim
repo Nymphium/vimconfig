@@ -12,8 +12,14 @@ endif
 	"" }}}
 
 	"" support by language {{{
+	NeoBundleLazy 'autozimu/LanguageClient-neovim', {
+				\ 'depends' : ['roxka/nvim-yarp', 'roxma/vim-hug-neovim-rpc']
+				\ }
+	NeoBundle 'roxma/nvim-yarp'
+	NeoBundle 'roxma/vim-hug-neovim-rpc'
+
 	NeoBundleLazy 'rgrinberg/vim-ocaml', {'autoload' : {'filetypes' : ['ocaml', 'dune', 'jbuild', 'opam', 'oasis', 'omake']}}
-	" NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
+	NeoBundleLazy 'Shirk/vim-gas', {'autoload' : { 'filetypes' : ['asm', 'gas'] }}
 	NeoBundleLazy 'lervag/vimtex', {'autoload' : {'filetypes' : ['tex'] }}
 	NeoBundleLazy 'leafo/moonscript-vim', {'autoload' : {'filetypes' : ['moon', 'moonscript'] }}
 	NeoBundleLazy 'nymphium/syntastic-moonscript', {
@@ -41,15 +47,21 @@ endif
 	" \     'filetypes' : 'rust',
 	" \   },
 	" \ }
-	NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
-	NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+	" NeoBundleLazy 'dag/vim2hs', {'autoload' : {'filetypes' : ['haskell']}}
+	" NeoBundleLazy 'kana/vim-filetype-haskell', {'autoload' : {'filetypes' : ['haskell']}}
+	NeoBundleLazy 'itchyny/vim-haskell-indent', {'filetypes' : ['haskell']}
+	NeoBundleLazy 'neovimhaskell/haskell-vim', {'filetypes' : ['haskell']}
 	NeoBundleLazy 'eagletmt/ghcmod-vim', {'autoload' : {'filetypes' : ['haskell']}}
+	NeoBundleLazy 'eagletmt/neco-ghc', {'autoload' : {'filetypes' : ['haskell']}}
 	NeoBundleLazy 'plasticboy/vim-markdown', {'autoload' : {'filetypes' : ['markdown']}}
+	NeoBundleLazy 'nymphium/vim-koka', {'autoload' : {'filetypes' : ['koka']}}
 	" NeoBundleLazy 'davidhalter/jedi-vim', {'autoload' : {'filetypes' : ['python']}}
 	" }}}
 
 	"" utils {{{
-	NeoBundle 'Nymphium/luafiler'
+	if has('nvim') && has('lua')
+		NeoBundle 'Nymphium/luafiler'
+	endif
 	NeoBundle 'thinca/vim-quickrun'
 	NeoBundle 'scrooloose/nerdcommenter'
 	NeoBundle 'tpope/vim-surround'
@@ -91,7 +103,7 @@ endif
 
 "" ----plugins' settings & keymaps----{{{
 "" vim-surround {{{
-	if !empty(neobundle#get('vim-surround'))
+	if index(neobundle#get_not_installed_bundle_names(), 'vim-surround') < 0 && !empty(neobundle#get('vim-surround'))
 		xmap " <Plug>VSurround"
 		xmap ' <Plug>VSurround'
 		xmap ( <Plug>VSurround)
@@ -118,7 +130,7 @@ endif
 "" deoplete {{{
 	let g:deoplete#enable_at_startup = 1
 
-	if !empty(neobundle#get('deoplete.nvim'))
+	if index(neobundle#get_not_installed_bundle_names(), 'deoplete.nvim') < 0 && !empty(neobundle#get('deoplete.nvim'))
 		let g:deoplete#enable_smart_case = 1
 		let g:deoplete#auto_completion_start_length=1
 		let g:deoplete#sources = {}
@@ -150,13 +162,13 @@ endif
 "" }}}
 
 " tmux-complete {{{
-	if !empty(neobundle#get('tmux-complete.vim'))
+	if index(neobundle#get_not_installed_bundle_names(), 'tmux-complete.vim') < 0 && !empty(neobundle#get('tmux-complete.vim'))
 		let g:tmuxcomplete#asyncomplete_source_options = {
 					\ 'name':      'tmuxcomplete',
 					\ 'whitelist': ['*'],
 					\ 'config': {
 					\     'splitmode':      'words',
-					\     'filter_prefix':   1,
+					\     'filter_prefix':   3,
 					\     'show_incomplete': 1,
 					\     'sort_candidates': 0,
 					\     'scrollback':      0,
@@ -171,7 +183,7 @@ endif
 	"" Use neocomplete.
 	let g:neocomplete#enable_at_startup = 1
 
-	if !empty(neobundle#get('neocomplete.vim'))
+	if index(neobundle#get_not_installed_bundle_names(), 'neocomplete.vim') < 0 && !empty(neobundle#get('neocomplete.vim'))
 		"" Disable AutoComplPop.
 		let g:acp_enableAtStartup = 0
 		"" Use smartcase.
@@ -230,8 +242,19 @@ endif
 	endif
 "" }}}
 
+"" LanguageClient {{{
+	if index(neobundle#get_not_installed_bundle_names(), "LanguageClient-neovim") < 0 && !empty(neobundle#get("LanguageClient-neovim"))
+		let g:LanguageClient_rootMakers = ['*.cabal', 'stack.yaml']
+		let g:LanguageClient_serverCommands = {
+			\ 'haskell': ['hie-wrapper'],
+			\ 'bash': ['bash-language-server'],
+			\ 'docker': ['docker-langserver'],
+			\ }
+	endif
+"" }}}
+
 "" vim-markdown {{{
-	if !empty(neobundle#get("vim-markdown"))
+	if index(neobundle#get_not_installed_bundle_names(), "vim-markdown") < 0 && !empty(neobundle#get("vim-markdown"))
 		let g:vim_markdown_folding_disabled = 1
 		let g:vim_markdown_conceal = 0
 		let g:tex_conceal = ""
@@ -246,7 +269,7 @@ endif
 "" }}}
 
 "" vim-over {{{
-	if !empty(neobundle#get("vim-over"))
+	if index(neobundle#get_not_installed_bundle_names(), "vim-over") < 0 && !empty(neobundle#get("vim-over"))
 		let g:over_command_line_prompt = "Over > "
 		hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
 		hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
@@ -259,7 +282,7 @@ endif
 "" }}}
 
 "" vim-quickrun {{{
-	if !empty(neobundle#get("vim-quickrun"))
+	if index(neobundle#get_not_installed_bundle_names(), "vim-quickrun") < 0 && !empty(neobundle#get("vim-quickrun"))
 		" let g:quickrun_config = {}
 
 		" let g:quickrun_config['*'] = {
@@ -308,7 +331,7 @@ endif
 "" }}}
 
 "" syntastic {{{
-	if !empty(neobundle#get("syntastic"))
+	if index(neobundle#get_not_installed_bundle_names(), "syntastic") < 0 && !empty(neobundle#get("syntastic"))
 		let g:syntastic_check_on_open = 1
 		let g:syntastic_always_populate_loc_list = 1
 		let g:syntastic_check_on_wq = 0
@@ -339,7 +362,7 @@ endif
 "" }}}
 
 "" neoformat {{{
-	if !empty(neobundle#get("syntastic"))
+	if index(neobundle#get_not_installed_bundle_names(), "syntastic") < 0 && !empty(neobundle#get("syntastic"))
 		let g:neoformat_scala_scalafmt = {
 					\ 'exe': 'scalafmt',
 					\ 'replace': 1,
@@ -355,7 +378,7 @@ endif
 "" }}}
 
 "" javacomplete {{{
-	if !empty(neobundle#get('vim-javacomplete2'))
+	if index(neobundle#get_not_installed_bundle_names(), 'vim-javacomplete2') < 0 && !empty(neobundle#get('vim-javacomplete2'))
 		augroup Javacomplete
 			autocmd!
 			autocmd filetype java setlocal omnifunc=javacomplete#Complete
@@ -372,7 +395,7 @@ endif
 "" }}}
 
 "" vimtex {{{
-	if !empty(neobundle#get('vimtex'))
+	if index(neobundle#get_not_installed_bundle_names(), 'vimtex') < 0 && !empty(neobundle#get('vimtex'))
 		let g:vimtex_view_method = 'general'
 		let g:vimtex_view_general_viewer ='evince'
 		let g:vimtex_fold_enabled = 0
@@ -402,14 +425,14 @@ endif
 "" }}}
 
 "" racer {{{
-	if !empty(neobundle#get('racer-rust/vim-racer'))
+	if index(neobundle#get_not_installed_bundle_names(), 'racer-rust/vim-racer') < 0 && !empty(neobundle#get('racer-rust/vim-racer'))
 		set hidden
 		let g:racer_cmd = "/usr/bin/racer"
 	endif
 "" }}}
 
 "" ensime-vim {{{
-	if !empty(neobundle#get('ensime-vim'))
+	if index(neobundle#get_not_installed_bundle_names(), 'ensime-vim') < 0 && !empty(neobundle#get('ensime-vim'))
 		augroup EnsimeVim
 			autocmd!
 			autocmd BufWritePost *.scala silent :EnTypeCheck
@@ -421,7 +444,7 @@ endif
 "" }}}
 
 "" jedi-vim {{{
-	if !empty(neobundle#get('jedi-vim'))
+	if index(neobundle#get_not_installed_bundle_names(), 'jedi-vim') < 0 && !empty(neobundle#get('jedi-vim'))
 		command! -nargs=0 JediRename :call jedi#rename()
 
 		let g:jedi#rename_command = ""
@@ -430,12 +453,12 @@ endif
 "" }}}
 
 "" vim-racket {{{
-	if !empty(neobundle#get('vim-racket'))
+	if index(neobundle#get_not_installed_bundle_names(), 'vim-racket') < 0 && !empty(neobundle#get('vim-racket'))
 	endif
 "" }}}
 
 "" vim-maximizer {{{
-	if !empty(neobundle#get('vim-maximizer'))
+	if index(neobundle#get_not_installed_bundle_names(), 'vim-maximizer') < 0 && !empty(neobundle#get('vim-maximizer'))
 		" let g:maximizer_default_mapping_key = '<F11>'
 		nnoremap <silent><F11> :MaximizerToggle<CR>
 		vnoremap <silent><F11> :MaximizerToggle<CR>gv
@@ -443,8 +466,16 @@ endif
 	endif
 "" }}}
 
+"" vim2hs {{{
+	if index(neobundle#get_not_installed_bundle_names(), 'vim2hs') < 0 && !empty(neobundle#get('vim2hs'))
+		let g:haskell_conceal = 0
+	endif
+"" }}}
+
 "" ghcmod.vim {{{
-	if !empty(neobundle#get('ghcmod-vim'))
+	if index(neobundle#get_not_installed_bundle_names(), 'ghcmod-vim') < 0 && !empty(neobundle#get('ghcmod-vim'))
+        nmap <silent> <LocalLeader>t :GhcModType<CR>
+
 		hi ghcmodType ctermbg=yellow
 		let g:ghcmod_type_highlight = 'ghcmodType'
 		let g:ghcmod_hlint_options = ['--ignore=Redundant $']
@@ -494,7 +525,7 @@ endif
 "" }}}
 
 "" rdark {{{
-	if !empty(neobundle#get('rdark'))
+	if index(neobundle#get_not_installed_bundle_names(), 'rdark') < 0 && !empty(neobundle#get('rdark'))
 		if has('gui_running')
 			colorscheme evening
 		else
@@ -504,7 +535,7 @@ endif
 "" }}}
 
 "" luafiler {{{
-	if !empty(neobundle#get('luafiler'))
+	if index(neobundle#get_not_installed_bundle_names(), 'luafiler') < 0 && !empty(neobundle#get('luafiler'))
 		let g:luafiler_do_not_warn_on_start = 1
 
 		augroup LuaFiler

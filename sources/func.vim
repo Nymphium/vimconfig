@@ -113,6 +113,7 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 
 "" racket lang setup {{{
 	augroup RacketSetup
+		autocmd!
 		au BufReadPost *.rkt,*.rktl set filetype=racket
 		au filetype racket set lisp
 		au filetype racket set expandtab
@@ -121,3 +122,13 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 		au filetype racket set lispwords+=public-method,override-method,private-method,syntax-case,syntax-rules
 	augroup END
 "" }}}
+
+" augroup Terminal
+	" autocmd!
+	" autocmd WinEnter *
+				" \  if &buftype ==# 'terminal' && bufname(bufnr('%')) =~# '\<ocaml\>'
+				" \|   setlocal ft=ocaml
+				" \| endif
+" augroup END
+
+command! Dirof echo expand('%:p:h')

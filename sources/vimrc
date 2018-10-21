@@ -29,4 +29,3 @@ autocmd FileType *
 \ |   setlocal omnifunc=syntaxcomplete#Complete
 \ | endif
 
-

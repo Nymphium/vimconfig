@@ -28,6 +28,10 @@ syn match ocamlArrayEnd "|\]"
 syn keyword ocamlFunction fun
 syn keyword ocamlFunction function
 syn keyword ocamlWild _
+syn keyword ocamlKeyword effect
+
+hi link ocamlEffKeyword Identifier
+syn keyword ocamlEffKeyword perform continue
 
 augroup OcamlHighlight
 	autocmd!
