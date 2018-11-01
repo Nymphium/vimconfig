@@ -11,20 +11,20 @@ ln -s "${PWD}/sources/" "${TARGET}/.vim/sources"
 ln -s "${TARGET}/.vim/sources/vimrc" "${TARGET}/.vimrc"
 
 # Neovim
-mkdir -p "${TARGET}/.config/nvim/"
+mkdir -p "${TARGET}/.config/nvim"
 
 ln -s "${PWD}/sources/vimrc" "${TARGET}/.config/nvim/init.vim"
 ln -s "${TARGET}/.vim/syntax_checkers/" "${TARGET}/.config/nvim/syntax_checkers"
+ln -s "${PWD}/dein" "${TARGET}/.config/nvim/"
 
 # neobundle
 if [[ ! -a "${TARGET}/.vim/bundle/neobundle.vim" ]]; then
-	curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
+	curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
+	sh /tmp/dein-installer.sh ~/.cache/dein
 fi
 
-case "${EDITOR:-vim}" in
-	vim)
-		vim -c :NeoBundleUpdate -c :q;;
+case "${EDITOR:-nvim}" in
 	nvim)
-		nvim +NeoBundleUpdate +UpdateRemotePlugins +q
+		nvim +'call dein#install()' +UpdateRemotePlugins +q
 esac
 

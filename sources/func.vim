@@ -14,6 +14,13 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 	augroup END
 "" }}}
 
+"" typescript {{{
+	" augroup SyntaxTS
+		" autocmd!
+		" autocmd BufNewFile *.ts set filetype=typescript
+	" augroup END
+"" }}}
+
 "" edit TeX file {{{
 	augroup LatexEnv
 		autocmd!

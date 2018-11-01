@@ -1,0 +1,86 @@
+[[plugins]]
+repo = 'rgrinberg/vim-ocaml'
+on_ft = ['ocaml','dune', 'jbuild', 'opam', 'oasis', 'omake']
+
+[[plugins]]
+repo = 'lervag/vimtex'
+on_ft = ['tex']
+hook_source = '''
+let g:vimtex_view_method = 'general'
+let g:vimtex_view_general_viewer ='evince'
+let g:vimtex_fold_enabled = 0
+" let g:vimtex_latexmk_options = '-pdfdvi'
+let g:vimtex_latexmk_callback = 0
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
+
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+'''
+
+hook_post_source = '''
+let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
+vnoremap <silent> <LocalLeader>lf "ey
+  \:call system("evince -l \"$(echo '" . @e . "' <bar> detex)\" " . fnamemodify(g:vimtex_data[0].tex, ":t:r") . ".pdf > /dev/null 2>&1")<CR>
+'''
+
+[[plugins]]
+repo = 'wlangstroth/vim-racket'
+on_ft = ['racket']
+
+[[plugins]]
+repo = 'kovisoft/slimv'
+on_ft = ['racket']
+
+[[plugins]]
+repo = 'derekwyatt/vim-scala'
+on_ft = ['scala', 'sbt']
+
+[[plugins]]
+repo = 'ensime/ensime-vim'
+on_ft = ['scala', 'sbt']
+
+hook_source = '''
+nnoremap <buffer> <silent> <localleader>t :EnType<CR>
+vnoremap <buffer> <silent> <localleader>t :EnType<CR>
+'''
+
+hook_post_source = '''
+augroup EnsimeVim
+  autocmd!
+  autocmd BufWritePost *.scala silent :EnTypeCheck
+augroup END
+'''
+
+[[plugins]]
+repo = 'mhartington/nvim-typescript'
+on_ft = ['typescript']
+build = 'sh ./install.sh'
+
+[[plugins]]
+repo = 'itchyny/vim-haskell-indent'
+on_ft = ['haskell']
+
+[[plugins]]
+repo = 'neovimhaskell/haskell-vim'
+on_ft = ['haskell']
+
+[[plugins]]
+repo = 'nymphium/vim-koka'
+on_ft = ['koka']
+
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = ['markdown']
+
+hook_source = '''
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+let g:tex_conceal = ""
+let g:vim_markdown_math = 1
+let g:vim_markdown_frontmatter = 1
+'''
