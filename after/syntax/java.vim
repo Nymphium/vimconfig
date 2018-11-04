@@ -3,13 +3,16 @@
 " Maintainer: Nymphium
 
 
-hi link javaMethod Include
-hi link javaBraces Special
-hi link javaClass javaType
-hi link javaScopeDecl Statement
-hi link javaClassDecl Statement
-hi link javaStorageClass Statement
-hi javaLambda cterm=bold gui=bold ctermfg=214 guifg=#af00af
+augroup JavaColor
+	autocmd!
+	autocmd ColorScheme * hi link javaMethod Include
+	autocmd ColorScheme * hi link javaBraces Special
+	autocmd ColorScheme * hi link javaClass javaType
+	autocmd ColorScheme * hi link javaScopeDecl Statement
+	autocmd ColorScheme * hi link javaClassDecl Statement
+	autocmd ColorScheme * hi link javaStorageClass Statement
+	autocmd ColorScheme * hi javaLambda cterm=bold gui=bold ctermfg=214 guifg=#af00af
+augroup END
 
 
 " Syntastic will resolve

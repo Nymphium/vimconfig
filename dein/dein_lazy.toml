@@ -2,6 +2,7 @@
 repo = 'rgrinberg/vim-ocaml'
 on_ft = ['ocaml','dune', 'jbuild', 'opam', 'oasis', 'omake']
 
+# tex {{{
 [[plugins]]
 repo = 'lervag/vimtex'
 on_ft = ['tex']
@@ -27,7 +28,9 @@ let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
 vnoremap <silent> <LocalLeader>lf "ey
   \:call system("evince -l \"$(echo '" . @e . "' <bar> detex)\" " . fnamemodify(g:vimtex_data[0].tex, ":t:r") . ".pdf > /dev/null 2>&1")<CR>
 '''
+# }}}
 
+# racket {{{
 [[plugins]]
 repo = 'wlangstroth/vim-racket'
 on_ft = ['racket']
@@ -35,7 +38,9 @@ on_ft = ['racket']
 [[plugins]]
 repo = 'kovisoft/slimv'
 on_ft = ['racket']
+# }}}
 
+# scala {{{
 [[plugins]]
 repo = 'derekwyatt/vim-scala'
 on_ft = ['scala', 'sbt']
@@ -55,12 +60,20 @@ augroup EnsimeVim
   autocmd BufWritePost *.scala silent :EnTypeCheck
 augroup END
 '''
+# }}}
+
+# ts {{{
+[[plugins]]
+repo = 'leafgarland/typescript-vim'
+on_ft = ['typescript']
 
 [[plugins]]
 repo = 'mhartington/nvim-typescript'
 on_ft = ['typescript']
 build = 'sh ./install.sh'
+# }}}
 
+# haskell {{{
 [[plugins]]
 repo = 'itchyny/vim-haskell-indent'
 on_ft = ['haskell']
@@ -68,11 +81,13 @@ on_ft = ['haskell']
 [[plugins]]
 repo = 'neovimhaskell/haskell-vim'
 on_ft = ['haskell']
+# }}}
 
 [[plugins]]
 repo = 'nymphium/vim-koka'
 on_ft = ['koka']
 
+# markdown {{{
 [[plugins]]
 repo = 'plasticboy/vim-markdown'
 on_ft = ['markdown']
@@ -84,3 +99,9 @@ let g:tex_conceal = ""
 let g:vim_markdown_math = 1
 let g:vim_markdown_frontmatter = 1
 '''
+# }}}
+
+[[plugins]]
+repo = 'cespare/vim-toml'
+on_ft = ['toml']
+

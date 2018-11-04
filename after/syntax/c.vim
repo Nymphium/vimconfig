@@ -4,8 +4,11 @@
 
 
 " hi link cChar cType
-hi link cFunc Identifier
-hi link cSurround Special
+augrou CColor
+	autocmd!
+	autocmd ColorScheme c hi link cFunc Identifier
+	autocmd ColorScheme c hi link cSurround Special
+augroup END
 
 syn match cOperator /[!=%<>+\(\->\)\-\.]/ display
 syn match cOperator /\/\(\*\|\/\)\@!/ display

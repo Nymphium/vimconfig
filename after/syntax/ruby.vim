@@ -3,17 +3,20 @@
 " Maintainer: Nymphium
 
 
-hi link rubyBracket Special
-hi link rubyCamma Special
-hi link rubyKeyword Statement
-hi link rubyBlockParameterList Statement
-hi link rubyMethodDeclaration Identifier
-hi link rubyInstanceVariable Type
-hi link rubySymbolName String
-hi link rubyColon Statement
-hi rubyLambda cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
-hi link rubyDefine rubyLambda
-hi link rubyEOL String
+augroup RubyColor
+	autocmd!
+	autocmd ColorScheme * hi link rubyBracket Special
+	autocmd ColorScheme * hi link rubyCamma Special
+	autocmd ColorScheme * hi link rubyKeyword Statement
+	autocmd ColorScheme * hi link rubyBlockParameterList Statement
+	autocmd ColorScheme * hi link rubyMethodDeclaration Identifier
+	autocmd ColorScheme * hi link rubyInstanceVariable Type
+	autocmd ColorScheme * hi link rubySymbolName String
+	autocmd ColorScheme * hi link rubyColon Statement
+	autocmd ColorScheme * hi rubyLambda cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
+	autocmd ColorScheme * hi link rubyDefine rubyLambda
+	autocmd ColorScheme * hi link rubyEOL String
+augroup END
 
 
 syn match rubyOperator /\s\zs[:?]\ze\s\+/ display

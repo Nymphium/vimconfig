@@ -3,6 +3,7 @@
 
 augroup MyHighlighten
 	autocmd!
+	autocmd ColorScheme * hi MoreFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
 	autocmd ColorScheme * hi CursorLine cterm=none gui=none ctermbg=237 guibg=#3a3a3a
 	autocmd ColorScheme * hi CursorColumn cterm=none gui=none ctermbg=237 guibg=#3a3a3a
 	autocmd ColorScheme * hi Comment cterm=italic gui=italic ctermfg=255 ctermbg=237 guifg=#eeeeee guibg=#3a3a3a

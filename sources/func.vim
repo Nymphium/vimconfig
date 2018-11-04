@@ -41,9 +41,10 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 "" }}}
 
 "" highlight Zenkaku-space {{{
+	hi ZenkakuSpace cterm=underline ctermbg=196 gui=underline guifg=darkgrey
+
 	augroup ZenkakuSpaceHighlight
 		autocmd!
-		autocmd ColorScheme * hi ZenkakuSpace cterm=underline ctermbg=196 gui=underline guifg=darkgrey
 		autocmd BufReadPost,FileReadPost * match ZenkakuSpace /　/
 	augroup END
 "" }}}
@@ -137,5 +138,20 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 				" \|   setlocal ft=ocaml
 				" \| endif
 " augroup END
+function! Dirof()
+  return expand('%:p:h')
+endfunction
 
-command! Dirof echo expand('%:p:h')
+command! Dirof echo Dirof()
+
+"augroup VimSession
+	"autocmd!
+	"autocmd VimEnter *
+		"\| let s:sessionfile = Dirof () . '/Session.vim'
+		"\| if filereadable(s:sessionfile)
+		"\|   execute('session ' . s:sessionfile)
+		"\| endif
+	"autocmd VimLeave * mksession!
+"augroup END
+
+

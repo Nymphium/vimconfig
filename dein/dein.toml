@@ -1,30 +1,37 @@
 [[plugins]]
-repo = 'vim-scripts/rdark'
+repo = 'vim-scripts/rdark' # {{{
 hook_add = '''
-color rdark
+augroup Rdark
+  autocmd!
+  autocmd VimEnter * nested color rdark
+augroup END
 '''
+# }}}
 
 [[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
+repo = 'autozimu/LanguageClient-neovim' # {{{
 rev = 'next'
 build = 'bash install.sh'
 hook_add = '''
+let g:LanguageClient_autoStart = 1
 let g:LanguageClient_rootMakers = {
+\ '_': ['.git'],
 \ 'haskell': ['*.cabal', 'stack.yaml'],
-\ } 
+\ 'typescript': ['package.json', 'tsconfig.josn'],
+\ 'dockerfile': ['Dockerfile'],
+\ }
 let g:LanguageClient_serverCommands = {
 \ 'lua': ['lua-lsp'],
 \ 'ocaml': ['ocaml-language-server', '--stdio'],
-\ 'haskell': ['stack', '--allow-different-user', 'exec', '--', 'hie-wrapper', '--vomit', '--ekg'],
-\ 'typescript': ['javascript-typescript-langserver'],
-\ 'javascript': ['javascript-typescript-langserver'],
+\ 'haskell': ['stack', 'exec', '--', 'hie-wrapper'],
+\ 'typescript': ['typescript-language-server', '--stdio'],
 \ 'sh': ['bash-language-server', 'start'],
-\ 'docker': ['docker-langserver'],
+\ 'dockerfile': ['docker-langserver'],
 \ }
-
 
 function LC_maps()
   if has_key(g:LanguageClient_serverCommands, &filetype)
+    setlocal signcolumn=yes
     nnoremap <F5> :call LanguageClient_contextMenu()<CR>
     map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
     map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
@@ -41,117 +48,24 @@ augroup LanguageClientKeyconfig
   autocmd Filetype * call LC_maps()
 augroup END
 '''
+# }}}
 
 [[plugins]]
-repo = 'equalsraf/neovim-gui-shim'
+repo = 'Shougo/echodoc.vim'
 
 [[plugins]]
-repo = 'Nymphium/luafiler'
+repo = 'tpope/vim-sleuth' # {{{
 hook_add = '''
-let g:luafiler_do_not_warn_on_start = 1
+set tabstop=4
 '''
-
-hook_post_source = '''
-if isdirectory(@%)
-  call luaeval("plugin.luafiler.render_dirs([[" . @% . "]])")
-  nnoremap <silent> WO :call<Space>luaeval('plugin.luafiler.open()')<CR>
-  nnoremap <silent> WV :call<Space>luaeval('plugin.luafiler.open("v")')<CR>
-endif
-'''
+# }}}
 
 [[plugins]]
-repo = 'scrooloose/nerdcommenter'
-hook_add = '''
-let NERDSpaceDelims = 1
-nmap <M-C> <Nop>
-nmap <M-C> <Plug>NERDCommenterToggle
-vmap <M-C> <Nop>
-vmap <M-C> <Plug>NERDCommenterToggle
-nmap <ESC>C <Nop>
-nmap <ESC>C <Plug>NERDCommenterToggle
-vmap <ESC>C <Nop>
-vmap <ESC>C <Plug>NERDCommenterToggle
-'''
-
-[[plugins]]
-repo = 'tpope/vim-surround'
-
-hook_add = '''
-xmap " <Plug>VSurround"
-xmap ' <Plug>VSurround'
-xmap ( <Plug>VSurround)
-xmap { <Plug>VSurround}
-xmap < <Plug>VSurround>
-xmap [ <Plug>VSurround]
-'''
-
-[[plugins]]
-repo = 'tpope/vim-endwise'
-
-[[plugins]]
-repo = 'Townk/vim-autoclose'
-
-[[plugins]]
-repo = 'tmhedberg/matchit'
-hook_add = '''
-augroup Matchit
-autocmd!
-autocmd FileType lua let b:match_words = '\<\(if\|function\|for\|while\)\>:\<\(\|then\|do\)\>:\<\(elseif\)\>:\<\(else\)\>:\<\(end\)\>'
-autocmd FileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
-autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
-augroup END
-'''
-
-[[plugins]]
-repo = 'scrooloose/syntastic'
-hook_add = '''
-let g:syntastic_check_on_open = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_loc_list_height = 3
-let g:syntastic_echo_current_error = 1
-let g:syntastic_enable_balloons = 1
-let g:syntastic_enable_highlighting = 1
-let g:syntastic_enable_signs=1
-let g:syntastic_auto_loc_list=2
-let g:syntastic_cpp_compiler = 'g++'
-let g:syntastic_cpp_compiler_options = '-Wall -Wextra'
-let g:syntastic_c_compiler = 'gcc'
-let g:syntastic_c_compiler_options = '-Wall -Wextra'
-let g:syntastic_ignore_files = ['\.tex$']
-let g:syntastic_lua_checkers = ["luac", "luacheck"]
-let g:syntastic_lua_luacheck_options = "-g -d -a -u -r"
-let g:syntastic_moon_checkers = ['mooncheck', 'moonc']
-let g:syntastic_moon_mooncheck_options = "-g -d -a -u -r"
-let g:syntastic_sh_checkers = ['shellcheck']
-let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
-let g:syntastic_haskell_checkers = ['ghc-mod']
-let g:syntastic_ocaml_checkers = ['ocamlmerlin']
-let g:syntastic_scala_checkers = []
-'''
-
-hook_post_source = '''
-set statusline+=\ %#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-'''
-
-[[plugins]]
-repo = 'sbdchd/neoformat'
-hook_add = '''
-let g:neoformat_scala_scalafmt = {
-\ 'exe': 'scalafmt',
-\ 'replace': 1,
-\ }
-'''
-
-[[plugins]]
-repo = "Shougo/deoplete.nvim"
-on_i = 1
+repo = "Shougo/deoplete.nvim" # {{{
 hook_add = '''
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
-let g:deoplete#auto_completion_start_length=1
+let g:deoplete#auto_completion_start_length=3
 let g:deoplete#sources = {}
 let g:deoplete#sources._ = ['buffer', 'tag']
 if !exists('g:deoplete#keyword_patterns')
@@ -176,17 +90,130 @@ function! s:my_cr_function()
 endfunction
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 '''
+# }}}
 
 [[plugins]]
-repo = 'szw/vim-maximizer'
+repo = 'equalsraf/neovim-gui-shim'
+
+[[plugins]]
+repo = 'Nymphium/luafiler' # {{{
+hook_add = '''
+let g:luafiler_do_not_warn_on_start = 1
+augroup LuaFiler
+  autocmd!
+  autocmd FileType *
+    \ if isdirectory(@%)
+    \|   call luaeval("plugin.luafiler.render_dirs([[" . @% . "]])")
+    \|   nnoremap <silent> WO :call<Space>luaeval('plugin.luafiler.open()')<CR>
+    \|   nnoremap <silent> WV :call<Space>luaeval('plugin.luafiler.open("v")')<CR>
+    \| endif
+augroup END
+'''
+# }}}
+
+[[plugins]]
+repo = 'scrooloose/nerdcommenter' # {{{
+hook_add = '''
+let NERDSpaceDelims = 1
+nmap <M-C> <Nop>
+nmap <M-C> <Plug>NERDCommenterToggle
+vmap <M-C> <Nop>
+vmap <M-C> <Plug>NERDCommenterToggle
+nmap <ESC>C <Nop>
+nmap <ESC>C <Plug>NERDCommenterToggle
+vmap <ESC>C <Nop>
+vmap <ESC>C <Plug>NERDCommenterToggle
+'''
+# }}}
+
+[[plugins]]
+repo = 'tpope/vim-surround' # {{{
+
+hook_add = '''
+xmap " <Plug>VSurround"
+xmap ' <Plug>VSurround'
+xmap ( <Plug>VSurround)
+xmap { <Plug>VSurround}
+xmap < <Plug>VSurround>
+xmap [ <Plug>VSurround]
+'''
+# }}}
+
+[[plugins]]
+repo = 'tpope/vim-endwise'
+
+[[plugins]]
+repo = 'Townk/vim-autoclose'
+
+[[plugins]]
+repo = 'tmhedberg/matchit' # {{{
+hook_add = '''
+augroup Matchit
+autocmd!
+autocmd FileType lua let b:match_words = '\<\(if\|function\|for\|while\)\>:\<\(\|then\|do\)\>:\<\(elseif\)\>:\<\(else\)\>:\<\(end\)\>'
+autocmd FileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
+autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
+augroup END
+'''
+# }}}
+
+[[plugins]]
+repo = 'scrooloose/syntastic' # {{{
+hook_add = '''
+let g:syntastic_check_on_open = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_loc_list_height = 3
+let g:syntastic_echo_current_error = 1
+let g:syntastic_enable_balloons = 1
+let g:syntastic_enable_highlighting = 1
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_loc_list=2
+let g:syntastic_cpp_compiler = 'g++'
+let g:syntastic_cpp_compiler_options = '-Wall -Wextra'
+let g:syntastic_c_compiler = 'gcc'
+let g:syntastic_c_compiler_options = '-Wall -Wextra'
+let g:syntastic_ignore_files = ['\.tex$']
+let g:syntastic_lua_checkers = ["luac", "luacheck"]
+let g:syntastic_lua_luacheck_options = "-g -d -a -u -r"
+let g:syntastic_moon_checkers = ['mooncheck', 'moonc']
+let g:syntastic_moon_mooncheck_options = "-g -d -a -u -r"
+let g:syntastic_sh_checkers = ['shellcheck']
+let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
+let g:syntastic_haskell_checkers = ['ghc-mod']
+let g:syntastic_ocaml_checkers = ['ocamlmerlin']
+let g:syntastic_scala_checkers = []
+
+augroup SyntasticStatusline
+  autocmd!
+  autocmd VimEnter * nested set statusline+=\ %#warningmsg#
+  autocmd VimEnter * nested set statusline+=%{SyntasticStatuslineFlag()}
+  autocmd VimEnter * nested set statusline+=%*
+augroup END
+'''
+# }}}
+
+[[plugins]]
+repo = 'sbdchd/neoformat' # {{{
+hook_add = '''
+let g:neoformat_scala_scalafmt = {
+\ 'exe': 'scalafmt',
+\ 'replace': 1,
+\ }
+'''
+# }}}
+
+[[plugins]]
+repo = 'szw/vim-maximizer' # {{{
 hook_add = '''
 nnoremap <silent><F11> :MaximizerToggle<CR>
 vnoremap <silent><F11> :MaximizerToggle<CR>gv
 inoremap <silent><F11> <C-o>:MaximizerToggle<CR>
 '''
+# }}}
 
 [[plugins]]
-repo ='osyo-manga/vim-over'
+repo ='osyo-manga/vim-over' # {{{
 hook_add = '''
 let g:over_command_line_prompt = "Over > "
 hi OverCommandLineCursor cterm=bold,reverse ctermfg=46
@@ -195,6 +222,7 @@ hi OverCommandLineCursorInsert cterm=bold,reverse ctermfg=46
 nnoremap <silent> %% :OverCommandLine<CR>%s/
 nnoremap <silent> %P y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!','g')<CR>!!gI<Left><Left><Left>
 '''
+# }}}
 
 [[plugins]]
 repo = 'osyo-manga/vim-precious'
@@ -203,10 +231,5 @@ depends = ['context_filetype.vim']
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
 
-
-# language support with no-lazy load
 [[plugins]]
-repo = 'cespare/vim-toml'
-
-[[plugins]]
-repo = 'leafgarland/typescript-vim'
+repo = 'simeji/winresizer'

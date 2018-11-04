@@ -5,21 +5,24 @@
 " It's assuming to use leafo/moonscrpt-vim(https://github.com/leafo/moonscript-vim)
 
 
-hi moonFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
-hi moonChar cterm=bold gui=bold
-hi moonMetatable cterm=bold gui=bold
-hi moonObjAssign cterm=bold gui=bold
-hi moonLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
-hi moonTable cterm=bold gui=bold
-hi link moonInterpDelim Special
-hi link moonKeyword Statement
-hi link moonBracket Special
-hi link moonConditional Type
-hi link moonGlobal Boolean
-hi link moonRoundBrac Special
-hi link moonTable Special
-hi link moonSquareBrac Special
-hi link moonBlockString String
+augroup MoonColor
+	autocmd!
+	autocmd ColorScheme * hi moonFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
+	autocmd ColorScheme * hi moonChar cterm=bold gui=bold
+	autocmd ColorScheme * hi moonMetatable cterm=bold gui=bold
+	autocmd ColorScheme * hi moonObjAssign cterm=bold gui=bold
+	autocmd ColorScheme * hi moonLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
+	autocmd ColorScheme * hi moonTable cterm=bold gui=bold
+	autocmd ColorScheme * hi link moonInterpDelim Special
+	autocmd ColorScheme * hi link moonKeyword Statement
+	autocmd ColorScheme * hi link moonBracket Special
+	autocmd ColorScheme * hi link moonConditional Type
+	autocmd ColorScheme * hi link moonGlobal Boolean
+	autocmd ColorScheme * hi link moonRoundBrac Special
+	autocmd ColorScheme * hi link moonTable Special
+	autocmd ColorScheme * hi link moonSquareBrac Special
+	autocmd ColorScheme * hi link moonBlockString String
+augroup END
 
 syn clear moonShortHandAssign
 syn clear moonObjAssign

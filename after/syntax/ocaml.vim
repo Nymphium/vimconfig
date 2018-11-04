@@ -3,18 +3,20 @@
 " Maintainer: Nymphium
 
 
-hi link ocamlKeyword Statement
-hi link ocamlOp Statement
-hi link ocamlKeyChar Type
-" hi link ocamlFunc Identifier
-hi link ocamlIf Type
-hi link ocamlDoubleSemicolon Type
-hi link ocamlSymbol ocamlIf
-hi link ocamlBracket Special
-hi link ocamlArrayBegin Special
-" hi link ocamlModuleAccess Special
-hi ocamlFunction cterm=bold gui=bold ctermfg=214 guifg=#ffaf87
-hi ocamlWild cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
+augroup OCamlColor
+	autocmd!
+	autocmd ColorScheme * hi link ocamlKeyword Statement
+	autocmd ColorScheme * hi link ocamlOp Statement
+	autocmd ColorScheme * hi link ocamlKeyChar Type
+	autocmd ColorScheme * hi link ocamlIf Type
+	autocmd ColorScheme * hi link ocamlDoubleSemicolon Type
+	autocmd ColorScheme * hi link ocamlSymbol ocamlIf
+	autocmd ColorScheme * hi link ocamlBracket Special
+	autocmd ColorScheme * hi link ocamlArrayBegin Special
+	autocmd ColorScheme * hi link ocamlFunction MoreFunction
+	autocmd ColorScheme * hi ocamlWild cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
+	autocmd ColorScheme * hi link ocamlEffKeyword Identifier
+augroup END
 
 syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
 syn match ocamlDoubleSemicolon /\<;;\>/
@@ -30,7 +32,6 @@ syn keyword ocamlFunction function
 syn keyword ocamlWild _
 syn keyword ocamlKeyword effect
 
-hi link ocamlEffKeyword Identifier
 syn keyword ocamlEffKeyword perform continue
 
 augroup OcamlHighlight
