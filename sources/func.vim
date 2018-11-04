@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 " go to where the file is located {{{
 command Here cd %:p:h
 " }}}
@@ -52,7 +54,7 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 "" insertmode highlight {{{
 	if has('syntax')
 		let g:hi_insert = 'StatusLine cterm=bold ctermfg=0 ctermbg=255 guifg=#000000 guibg=#ffffff'
-		let g:hi_normal = ""
+		let g:hi_normal = ''
 
 		redir => g:hi_normal
 			silent! hi StatusLine
@@ -85,18 +87,18 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
 			return
 		endif
 
-		let s:l = line(".")
-		let s:c = col(".")
-		normal gg
-		let s:line = getline(".")
+		let s:l = line('.')
+		let s:c = col('.')
+		call cursor(1, 1)
+		let s:line = getline('.')
 		let s:this_ft = matchstr(s:line, '\(^#!.\{-}\/bin\/.\{-}\)\@<=\w\+$')
 
 		if strlen(s:this_ft) > 0
-			if s:this_ft == "bash" || s:this_ft == "zsh"
-				let s:this_ft = "sh"
+			if s:this_ft ==# 'bash' || s:this_ft ==# 'zsh'
+				let s:this_ft = 'sh'
 			endif
 
-			let s:this_ft = "set ft=" . s:this_ft
+			let s:this_ft = 'set ft=' . s:this_ft
 
 			execute (s:this_ft)
 		endif

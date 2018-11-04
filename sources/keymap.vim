@@ -97,11 +97,11 @@ nnoremap <F7> `q
 
 " tag jump
 function TagUpdateOrTagJump()
-	if strlen(findfile("tags")) < 1
+	if strlen(findfile('tags')) < 1
 		TagUpdate
 	endif
 
-	exe('tjump ' .expand("<cword>"))
+	exe('tjump ' .expand('<cword>'))
 endfunction
 nnoremap tn :call TagUpdateOrTagJump()<CR>
 nnoremap tt <C-t>

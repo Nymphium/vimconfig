@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 let g:loaded_gzip=1
 let g:loaded_tar = 1
 let g:loaded_tarPlugin = 1
@@ -14,8 +16,6 @@ let g:loaded_netrwPlugin = 1
 let g:loaded_netrwSettings = 1
 let g:loaded_netrwFileHeadlers = 1
 
-set encoding=utf-8
-scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,sjis,cp932,euc-jp
 set fileformats=unix,dos,mac
@@ -37,12 +37,8 @@ set hidden
 
 set fdm=marker
 
-if has('nvim')
 	" interactive replacement
-	set inccommand=split
-
-	set nocompatible
-endif
+set inccommand=split
 
 set showmatch
 set matchtime=2
@@ -71,21 +67,10 @@ set number
 set relativenumber
 set cursorcolumn
 set cursorline
-" if &term =~ "256color"
-	" set t_ut=
-" endif
-" set t_Co=256
-" set t_ZH=[3m
-" set t_ZR=[22m
-" if has('nvim')
-	" set termguicolors
-" endif
 
 set lazyredraw
 set shell=$SHELL
-if !has('nvim')
-	set clipboard+=unnamed,autoselect
-endif
+set clipboard+=unnamed
 set timeoutlen=250
 set display=uhex,lastline
 set whichwrap=b,s,h,l,<,>,[,]
@@ -107,46 +92,31 @@ set shellslash
 
 " set conceallevel=2
 
-if &filetype == "lua"
+if &filetype ==# 'lua'
 	set iskeyword+=:
 endif
 
-if has('nvim')
-	" Neovim-qt Guifont command
-	command -nargs=? Guifont call rpcnotify(0, 'Gui', 'SetFont', "<args>") | let g:Guifont="<args>"
-	let g:nvim_qt_fontsize = 7
-	execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
+" function! g:FontSizePlus()
+	" let g:nvim_qt_fontsize = g:nvim_qt_fontsize + 1
+	" execute('Guifont Meslo LG L:h' . g:nvim_qt_fontsize)
+" endfunction
 
-	function! g:FontSizePlus()
-		let g:nvim_qt_fontsize = g:nvim_qt_fontsize + 1
-		execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
-	endfunction
+" function! g:FontSizeMinus()
+	" let g:nvim_qt_fontsize = g:nvim_qt_fontsize - 1
+	" execute('Guifont Meslo LG L:h' . g:nvim_qt_fontsize)
+" endfunction
 
-	function! g:FontSizeMinus()
-		let g:nvim_qt_fontsize = g:nvim_qt_fontsize - 1
-		execute("Guifont Meslo LG L:h" . g:nvim_qt_fontsize)
-	endfunction
-
-	augroup NVimTerminal
-		autocmd!
-		autocmd TermOpen  * setlocal nonumber
-		\|                  setlocal norelativenumber
-		\|                  setlocal nocursorcolumn
-		\|                  setlocal nocursorline
-		\|                  setlocal statusline=TERMINAL\ (L%l/%L\ C%v\ W%{win_getid()}\ B%n)
-		\|                  startinsert
-		autocmd TermClose * setlocal number
-		\|                  setlocal relativenumber
-		\|                  setlocal cursorcolumn
-		\|                  setlocal cursorline
-	augroup END
-
-else
-	if has('gui_running')
-		set guioptions=
-		set guifont=Meslo\ LG\ L\ 7
-		set antialias=on
-		set mouse=c
-	endif
-endif
+augroup NVimTerminal
+	autocmd!
+	autocmd TermOpen  * setlocal nonumber
+	\|                  setlocal norelativenumber
+	\|                  setlocal nocursorcolumn
+	\|                  setlocal nocursorline
+	\|                  setlocal statusline=TERMINAL\ (L%l/%L\ C%v\ W%{win_getid()}\ B%n)
+	\|                  startinsert
+	autocmd TermClose * setlocal number
+	\|                  setlocal relativenumber
+	\|                  setlocal cursorcolumn
+	\|                  setlocal cursorline
+augroup END
 
