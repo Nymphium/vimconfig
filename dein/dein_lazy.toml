@@ -84,7 +84,7 @@ on_ft = ['haskell']
 # }}}
 
 [[plugins]]
-repo = 'nymphium/vim-koka'
+repo = 'Nymphium/vim-koka'
 on_ft = ['koka']
 
 # markdown {{{
