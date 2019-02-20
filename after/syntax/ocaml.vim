@@ -2,20 +2,24 @@
 " Language: OCaml
 " Maintainer: Nymphium
 
+function! s:color()
+	hi link ocamlKeyword Statement
+	hi link ocamlOp Statement
+	hi link ocamlKeyChar Type
+	hi link ocamlIf Type
+	hi link ocamlDoubleSemicolon Type
+	hi link ocamlSymbol ocamlIf
+	hi link ocamlBracket Special
+	hi link ocamlArrayBegin Special
+	hi link ocamlFunction MoreFunction
+	hi ocamlWild cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
+	hi link ocamlEffKeyword Identifier
+endfunction
 
 augroup OCamlColor
 	autocmd!
-	autocmd ColorScheme * hi link ocamlKeyword Statement
-	autocmd ColorScheme * hi link ocamlOp Statement
-	autocmd ColorScheme * hi link ocamlKeyChar Type
-	autocmd ColorScheme * hi link ocamlIf Type
-	autocmd ColorScheme * hi link ocamlDoubleSemicolon Type
-	autocmd ColorScheme * hi link ocamlSymbol ocamlIf
-	autocmd ColorScheme * hi link ocamlBracket Special
-	autocmd ColorScheme * hi link ocamlArrayBegin Special
-	autocmd ColorScheme * hi link ocamlFunction MoreFunction
-	autocmd ColorScheme * hi ocamlWild cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
-	autocmd ColorScheme * hi link ocamlEffKeyword Identifier
+	autocmd BufEnter *.ml,*.mli call s:color()
+	autocmd FileType ocaml call s:color()
 augroup END
 
 syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
@@ -34,17 +38,22 @@ syn keyword ocamlKeyword effect
 
 syn keyword ocamlEffKeyword perform continue
 
+syn match ocamlyaccToken '%\S\+'
+syn match ocamlyaccComment /\/\/.*/
+syn match ocamlyaccTerm /\<[a-z_']\+\>:/
+syn match ocamlyaccTerm /\$\d\+/
+syn match ocamlyaccTypeset /<[^>]\+>/
+
+function! s:yaccolor()
+	hi link ocamlyaccToken Identifier
+	hi link ocamlyaccComment Comment
+	hi link ocamlyaccTerm Include
+	hi link ocamlyaccDollarterm Include
+	hi link ocamlyaccTypeset Type
+endfunction
+
 augroup OcamlHighlight
 	autocmd!
-	autocmd BufEnter *.mly hi link ocamlyaccToken Identifier
-	autocmd BufEnter *.mly hi link ocamlyaccComment Comment
-	autocmd BufEnter *.mly hi link ocamlyaccTerm Include
-	autocmd BufEnter *.mly hi link ocamlyaccDollarterm Include
-	autocmd BufEnter *.mly hi link ocamlyaccTypeset Type
-	autocmd BufEnter *.mly syn match ocamlyaccToken '%\S\+'
-	autocmd BufEnter *.mly syn match ocamlyaccComment /\/\/.*/
-	autocmd BufEnter *.mly syn match ocamlyaccTerm /\<[a-z_']\+\>:/
-	autocmd BufEnter *.mly syn match ocamlyaccTerm /\$\d\+/
-	autocmd BufEnter *.mly syn match ocamlyaccTypeset /<[^>]\+>/
+	autocmd BufEnter *.mly call s:yaccolor()
 augroup END
 

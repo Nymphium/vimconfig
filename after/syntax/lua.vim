@@ -2,24 +2,29 @@
 " Language: Lua
 " Maintainer: Nymphium
 
+function! s:color()
+	hi link luaFunction MoreFunction
+	hi luaLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
+	hi luaCond cterm=bold gui=bold ctermfg=48 guifg=#00ff87
+	hi link luaElse luaCond
+	hi link luaCamma Special
+	hi link luaChar Statement
+	hi link luaTableName Structure
+	hi luaMetatable cterm=bold gui=bold
+	hi link luaRoundBrac Special
+	hi link luaTable Special
+	hi link luaSquareBrac Special
+endfunction
 
 augroup LuaColor
 	autocmd!
-	autocmd ColorScheme * hi link luaFunction MoreFunction
-	autocmd ColorScheme * hi luaLength cterm=bold gui=bold ctermfg=62 guifg=#5f5fd7
-	autocmd ColorScheme * hi luaCond cterm=bold gui=bold ctermfg=48 guifg=#00ff87
-	autocmd ColorScheme * hi link luaElse luaCond
-	autocmd ColorScheme * hi link luaCamma Special
-	autocmd ColorScheme * hi link luaChar Statement
-	autocmd ColorScheme * hi link luaTableName Structure
-	autocmd ColorScheme * hi luaMetatable cterm=bold gui=bold
-	autocmd ColorScheme * hi link luaRoundBrac Special
-	autocmd ColorScheme * hi link luaTable Special
-	autocmd ColorScheme * hi link luaSquareBrac Special
+	autocmd ColorScheme * call s:color()
+	autocmd FileType lua call s:color()
+	autocmd BufEnter *.lua call s:color()
 augroup END
 
 "" '=', '%', '<', '>', '/', '+', '*', ',', '-', ".."
-syn match luaChar /[=%<>/+\*\^]/ display
+syn match luaChar /[=%<>/+\*\^\~]/ display
 syn match luaCamma "," display
 syn match luaChar /\(\.\)\@<!\.\{2\}\(\.\)\@!/ display
 syn match luaChar /-\(-\)\@!/ display

@@ -2,12 +2,17 @@
 " Language: C
 " Maintainer: Nymphium
 
+function! s:color()
+	hi link cFunc Identifier
+	hi link cSurround Special
+endfunction
 
 " hi link cChar cType
 augrou CColor
 	autocmd!
-	autocmd ColorScheme c hi link cFunc Identifier
-	autocmd ColorScheme c hi link cSurround Special
+	autocmd ColorScheme * call s:color()
+	autocmd BufEnter *.c call s:color()
+	autocmd FileType c call s:color()
 augroup END
 
 syn match cOperator /[!=%<>+\(\->\)\-\.]/ display

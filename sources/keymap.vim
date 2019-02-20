@@ -107,7 +107,7 @@ nnoremap tn :call TagUpdateOrTagJump()<CR>
 nnoremap tt <C-t>
 nnoremap q: <Nop>
 
-inoremap <silent> <ESC> <C-c>:nohlsearch<CR>
+inoremap <silent> <ESC> <ESC>:nohlsearch<CR>
 inoremap <ESC>v <Nop>
 inoremap <ESC>v <C-x><C-r>+
 inoremap <M-v> <Nop>

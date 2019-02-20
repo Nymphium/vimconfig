@@ -1,9 +1,9 @@
 [editor]
 clipboard = true
 
-fontFamily = 'monospace'
-fontsize = 10
-linespace = 6
+# fontFamily = 'monospace'
+# fontsize = 10
+# linespace = 6
 
 disableIMEinNormal = true
 cursorBlink = true

@@ -1,10 +1,15 @@
+function! s:color()
+	hi tsKeywords cterm=bold ctermfg=yellow
+	hi link typescriptReserved tsKeywords
+	hi link typescriptFuncKeyword MoreFunction
+	hi link typescriptExceptions tsKeywords
+	hi link tsBrac Bracket
+endfunction
+
 augroup TSColor
 	autocmd!
-	autocmd Colorscheme * hi tsKeywords cterm=bold ctermfg=yellow
-	autocmd ColorScheme * hi link typescriptReserved tsKeywords
-	autocmd ColorScheme * hi link typescriptFuncKeyword MoreFunction
-	autocmd ColorScheme * hi link typescriptExceptions tsKeywords
-	autocmd ColorScheme * hi link tsBrac Special
+	autocmd FileType typescript, typescript.tsx call s:color()
+	autocmd BufEnter *.ts,*.tsx call s:color()
 augroup END
 
 syn keyword tsKeywords const

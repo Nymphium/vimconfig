@@ -156,4 +156,13 @@ command! Dirof echo Dirof()
 	"autocmd VimLeave * mksession!
 "augroup END
 
+function! LineAppend(str)
+  return setline(line('.'), getline('.') . a:str)
+endfunction
+
+function! IsGitConflict()
+  let has_conflict = system('git diff --name-only --diff-filter=U 2>/dev/null | wc')
+
+  return has_conflict != '0'
+endfunction
 
