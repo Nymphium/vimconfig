@@ -16,10 +16,19 @@ function! s:color()
 	hi link ocamlEffKeyword Identifier
 endfunction
 
+function! s:yaccolor()
+	hi link ocamlyaccToken Identifier
+	hi link ocamlyaccComment Comment
+	hi link ocamlyaccTerm Include
+	hi link ocamlyaccDollarterm Include
+	hi link ocamlyaccTypeset Type
+endfunction
+
 augroup OCamlColor
 	autocmd!
-	autocmd BufEnter *.ml,*.mli call s:color()
-	autocmd FileType ocaml call s:color()
+	autocmd ColorScheme *
+				\  call s:color()
+				\| call s:yaccolor()
 augroup END
 
 syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
@@ -43,17 +52,4 @@ syn match ocamlyaccComment /\/\/.*/
 syn match ocamlyaccTerm /\<[a-z_']\+\>:/
 syn match ocamlyaccTerm /\$\d\+/
 syn match ocamlyaccTypeset /<[^>]\+>/
-
-function! s:yaccolor()
-	hi link ocamlyaccToken Identifier
-	hi link ocamlyaccComment Comment
-	hi link ocamlyaccTerm Include
-	hi link ocamlyaccDollarterm Include
-	hi link ocamlyaccTypeset Type
-endfunction
-
-augroup OcamlHighlight
-	autocmd!
-	autocmd BufEnter *.mly call s:yaccolor()
-augroup END
 

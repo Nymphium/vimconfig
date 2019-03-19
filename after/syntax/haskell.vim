@@ -5,8 +5,7 @@ function! s:color()
 endfunction
 
 augroup Color
-	autocmd FileType haskell call s:color()
-	autocmd BufEnter *.hs call s:color()
+	autocmd colorscheme * call s:color()
 augroup END
 
 syn keyword hsUndefined undefined

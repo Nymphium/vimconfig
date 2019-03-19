@@ -6,9 +6,13 @@ TARGET=$HOME
 
 mkdir -p "${TARGET}/.vim/syntax_checkers"
 mkdir -p "${TARGET}/.vim/after/syntax"
+mkdir -p "${TARGET}/.vim/after/ftdetect"
+mkdir -p "${TARGET}/.vim/after/ftplugin"
 mkdir -p "${TARGET}/.config/nvim"
 
 ln -s "${PWD}/after/syntax/"* "${TARGET}/.vim/after/syntax/"
+ln -s "${PWD}/after/ftdetect/"* "${TARGET}/.vim/after/ftdetect/"
+ln -s "${PWD}/after/ftplugin/"* "${TARGET}/.vim/after/ftplugin/"
 ln -s "${PWD}/sources/" "${TARGET}/.vim/sources"
 
 ln -s "${TARGET}/.vimrc" "${TARGET}/.config/nvim/init.vim"

@@ -114,9 +114,5 @@ augroup NVimTerminal
 	\|                  setlocal nocursorline
 	\|                  setlocal statusline=TERMINAL\ (L%l/%L\ C%v\ W%{win_getid()}\ B%n)
 	\|                  startinsert
-	autocmd TermClose * setlocal number
-	\|                  setlocal relativenumber
-	\|                  setlocal cursorcolumn
-	\|                  setlocal cursorline
 augroup END
 

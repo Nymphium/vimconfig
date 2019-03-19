@@ -44,9 +44,9 @@ endfunction
 
 function! s:syn_ft()
 	syn match GitConflictCommit /\(^\(<\{7}\|>\{7}\)\s\+\)\@<=\(.*\)$/
-	syn match GitConflictMarkerEq /^=======$\@<!/
-	syn region GitConflictMergeOurselves matchgroup=GitConflictMarker start=/^<<<<<<< \@=/ end=/^=======$\@<!/ contains=NONEBUT,GitConflictCommit
-	syn region GitConflictMergeThemselves matchgroup=GitConflictMarker start=/^=======$\@<!/ end=/^>>>>>>> \@=/ contains=NONEBUT,GitConflictCommit
+	syn match GitConflictMarkerEq /^=======$/
+	syn region GitConflictMergeOurselves matchgroup=GitConflictMarker start=/^<<<<<<< \@=/ end=/^=======$/ contains=NONEBUT,GitConflictCommit
+	syn region GitConflictMergeThemselves matchgroup=GitConflictMarker start=/^=======$/ end=/^>>>>>>> \@=/ contains=NONEBUT,GitConflictCommit
 	syn region GitConflictMerge matchgroup=GitConflictMarker start=/^<<<<<<< \@=/ end=/^>>>>>>> \@=/ contains=NONEBUT,GitConflictCommit,GitConflictMarkerEq
 endfunction
 

@@ -40,8 +40,8 @@ let g:LanguageClient_serverCommands = {
 
 let g:LanguageClient_started = 0
 
-function LC_maps()
-  if has_key(g:LanguageClient_serverCommands, &filetype) && !g:LanguageClient_started && !g:syntastic_initialized
+function s:LC_maps()
+  if has_key(g:LanguageClient_serverCommands, &filetype) && !g:LanguageClient_started
     let g:LanguageClient_started = 1
     LanguageClientStart
     setlocal signcolumn=yes
@@ -59,7 +59,7 @@ endfunction
 
 augroup LanguageClientKeyconfig
   autocmd!
-  autocmd FileType * call LC_maps()
+  autocmd FileType * call s:LC_maps()
 augroup END
 '''
 # }}}
@@ -210,12 +210,11 @@ let g:syntastic_haskell_checkers = ['ghc-mod']
 let g:syntastic_ocaml_checkers = ['ocamlmerlin']
 let g:syntastic_scala_checkers = []
 
-let g:syntastic_initialized = 0
+let g:syntastic_started = 0
 
 function s:syntastic_init()
-  if !g:syntastic_initialized && !g:LanguageClient_started
-    let g:syntastic_initialized = 1
-    SyntasticCheck
+  if !g:syntastic_started && !g:LanguageClient_started
+    let g:syntastic_started = 1
     setlocal statusline+=\ %#warningmsg#
     setlocal statusline+=%{SyntasticStatuslineFlag()}
     setlocal statusline+=%*
@@ -281,7 +280,7 @@ let g:neoformat_haskell_brittany = {
 
 let g:neoformat_javascript_prettier = {
 \ 'exe': 'yarn',
-\ 'args': ['--silent', 'prettier:format', '--stdin'],
+\ 'args': ['--silent', 'prettier', '--stdin', '--parser', 'typescript'],
 \ 'stdin': 1,
 \ }
 
