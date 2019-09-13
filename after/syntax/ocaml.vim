@@ -4,8 +4,11 @@
 
 function! s:color()
 	hi link ocamlKeyword Statement
-	hi link ocamlOp Statement
-	hi link ocamlKeyChar Type
+	hi link ocamlEqual ocamlKeyword
+	hi link ocamlKeyChar ocamlKeyword
+	hi link ocamlInfixOp Statement
+	hi link ocamlPrefixOp Statement
+	hi link ocamlLetOp ocamlInfixOp
 	hi link ocamlIf Type
 	hi link ocamlDoubleSemicolon Type
 	hi link ocamlSymbol ocamlIf
@@ -33,13 +36,10 @@ augroup END
 
 syn match ocamlKeyword /\(\s\+\)\@<=to\(\s\+\)\@=/
 syn match ocamlDoubleSemicolon /\<;;\>/
-syn match ocamlOp /[^'#0-9A-Za-z_\s"\((*\)\(*)\)]\+/
-" syn match ocamlFunc /\(\<let\s\+\(rec\s\+\)\{0,1\}\)\@<=\w\+\>/
-" syn match ocamlFunc /\(\<and\s\+\)\@<=\w\+\>/
 syn match ocamlBracket /[(){}\[]\]/
 syn match ocamlArrayBegin "\[|"
 syn match ocamlArrayEnd "|\]"
-" syn match ocamlModuleAccess /\([A-Z]\w*\)\@<=\./
+syn match ocamlKeyChar /[,:]/
 syn keyword ocamlFunction fun
 syn keyword ocamlFunction function
 syn keyword ocamlWild _

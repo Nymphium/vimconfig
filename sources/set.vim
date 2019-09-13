@@ -45,11 +45,12 @@ set matchtime=2
 
 set showcmd
 
-set tabstop=4
-set softtabstop=4
+set tabstop=2
+set softtabstop=2
 set autoindent
 set smartindent
-set shiftwidth=4
+set shiftwidth=2
+set expandtab
 
 set wrap
 
@@ -59,7 +60,7 @@ set list
 set listchars=tab:>-,trail:.,extends:>,precedes:<,nbsp:%,eol:<
 " set listchars=tab:>―,trail:.,extends:>,precedes:<,nbsp:%,eol:◁
 set matchpairs& matchpairs+=<:>
-set ambiwidth=double
+" set ambiwidth=double
 " set formatoptions+=mM
 set formatoptions=lmoq
 set wildmenu

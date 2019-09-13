@@ -7,7 +7,7 @@ on_ft = 'ocaml'
 repo = 'lervag/vimtex'
 on_ft = 'tex'
 hook_post_source = '''
-let g:vimtex_view_method = 'general'
+" let g:vimtex_view_method = 'general'
 let g:vimtex_view_general_viewer ='evince'
 let g:vimtex_fold_enabled = 0
 " let g:vimtex_latexmk_options = '-pdfdvi'
@@ -57,6 +57,12 @@ repo = 'othree/yajs.vim'
 on_ft = 'javascript'
 # }}}
 
+# json {{{
+[[plugins]]
+repo= 'elzr/vim-json'
+on_ft = 'json'
+# }}}
+
 # css {{{
 [[plugins]]
 repo = 'iloginow/vim-stylus'
@@ -66,6 +72,11 @@ on_ft = 'stylus'
 repo = 'gko/vim-coloresque'
 # }}}
 
+# pug {{{
+[[plugins]]
+repo = 'digitaltoad/vim-pug'
+on_ft = 'pug'
+# }}}
 
 # haskell {{{
 [[plugins]]
@@ -130,3 +141,13 @@ on_ft = 'lua'
 [[plugins]]
 repo = 'LnL7/vim-nix'
 on_ft = 'nix'
+
+[[plugins]]
+repo = 'ionide/Ionide-vim'
+on_ft = 'fsharp'
+build = 'make fsautocomplete'
+
+hook_source = '''
+let g:fsharp#automatic_workspace_init = 0
+let g:fsharp#show_signature_on_cursor_move = 0
+'''
