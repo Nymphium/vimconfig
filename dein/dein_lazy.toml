@@ -151,3 +151,7 @@ hook_source = '''
 let g:fsharp#automatic_workspace_init = 0
 let g:fsharp#show_signature_on_cursor_move = 0
 '''
+
+[[plugins]]
+repo =  'mustache/vim-mustache-handlebars'
+on_ft = 'mustache'

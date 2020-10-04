@@ -29,7 +29,7 @@ set grepprg=ag\ --vimgrep\ --hidden\ -S\ --stats\ $*
 set grepformat=%f:%l:%c:%m
 set history=2000
 
-set ignorecase
+" set ignorecase
 set smartcase
 set hlsearch
 set incsearch

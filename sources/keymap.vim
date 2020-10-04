@@ -134,10 +134,10 @@ inoremap <ESC>x <Nop>
 inoremap <M-x> <Nop>
 inoremap <ESC>x <C-x><C-r>
 inoremap <M-x> <C-x><C-r>
-inoremap <ESC>o <C-o>o
-inoremap <ESC>O <C-o>O
-inoremap <M-o> <C-o>o
-inoremap <M-O> <C-o>O
+" inoremap <ESC>o <C-o>o
+" inoremap <ESC>O <C-o>O
+" inoremap <M-o> <C-o>o
+" inoremap <M-O> <C-o>O
 
 cnoremap <ESC>w <Nop>
 cnoremap <M-w> <Nop>
