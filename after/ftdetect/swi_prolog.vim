@@ -1,1 +1,1 @@
-auBufNewFile,BufRead *.swi set filetype=prolog
+au BufNewFile,BufRead *.swi set filetype=prolog

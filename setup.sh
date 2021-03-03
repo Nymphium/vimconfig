@@ -23,7 +23,7 @@ ln -s "${TARGET}/.vim/syntax_checkers/" "${TARGET}/.config/nvim/"
 # gonvim
 mkdir -p "${TARGET}/.gonvim"
 ln -s "${PWD}/gonvim/setting.toml" "${TARGET}/.gonvim/"
-ln -s "${pwd}/gonvim/ginit.vim" "${TARGET}/.config/nvim/"
+ln -s "${PWD}/gonvim/ginit.vim" "${TARGET}/.config/nvim/"
 
 # dein
 ln -s "${PWD}/dein" "${TARGET}/.config/nvim/"
