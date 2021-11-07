@@ -53,6 +53,7 @@ set shiftwidth=2
 set expandtab
 
 set wrap
+set wildignorecase
 
 set scrolloff=20
 set backspace=indent,eol,start

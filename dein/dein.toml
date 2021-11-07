@@ -71,26 +71,6 @@ rev = 'release'
 on_i = 1
 merged = '0'
 hook_add = '''
-function! StatusDiagnostic() abort
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if empty(info) | return '' | endif
-  let msgs = []
-  if get(info, 'error', 0)
-    call add(msgs, 'E' . info['error'])
-  endif
-  if get(info, 'warning', 0)
-    call add(msgs, 'W' . info['warning'])
-  endif
-
-  if !len(msgs)
-    return ''
-  endif
-
-  let server = substitute(get(g:, 'coc_status', ''), '\v^\s*(.*)\s*$', '\1', '')
-
-  return '[' . server . ': ' . join(msgs, ',') . ']'
-endfunction
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
@@ -113,6 +93,7 @@ setlocal updatetime=300
 setlocal signcolumn=yes
 
 nmap <silent> <Leader>lk :call <SID>show_documentation()<CR>
+nmap <silent> <Leader>la :CocAction<CR>
 nmap <silent> <Leader>lg :call CocAction('jumpDefinition')<CR>
 nmap <silent> <Leader>ld <Plug>(coc-type-definition)
 nmap <silent> <Leader>li <Plug>(coc-implementation)
@@ -139,7 +120,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <silent> <Leader><Up> <Plug>(coc-diagnostic-prev)
 nmap <silent> <Leader><Down> <Plug>(coc-diagnostic-next)
 
-setlocal statusline+=%{StatusDiagnostic()}
+setlocal statusline+=%{coc#status()}
+let g:neoformat = 0
 
 autocmd ColorScheme * hi CocHighlightText ctermbg=blue cterm=bold,italic ctermfg=yellow
 '''
@@ -413,18 +395,30 @@ repo = 'sbdchd/neoformat' # {{{
 hook_add = '''
 let g:neoformat_enabled_typescript = ['prettier']
 let g:neoformat_enabled_javascript = ['prettier']
-let g:neoformat_enabled_haskell = ['brittany']
+let g:neoformat_enabled_haskell = ['brittany', 'fourmolu']
 let g:neoformat_enabled_ocaml = ['ocamlformat']
 
-let g:neoformat = 1
+let g:neoformat_dune_dune = {
+  \ 'exe': 'dune',
+  \ 'args': ['format', '%'],
+  \ 'stdin': 1,
+\ }
+
+let g:neoformat_haskell_fourmolu = {
+  \ 'exe': 'fourmolu',
+  \ 'args': ['-i', '%'],
+  \ 'replace': 1,
+  \ }
+
 let g:neoformat_on_ft = ['scala', 'haskell', 'javascript', 'typescript', 'typescript.tsx', 'ocaml', 'c', 'ruby', 'ocaml', 'dune']
+let g:neoformat = !get(g:, "coc_enabled", 1)
 
 augroup Neofmt
   autocmd!
   autocmd BufWritePre *
-        \  if g:neoformat && index(g:neoformat_on_ft, &filetype) >= 0
-        \|   Neoformat
-        \| endif
+    \  if g:neoformat && index(g:neoformat_on_ft, &filetype) >= 0
+    \|   Neoformat
+    \| endif
 augroup END
 '''
 # }}}
