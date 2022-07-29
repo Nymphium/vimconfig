@@ -48,13 +48,13 @@ nnoremap <C-r> r
 nnoremap <silent> <F4> :setlocal relativenumber!<CR>
 nnoremap I <Nop>
 " if &ft == "rust"
-	" nnoremap <silent> II :RustFmt
+" nnoremap <silent> II :RustFmt
 " els
 nnoremap <silent> II :let l=line(".")<CR>:let c=col(".")<CR><ESC>gg=G:call cursor(l,c)<CR>:unlet l<CR>:unlet c<CR>
 " endif
 augroup RustFmt
-	autocmd!
-	autocmd Filetype rust nnoremap <silent> II :RustFmt<CR>
+  autocmd!
+  autocmd Filetype rust nnoremap <silent> II :RustFmt<CR>
 augroup END
 
 nnoremap <bar> :vim  // % <bar> cw<left><left><left><left><left><left><left><left>
@@ -97,11 +97,11 @@ nnoremap <F7> `q
 
 " tag jump
 function TagUpdateOrTagJump()
-	if strlen(findfile('tags')) < 1
-		TagUpdate
-	endif
+  if strlen(findfile('tags')) < 1
+    TagUpdate
+  endif
 
-	exe('tjump ' .expand('<cword>'))
+  exe('tjump ' .expand('<cword>'))
 endfunction
 nnoremap tn :call TagUpdateOrTagJump()<CR>
 nnoremap tt <C-t>
@@ -156,6 +156,6 @@ cnoremap <M-x> <C-r>
 cnoremap w!! w !sudo tee > /dev/null %
 
 if has('nvim')
-	tnoremap <ESC> <C-\><C-n>
+  tnoremap <ESC> <C-\><C-n>
 endif
 

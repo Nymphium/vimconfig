@@ -1,34 +1,16 @@
 #!/bin/bash
 
-set -eux
+set -ux
 
-TARGET=$HOME
+TARGET=${1:-$HOME}
 
-mkdir -p "${TARGET}/.vim/syntax_checkers"
-mkdir -p "${TARGET}/.vim/after/syntax"
-mkdir -p "${TARGET}/.vim/after/ftdetect"
-mkdir -p "${TARGET}/.vim/after/ftplugin"
-mkdir -p "${TARGET}/.config/nvim"
+mkdir -p "${TARGET}/.config/nvim/lua"
+mkdir -p "${TARGET}/.config/nvim/after/"{ftplugin,ftdetect}
 
-ln -s "${PWD}/after/syntax/"* "${TARGET}/.vim/after/syntax/"
-ln -s "${PWD}/after/ftdetect/"* "${TARGET}/.vim/after/ftdetect/"
-ln -s "${PWD}/after/ftplugin/"* "${TARGET}/.vim/after/ftplugin/"
-ln -s "${PWD}/sources/" "${TARGET}/.vim/sources"
+ln -s "${PWD}/after/ftplugin/"* "${TARGET}/.config/nvim/after/ftplugin/"
+ln -s "${PWD}/after/ftdetect/"* "${TARGET}/.config/nvim/after/ftdetect/"
+ln -s "${PWD}/lua/"* "${TARGET}/.config/nvim/lua/"
 
-ln -s "${TARGET}/.vimrc" "${TARGET}/.config/nvim/init.vim"
-ln -s "${TARGET}/.vim/sources/vimrc" "${TARGET}/.vimrc"
-ln -s "${TARGET}/.vim/after/" "${TARGET}/.config/nvim/"
-ln -s "${TARGET}/.vim/syntax_checkers/" "${TARGET}/.config/nvim/"
+ln -s "${PWD}/sources/vimrc" "${TARGET}/.config/nvim/init.vim"
 
-# gonvim
-mkdir -p "${TARGET}/.gonvim"
-ln -s "${PWD}/gonvim/setting.toml" "${TARGET}/.gonvim/"
-ln -s "${PWD}/gonvim/ginit.vim" "${TARGET}/.config/nvim/"
-
-# dein
-ln -s "${PWD}/dein" "${TARGET}/.config/nvim/"
-
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
-sh /tmp/dein-installer.sh ~/.cache/dein
-nvim --headless +'call dein#install()' +UpdateRemotePlugins +q
-
+nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' +UpdateRemotePlugins +q

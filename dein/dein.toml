@@ -11,120 +11,107 @@ augroup END
 '''
 # }}}
 
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter' # {{{
+merged = 0
+hook_post_update = 'TSUpdate'
+hook_source = '''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"typescript", "haskell", "ocaml", "bash", "lua"},
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+}
+EOF
+'''
+# }}}
+
+# nvim-lsp {{{
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+
+[[plugins]]
+repo = 'williamboman/nvim-lsp-installer'
+
+[[plugins]]
+repo = 'hrsh7th/cmp-nvim-lsp'
+
+[[plugins]]
+repo = 'hrsh7th/cmp-buffer'
+
+[[plugins]]
+repo = 'hrsh7th/cmp-path'
+
+[[plugins]]
+repo = 'hrsh7th/cmp-cmdline'
+
+[[pluginsp]]
+repo = 'hrsh7th/nvim-cmp'
+# }}}
+
+# coc {{{
 # [[plugins]]
-# repo = 'autozimu/LanguageClient-neovim' # {{{
-# rev = 'next'
-# build = 'bash install.sh'
+# repo = 'neoclide/coc.nvim'
+# rev = 'release'
+# on_i = 1
+# merged = '0'
 # hook_add = '''
-# let g:LanguageClient_autoStart = 0
-# let g:LanguageClient_rootMakers = {
-# \ '_': ['.git'],
-# \ 'haskell': ['*.cabal', 'stack.yaml'],
-# \ 'typescript': ['tsconfig.josn'],
-# \ 'dockerfile': ['Dockerfile'],
-# \ 'ruby': ['Gemfile', 'Rakefile'],
-# \ 'scala': ['build.sbt'],
-# \ }
-# let g:LanguageClient_serverCommands = {
-# \ 'lua': ['lua-lsp'],
-# \ 'ocaml': ['ocaml-language-server', '--stdio'],
-# \ 'haskell': ['stack', '--allow-different-user', 'exec', '--', 'hie-wrapper'],
-# \ 'typescript': ['typescript-language-server', '--stdio'],
-# \ 'typescript.tsx': ['typescript-language-server', '--stdio'],
-# \ 'javascript': ['typescript-language-server', '--stdio'],
-# \ 'sh': ['bash-language-server', 'start'],
-# \ 'dockerfile': ['docker-langserver'],
-# \ 'ruby': ['solargraph', 'stdio'],
-# \ 'scala': ['scalameta_lsp'],
-# \ }
+# function! s:check_back_space() abort
+  # let col = col('.') - 1
+  # return !col || getline('.')[col - 1]  =~ '\s'
+# endfunction
 
-# let g:LanguageClient_started = 0
+# autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
-# function s:LC_maps()
-  # if has_key(g:LanguageClient_serverCommands, &filetype) && !g:LanguageClient_started
-    # let g:LanguageClient_started = 1
-    # LanguageClientStart
-    # setlocal signcolumn=yes
-    # setlocal hidden
-    # nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-    # map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
-    # map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
-    # map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
-    # map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
-    # map <Leader>lb :call LanguageClient#textDocument_references()<CR>
-    # map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
-    # map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
+# function! s:show_documentation()
+  # if (index(['vim','help'], &filetype) >= 0)
+    # execute 'h '.expand('<cword>')
+  # else
+    # call CocAction('doHover')
   # endif
 # endfunction
 
-# augroup LanguageClientKeyconfig
-  # autocmd!
-  # autocmd FileType * call s:LC_maps()
-# augroup END
+# setlocal hidden
+# setlocal nobackup
+# setlocal nowritebackup
+# setlocal updatetime=300
+# setlocal signcolumn=yes
+
+# nmap <silent> <Leader>lk :call <SID>show_documentation()<CR>
+# nmap <silent> <Leader>la <plug>(coc-fix-current)
+# nmap <silent> <Leader>lg <plug>(coc-definition)
+# nmap <silent> <Leader>ld <Plug>(coc-type-definition)
+# nmap <silent> <Leader>li <Plug>(coc-implementation)
+# nmap <silent> <Leader>lr <Plug>(coc-rename)
+# nmap <silent> <Leader>lq <Plug>(coc-fix-current)
+# nmap <silent> <Leader>lb <Plug>(coc-references)
+# nmap <silent> <F5> :CocList --number-select<CR>
+# nmap <silent> <Leader>l= <Plub>(coc-format)
+
+# inoremap <silent><expr> <Tab>
+      # \ pumvisible() ? "\<C-n>" :
+      # \ <SID>check_back_space() ? "\<Tab>" :
+      # \ coc#refresh()
+# inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+# " inoremap <silent><expr> <C-o> coc#refresh()
+
+# function! s:my_cr_function()
+ # return pumvisible() ? "\<c-y>" : "\<c-g>u\<CR>"
+# endfunction
+# inoremap <CR> <C-R>=<SID>my_cr_function()<CR>
+
+# autocmd CursorHold * silent call CocActionAsync('highlight')
+
+# nmap <silent> <Leader><Up> <Plug>(coc-diagnostic-prev)
+# nmap <silent> <Leader><Down> <Plug>(coc-diagnostic-next)
+
+# setlocal statusline+=%{coc#status()}
+# let g:neoformat = 0
+
+# autocmd ColorScheme * hi CocHighlightText ctermbg=blue cterm=bold,italic ctermfg=yellow
 # '''
-# # }}}
-
-# coc {{{
-[[plugins]]
-repo = 'neoclide/coc.nvim'
-rev = 'release'
-on_i = 1
-merged = '0'
-hook_add = '''
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-setlocal hidden
-setlocal nobackup
-setlocal nowritebackup
-setlocal updatetime=300
-setlocal signcolumn=yes
-
-nmap <silent> <Leader>lk :call <SID>show_documentation()<CR>
-nmap <silent> <Leader>la :CocAction<CR>
-nmap <silent> <Leader>lg :call CocAction('jumpDefinition')<CR>
-nmap <silent> <Leader>ld <Plug>(coc-type-definition)
-nmap <silent> <Leader>li <Plug>(coc-implementation)
-nmap <silent> <Leader>lr <Plug>(coc-rename)
-nmap <silent> <Leader>lq <Plug>(coc-fix-current)
-nmap <silent> <Leader>lb <Plug>(coc-references)
-nmap <silent> <F5> :CocList --number-select<CR>
-nmap <silent> <Leader>l= <Plub>(coc-format)
-
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" inoremap <silent><expr> <C-o> coc#refresh()
-
-function! s:my_cr_function()
- return pumvisible() ? "\<c-y>" : "\<c-g>u\<CR>"
-endfunction
-inoremap <CR> <C-R>=<SID>my_cr_function()<CR>
-
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-nmap <silent> <Leader><Up> <Plug>(coc-diagnostic-prev)
-nmap <silent> <Leader><Down> <Plug>(coc-diagnostic-next)
-
-setlocal statusline+=%{coc#status()}
-let g:neoformat = 0
-
-autocmd ColorScheme * hi CocHighlightText ctermbg=blue cterm=bold,italic ctermfg=yellow
-'''
 # }}}
 
 [[plugins]]
@@ -137,75 +124,8 @@ setlocal tabstop=4
 '''
 # }}}
 
-# [[plugins]]
-# repo = "Shougo/deoplete.nvim" # {{{
-# hook_add = '''
-# let g:deoplete#enable_at_startup = 1
-# let g:deoplete#enable_smart_case = 1
-# let g:deoplete#auto_completion_start_length=3
-# let g:deoplete#sources = {}
-# let g:deoplete#sources._ = ['buffer', 'tag']
-# if !exists('g:deoplete#keyword_patterns')
-#   let g:deoplete#keyword_patterns = {}
-# endif
-# let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\w*'
-# " let g:deoplete#keyword_patterns.tex = '\\?[a-zA-Z_]\w*'
-# let g:deoplete#keyword_patterns.tex = ['\\?[a-zA-Z_]\w*', g:deoplete#keyword_patterns._]
-# 
-# if !exists('g:deopletes#omni#input_patterns')
-#   let g:deoplete#omni#input_patterns = {}
-# endif
-# let g:deoplete#omni#input_patterns.tex = '\v\\\a*(ref|cite)\a*([^]]*\])?\{([^}]*,)*[^}]*'
-# let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
-# 
-# call deoplete#custom#option('sources', {
-# \ 'tex' : ['buffer', 'dictionary', 'file', 'omni']
-# \})
-# 
-# call deoplete#custom#var('omni', 'input_patterns', {
-#           \ 'tex' : '\\(?:'
-#               \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
-#               \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-#               \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
-#               \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
-#               \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
-#               \ . '|\w*'
-#               \ .')',
-#           \ 'ruby': ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::'],
-# \  })
-# 
-# inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<Tab>"
-# inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-Tab>"
-# inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
-# inoremap <expr><C-c> deoplete#mappings#cancel_popup()
-# function! s:my_cr_function()
-#  return pumvisible() ? deoplete#mappings#close_popup() : "\<CR>"
-# endfunction
-# inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-# '''
-# # }}}
-
-# [[plugins]]
-# repo = 'tbodt/deoplete-tabnine'
-# build = 'bash install.sh'
-
-# [[plugins]]
-# repo = 'equalsraf/neovim-gui-shim'
-
-# [[plugins]]
-# repo = 'Nymphium/luafiler' # {{{
-# hook_add = '''
-# let g:luafiler_do_not_warn_on_start = 1
-# augroup LuafilerSettings
-  # autocmd!
-  # autocmd FileType * nnoremap <silent> WO :lua plugin.luafiler.open()<CR>
-  # autocmd FileType * nnoremap <silent> WV :lua plugin.luafiler.open("v")<CR>
-# augroup END
-# '''
-# }}}
-
 [[plugins]]
-repo = 'Shougo/defx.nvim'
+repo = 'Shougo/defx.nvim' # {{{
 hook_add = '''
 autocmd BufEnter,VimEnter *
     \ let bufname = expand('<afile>')
@@ -278,6 +198,7 @@ function! s:defx_my_settings() abort
  \ defx#do_action('change_vim_cwd')
 endfunction
 '''
+# }}}
 
 [[plugins]]
 repo = 'kristijanhusak/defx-git'
@@ -327,44 +248,6 @@ autocmd Filetype tex,vim let b:match_words = '（:）,【:】'
 augroup END
 '''
 # }}}
-
-# [[plugins]]
-# repo = 'scrooloose/syntastic' # {{{
-# hook_add = '''
-# let g:syntastic_check_on_open = 0
-# let g:syntastic_always_populate_loc_list = 1
-# let g:syntastic_check_on_wq = 0
-# let g:syntastic_loc_list_height = 3
-# let g:syntastic_echo_current_error = 1
-# let g:syntastic_enable_balloons = 1
-# let g:syntastic_enable_highlighting = 1
-# let g:syntastic_enable_signs=1
-# let g:syntastic_auto_loc_list=2
-# let g:syntastic_cpp_compiler = 'g++'
-# let g:syntastic_cpp_compiler_options = '-Wall -Wextra'
-# let g:syntastic_c_compiler = 'gcc'
-# let g:syntastic_c_compiler_options = '-Wall -Wextra'
-# let g:syntastic_ignore_files = ['\.tex$']
-# let g:syntastic_lua_checkers = ["luac", "luacheck"]
-# let g:syntastic_lua_luacheck_options = "-g -d -a -u -r"
-# let g:syntastic_moon_checkers = ['mooncheck', 'moonc']
-# let g:syntastic_moon_mooncheck_options = "-g -d -a -u -r"
-# let g:syntastic_sh_checkers = ['shellcheck']
-# let g:syntastic_sh_shellcheck_args = ['--exclude=SC2148']
-# let g:syntastic_haskell_checkers = ['ghc-mod']
-# let g:syntastic_ocaml_checkers = ['ocamlmerlin']
-# let g:syntastic_scala_checkers = []
-# '''
-
-# hook_post_source = '''
-# if !g:coc_enabled
-  # let g:syntastic_started = 1
-  # setlocal statusline+=\ %#warningmsg#
-  # setlocal statusline+=%{SyntasticStatuslineFlag()}
-  # setlocal statusline+=%*
-# endif
-# '''
-# # }}}
 
 [[plugins]]
 repo = 'szw/vim-maximizer' # {{{
@@ -422,20 +305,4 @@ augroup Neofmt
 augroup END
 '''
 # }}}
-
-# [[plugins]]
-# repo = 'ensime/ensime-vim'
-
-# hook_add = '''
-# function EnsimeKeymaps()
-  # nnoremap <buffer> <silent> <leader>t :EnType<CR>
-  # vnoremap <buffer> <silent> <leader>t :EnType<CR>
-# endfunction
-
-# augroup EnsimeVim
-  # autocmd!
-  # autocmd BufWritePost *.scala silent :EnTypeCheck
-  # autocmd FileType scala silent :call EnsimeKeymaps()
-# augroup END
-# '''
 
