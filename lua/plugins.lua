@@ -21,24 +21,31 @@ packer.startup(function()
 
   use { 'folke/tokyonight.nvim', -- {{{
     config = function()
-      -- vim.g.tokyonight_style = 'night'
-      -- vim.g.tokyonight_dark_float = true
-      vim.cmd [[:color tokyonight]]
-
       local normal = vim.api.nvim_command_output([[hi Normal]]):gsub('Normal%s*xxx%s', '')
 
       local bg
       do
         local guibg = normal:match('guibg=(#?%S+)')
         local ctermbg = normal:match('ctermbg=(#?%S+)')
-        bg = guibg or ctermg
+        bg = guibg or ctermbg
       end
 
       vim.api.nvim_create_autocmd({ 'VimEnter', 'ColorScheme' }, {
         callback = function()
           vim.cmd [[:color tokyonight]]
-          vim.cmd [[:hi Normal guibg=NONE ctermbg=NONE]]
           vim.cmd(([[:hi LineNr guifg=%s]]):format(bg))
+          -- clear background color for inactive window
+          vim.cmd [[:hi Normal ctermbg=NONE guibg=NONE]]
+          vim.cmd [[:hi NormalNC ctermbg=NONE guibg=NONE]]
+
+          -- statusline
+          vim.cmd [[:au InsertEnter * hi statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta]]
+          vim.cmd [[:au InsertLeave * hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan]]
+          vim.cmd [[:hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan]]
+          vim.cmd [[:hi User1 ctermfg=007 ctermbg=239 guibg=#4e4e4e guifg=#adadad]]
+          vim.cmd [[:hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad]]
+          vim.cmd [[:hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030]]
+          vim.cmd [[:hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e]]
         end
       })
     end
@@ -78,7 +85,9 @@ packer.startup(function()
   use 'hrsh7th/nvim-cmp'
   use 'RRethy/vim-illuminate'
   use 'folke/lsp-colors.nvim'
+  use 'L3MON4D3/LuaSnip'
   use { "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } }
+  use 'lukas-reineke/lsp-format.nvim'
   use { "https://git.sr.ht/~whynothugo/lsp_lines.nvim", -- {{{
     config = function()
       require("lsp_lines").setup()

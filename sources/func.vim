@@ -17,36 +17,6 @@ command! -nargs=1 GoWin lua vim.api.nvim_set_current_win(<args>)
   augroup END
 "" }}}
 
-"" insertmode highlight {{{
-  if has('syntax')
-    let g:hi_insert = 'StatusLine cterm=bold ctermfg=0 ctermbg=255 guifg=#000000 guibg=#ffffff'
-    let g:hi_normal = ''
-
-    redir => g:hi_normal
-      silent! hi StatusLine
-    redir END
-
-    let g:hi_normal = substitute(hi_normal, '[\r\n]', '', 'g')
-    let g:hi_normal = substitute(hi_normal, 'xxx ', '', '')
-
-    augroup InsertHighlight
-      autocmd!
-      autocmd InsertEnter * exec 'hi '. g:hi_normal
-      autocmd InsertLeave * exec 'hi '. g:hi_insert
-    augroup END
-  endif
-"" }}}
-
-"" gui-transparency {{{
-  if has('gui_running')
-    function! s:Transset(opacity)
-     call system('transset-df --id ' . v:windowid . ' ' . a:opacity)
-    endfunction
-
-    command! -nargs=1 Transset call <SID>Transset(<q-args>)
-  endif
-""  }}}
-
 "" set-shellscript filetype {{{
   function! DetectFromShebang()
     if strlen(&ft) > 1

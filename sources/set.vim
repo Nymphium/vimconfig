@@ -40,7 +40,7 @@ set wildignorecase
 set scrolloff=20
 set backspace=indent,eol,start
 set list
-set listchars=tab:>-,trail:.,extends:>,precedes:<,nbsp:%,eol:<
+set listchars=tab:>-,trail:.,extends:…,precedes:↵,nbsp:%,eol:↵
 " set listchars=tab:>―,trail:.,extends:>,precedes:<,nbsp:%,eol:◁
 set matchpairs& matchpairs+=<:>
 " set ambiwidth=double
@@ -58,6 +58,8 @@ set clipboard+=unnamed
 set timeoutlen=250
 set display=uhex,lastline
 set whichwrap=b,s,h,l,<,>,[,]
+set pumblend=15
+set winblend=15
 
 set splitright
 
@@ -70,14 +72,4 @@ set shellslash
 if &filetype ==# 'lua'
   set iskeyword+=:
 endif
-
-augroup NVimTerminal
-  autocmd!
-  autocmd TermOpen  * setlocal nonumber
-  \|                  setlocal norelativenumber
-  \|                  setlocal nocursorcolumn
-  \|                  setlocal nocursorline
-  \|                  setlocal statusline=TERMINAL\ (L%l/%L\ C%v\ W%{win_getid()}\ B%n)
-  \|                  startinsert
-augroup END
 

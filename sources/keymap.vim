@@ -74,8 +74,6 @@ nnoremap wh <ESC><C-w>><C-w>><C-w>><C-w>><C-w>>
 nnoremap wj <ESC><C-w>+<C-w>+<C-w>+<C-w>+<C-w>+
 nnoremap wk <ESC><C-w>-<C-w>-<C-w>-<C-w>-<C-w>-
 nnoremap <return> <ESC>i<return><ESC>
-nnoremap <TAB> >>
-nnoremap <S-Tab> <<
 nnoremap <ESC>o <Nop>
 nnoremap <ESC>o o<ESC>
 nnoremap <M-o> <Nop>
