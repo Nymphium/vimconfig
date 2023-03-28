@@ -56,6 +56,7 @@ set lazyredraw
 set shell=$SHELL
 set clipboard+=unnamed
 set timeoutlen=250
+set updatetime=500
 set display=uhex,lastline
 set whichwrap=b,s,h,l,<,>,[,]
 set pumblend=15
@@ -64,12 +65,4 @@ set winblend=15
 set splitright
 
 set shellslash
-
-" set viminfo='100,<1000,s50,h,n~/.viminfo
-
-" set conceallevel=2
-
-if &filetype ==# 'lua'
-  set iskeyword+=:
-endif
 

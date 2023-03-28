@@ -8,8 +8,17 @@ end
 
 local illuminate = require('illuminate')
 local format = require 'lsp-format'
+local nlspsettings = require("nlspsettings")
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
+
+nlspsettings.setup({
+  config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
+  local_settings_dir = ".nlsp-settings",
+  local_settings_root_markers_fallback = { '.git' },
+  append_default_schemas = true,
+  loader = 'json'
+})
 
 local on_attach = function(client, bufnr)
   illuminate.on_attach(client)
@@ -35,10 +44,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap("n", pfx 'fl', "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
   buf_set_keymap("n", pfx 'r', "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
   buf_set_keymap("n", pfx 'a', "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+  buf_set_keymap('n', pfx 'e', "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
   buf_set_keymap("n", pfx 'b',
     "<cmd>lua vim.g.cq_prev_buf = vim.api.nvim_get_current_win(); vim.lsp.buf.references()<CR>", opts)
-
-  buf_set_keymap("n", pfx 'se', "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
 
   buf_set_keymap("n", '<leader><up>', "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
   buf_set_keymap("n", '<leader><down>', "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
@@ -46,26 +54,47 @@ local on_attach = function(client, bufnr)
   buf_set_keymap("n", pfx 'q',
     "<cmd>lua vim.g.cq_prev_buf = vim.api.nvim_get_current_win(); vim.diagnostic.setloclist()<CR>", opts)
 
-  buf_set_keymap("n", pfx '=', "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  buf_set_keymap("n", pfx '=', "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts)
 
   buf_set_keymap("n", pfx 'n', [[<cmd>lua require"illuminate".next_reference{wrap=true}<cr>]], opts)
   buf_set_keymap("n", pfx 'p', [[<cmd>lua require"illuminate".next_reference{reverse=true,wrap=true}<cr>]], opts)
 
   api.nvim_buf_create_user_command(bufnr, "LspFormat", vim.lsp.buf.formatting, {})
   format.on_attach(client)
+
+  -- code lens
+  local codelens = vim.api.nvim_create_augroup(
+    'LSPCodeLens',
+    { clear = true }
+  )
+  -- vim.api.nvim_create_autocmd({ 'FileType', 'InsertLeave' }, {
+  -- group = codelens,
+  -- callback = vim.lsp.codelens.refresh,
+  -- buffer = bufnr,
+  -- })
+
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    group = codelens,
+    callback = vim.lsp.buf.clear_references,
+    buffer = bufnr,
+  })
+
+  -- vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+  -- group = codelens,
+  -- callback = vim.diagnostic.open_float,
+  -- buffer = bufnr
+  -- })
   -- }}}
 end
 
-local lspconfig = require "lspconfig"
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 do -- reference / diagnostic {{{
-  vim.fn.sign_define('DiagnosticSignError', { text = '❌', texthl = 'DiagnosticError', linehl = '', numhl = '' })
-  vim.fn.sign_define('DiagnosticSignWarn', { text = '⚠', texthl = 'DiagnosticWarn', linehl = '', numhl = '' })
+  vim.fn.sign_define('DiagnosticSignError', { text = '🚫', texthl = 'DiagnosticError', linehl = '', numhl = '' })
+  vim.fn.sign_define('DiagnosticSignWarn', { text = '⚠️', texthl = 'DiagnosticWarn', linehl = '', numhl = '' })
   vim.fn.sign_define('DiagnosticSignInfo', { text = '💡', texthl = 'DiagnosticInfo', linehl = '', numhl = '' })
   vim.fn.sign_define('DiagnosticSignHint', { text = '👉', texthl = 'DiagnosticHint', linehl = '', numhl = '' })
   vim.diagnostic.config({
-
     update_in_insert = true,
     severity_sort = true,
   })
@@ -78,6 +107,10 @@ do -- reference / diagnostic {{{
   vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help,
     { border = 'rounded' }
+  )
+
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = false }
   )
 
   local cb = function(f)
@@ -95,92 +128,130 @@ do -- reference / diagnostic {{{
     end
   end
 
+  local qf = vim.api.nvim_create_augroup(
+    'LSPQF',
+    { clear = true }
+  )
+
   api.nvim_create_autocmd('FileType', {
+    group = qf,
     pattern = 'qf',
     callback = function()
       vim.keymap.set('n', '<CR>', function()
-        return cb(function(win)
-          api.nvim_set_current_win(win)
-        end)
-      end,
+          return cb(function(win)
+            api.nvim_set_current_win(win)
+          end)
+        end,
         { noremap = true, buffer = true })
 
       vim.keymap.set('n', '<CR><CR>', function()
-        local current_win = api.nvim_get_current_win()
-        return cb(function(win)
-          api.nvim_win_close(current_win, true)
-          api.nvim_set_current_win(win)
-        end)
-      end,
+          local current_win = api.nvim_get_current_win()
+          return cb(function(win)
+            api.nvim_win_close(current_win, true)
+            api.nvim_set_current_win(win)
+          end)
+        end,
         { noremap = true, buffer = true })
 
       vim.keymap.set('n', '<ESC><ESC>', function()
-        local current_win = api.nvim_get_current_win()
-        return cb(function()
-          api.nvim_win_close(current_win, true)
-        end)
-      end,
+          local current_win = api.nvim_get_current_win()
+          return cb(function()
+            api.nvim_win_close(current_win, true)
+          end)
+        end,
         { noremap = true, buffer = true })
 
       vim.keymap.set('n', 'j', function()
-        local current_win = api.nvim_get_current_win()
-        local lines = vim.fn.line('$')
-        local pos = api.nvim_win_get_cursor(current_win)
-        local row = pos[1]
-        pos[2] = 0
+          local current_win = api.nvim_get_current_win()
+          local lines = vim.fn.line('$')
+          local pos = api.nvim_win_get_cursor(current_win)
+          local row = pos[1]
+          pos[2] = 0
 
-        if lines > row then
-          pos[1] = row + 1
-          api.nvim_win_set_cursor(current_win, pos)
-        end
+          if lines > row then
+            pos[1] = row + 1
+            api.nvim_win_set_cursor(current_win, pos)
+          end
 
-        return cb()
-      end,
+          return cb()
+        end,
         { noremap = true, buffer = true })
 
       vim.keymap.set('n', 'k', function()
-        local current_win = api.nvim_get_current_win()
-        local lines = vim.fn.line('$')
-        local pos = api.nvim_win_get_cursor(current_win)
-        local row = pos[1]
-        pos[2] = 0
-        if lines > 1 and row > 1 then
-          pos[1] = row - 1
-          api.nvim_win_set_cursor(current_win, pos)
-        end
+          local current_win = api.nvim_get_current_win()
+          local lines = vim.fn.line('$')
+          local pos = api.nvim_win_get_cursor(current_win)
+          local row = pos[1]
+          pos[2] = 0
+          if lines > 1 and row > 1 then
+            pos[1] = row - 1
+            api.nvim_win_set_cursor(current_win, pos)
+          end
 
-        cb()
-      end,
+          cb()
+        end,
         { noremap = true, buffer = true })
     end
   })
 end -- }}}
 
-local lsp_st = require('lsp_list')
+do
+  local mason = require('mason')
+  mason.setup({
+    ui = {
+      icons = {
+        package_installed = "✓",
+        package_pending = "➜",
+        package_uninstalled = "✗"
+      }
+    }
+  })
 
-api.nvim_create_autocmd('FileType', {
-  pattern = '*',
-  callback = function()
-    local ft = vim.bo.filetype
-    local st = lsp_st[ft]
+  local lspconfig = require "lspconfig"
+  local mason_lspconfig = require('mason-lspconfig')
+  local lsp_st = require('lsp_list')
 
-    if st and not st.loaded then
-      st.loaded = true
+  mason_lspconfig.setup_handlers({ function(server_name)
+    lspconfig[server_name].setup {
+      capabilities = capabilities,
+      lint = true,
+      on_attach = on_attach
+    }
+  end })
 
-      local config = lspconfig[st[1]]
-      if config then
-        config.setup {
-          capabilities = capabilities,
-          lint = true,
-          on_attach = on_attach
-        }
+  local eachconfig = vim.api.nvim_create_augroup(
+    'LSPEachConfig',
+    { clear = true }
+  )
+
+  local ft = vim.bo.filetype
+  print(ft, "aaaa")
+
+  api.nvim_create_autocmd('FileType', {
+    group = eachconfig,
+    pattern = '*',
+    callback = function()
+      local ft = vim.bo.filetype
+      local st = lsp_st[ft]
+
+      if st then
+        local config = lspconfig[st[1]]
+
+        if config then
+          config.setup {
+            capabilities = capabilities,
+            lint = true,
+            on_attach = on_attach
+          }
+        end
       end
     end
-  end
-})
+  })
+end
 
 -- completion {{{
 local cmp = require 'cmp'
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 local has_words_before = function()
   local line, col = unpack(api.nvim_win_get_cursor(0))
@@ -190,25 +261,22 @@ end
 local select_opts = { behavior = cmp.SelectBehavior.Select }
 
 cmp.setup {
-
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end
   },
   mapping = {
-    ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+    ["<Tab>"] = vim.schedule_wrap(function(fallback)
+      if cmp.visible() and has_words_before() then
         cmp.select_next_item(select_opts)
-      elseif has_words_before() then
-        cmp.complete()
       elseif luasnip.jumpable(1) then
         luasnip.jump(1)
       else
         fallback()
       end
     end, { "i", "s" }),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
+    ["<S-Tab>"] = vim.schedule_wrap(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item(select_opts)
       elseif luasnip.jumpable(-1) then
@@ -220,20 +288,34 @@ cmp.setup {
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = false })
+    ['<CR>'] = cmp.mapping.confirm({
+      select = false,
+      behavior = cmp.ConfirmBehavior.Replace,
+    })
   },
   window = {
-    documentation = cmp.config.window.bordered()
+    completion = {
+      winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+    },
+    documentation = {
+      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    },
   },
   sources = cmp.config.sources {
-    { name = 'nvim_lsp', keyword_length = 2 },
-    { name = 'buffer', keyword_length = 2,
-      opts = {
+    { name = 'nvim_lsp',  keyword_length = 2, group_index = 2 },
+    {
+      name = 'buffer',
+      keyword_length = 2,
+      options = {
         keyword_pattern = [[\k\+]]
       }
     },
-    { name = 'luasnip', keyword_length = 2 },
-    { name = 'path' }
+    { name = 'luasnip',   keyword_length = 2 },
+    { name = 'path' },
+    { name = 'treesitter' },
+    -- { name = 'cmdline' },
+    { name = 'git' },
+    { name = "copilot",   group_index = 2 },
   },
   formatting = {
     fields = { 'menu', 'abbr', 'kind' },
@@ -242,7 +324,7 @@ cmp.setup {
         nvim_lsp = 'λ',
         luasnip = '⋗',
         buffer = 'Ω',
-        path = '🖫',
+        path = '📄',
       }
 
       item.menu = menu_icon[entry.source.name]
@@ -251,7 +333,20 @@ cmp.setup {
   },
 }
 
-cmp.setup.cmdline('/', {
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
+
+cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
     { name = 'buffer' }

@@ -9,15 +9,14 @@ do -- {{{
   end
 end -- }}}
 
-local packer = require 'packer'
-local use = packer.use
 
-local use_lazy = function(pkg)
-  use { pkg, opt = true }
-end
-
-packer.startup(function()
-  use_lazy 'wbthomason/packer.nvim'
+require('packer').startup(function(use)
+  use 'wbthomason/packer.nvim'
+  use { 'jose-elias-alvarez/null-ls.nvim',
+    config = function()
+      require('null-ls').setup {}
+    end
+  }
 
   use { 'folke/tokyonight.nvim', -- {{{
     config = function()
@@ -49,7 +48,7 @@ packer.startup(function()
         end
       })
     end
-  } -- }}}
+  }                                 -- }}}
 
   use { 'scrooloose/nerdcommenter', -- {{{
     config = function()
@@ -57,7 +56,7 @@ packer.startup(function()
       vim.api.nvim_set_keymap('n', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
       vim.api.nvim_set_keymap('v', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
     end
-  } -- }}}
+  }                                        -- }}}
 
   use { 'nvim-treesitter/nvim-treesitter', -- {{{
     run = ':TSUpdate',
@@ -66,6 +65,7 @@ packer.startup(function()
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { "typescript", "haskell", "ocaml", "bash", "lua", "vim" },
+        endwise = { enable = true }, -- for treesitter-endwise
         highlight = {
           enable = true,
           disable = {},
@@ -77,29 +77,89 @@ packer.startup(function()
 
   -- nvim-lsp {{{
   use 'neovim/nvim-lspconfig'
-  use 'williamboman/nvim-lsp-installer'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
+  use { 'williamboman/mason.nvim',
+    config = function()
+      require('mason').setup()
+    end
+  }
+  use { 'williamboman/mason-lspconfig.nvim',
+    config = function()
+      require('mason-lspconfig').setup({
+        automatic_install = true
+      })
+    end
+  }
+
+  use { 'jay-babu/mason-null-ls.nvim',
+    config = function()
+      require('mason-null-ls').setup {}
+    end
+  }
+
+  use 'tamago324/nlsp-settings.nvim'
+
+  use { 'j-hui/fidget.nvim',
+    config = function()
+      require "fidget".setup {}
+    end
+  }
+
+  -- completions {{{
   use 'hrsh7th/nvim-cmp'
+  use  'hrsh7th/cmp-nvim-lsp' 
+  use  'hrsh7th/cmp-buffer'
+  use  'hrsh7th/cmp-path' 
+  use 'hrsh7th/cmp-cmdline'
+  use  'ray-x/cmp-treesitter'
+
+  -- use { 'github/copilot.vim',
+  -- config = function()
+  -- vim.cmd([[:let g:copilot_enabled = v:true]])
+  -- end
+  -- }
+  use {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+        filetypes = { ["*"] = true }
+      })
+    end,
+  }
+  use {
+    'zbirenbaum/copilot-cmp',
+    after = { 'copilot.lua', 'nvim-cmp' },
+    config = function()
+      require('copilot_cmp').setup()
+    end
+  }
+  -- }}}
+
   use 'RRethy/vim-illuminate'
   use 'folke/lsp-colors.nvim'
   use 'L3MON4D3/LuaSnip'
-  use { "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } }
   use 'lukas-reineke/lsp-format.nvim'
-  use { "https://git.sr.ht/~whynothugo/lsp_lines.nvim", -- {{{
-    config = function()
-      require("lsp_lines").setup()
+  -- use { "ErichDonGubler/lsp_lines.nvim", -- {{{
+  -- config = function()
+  -- require("lsp_lines").setup()
 
-      vim.diagnostic.config({
-        virtual_text = false,
-      })
-    end,
-  } -- }}}
+  -- vim.diagnostic.config({
+  -- virtual_text = false,
+  -- })
+  -- end,
+  -- } -- }}}
   -- }}}
 
-  use 'Shougo/echodoc.vim'
+  use {
+    'Shougo/echodoc.vim',
+    config = function()
+      vim.cmd([[:let g:echodoc_enable_at_startup = 1]])
+      vim.cmd([[:let g:echodoc#type = "popup"]])
+    end
+  }
   use 'tpope/vim-sleuth'
 
   use { 'tpope/vim-surround', -- {{{
@@ -113,8 +173,15 @@ packer.startup(function()
     end
   } -- }}}
 
-  use 'tpope/vim-endwise'
-  use 'Townk/vim-autoclose'
+  -- use 'tpope/vim-endwise'
+  -- use 'Townk/vim-autoclose'
+
+  use {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  }
+
+  use 'RRethy/nvim-treesitter-endwise'
 
   use { 'andymass/vim-matchup', requires = { 'nvim-treesitter/nvim-treesitter' } }
   use 'szw/vim-maximizer'
@@ -122,7 +189,6 @@ packer.startup(function()
 
   -- language-specific {{{
   -- use {'rgrinberg/vim-ocaml', ft = 'ocaml'}
-  use 'drmingdrmer/vim-indent-lua'
   use 'LnL7/vim-nix'
 
   use { 'lervag/vimtex', -- {{{
@@ -133,6 +199,6 @@ packer.startup(function()
   -- }}}
 
   if packer_bootstrap then
-    packer.sync()
+    require('packer').sync()
   end
 end)
