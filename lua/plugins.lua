@@ -106,11 +106,12 @@ require('packer').startup(function(use)
 
   -- completions {{{
   use 'hrsh7th/nvim-cmp'
-  use  'hrsh7th/cmp-nvim-lsp' 
-  use  'hrsh7th/cmp-buffer'
-  use  'hrsh7th/cmp-path' 
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
-  use  'ray-x/cmp-treesitter'
+  use 'ray-x/cmp-treesitter'
+  use 'onsails/lspkind.nvim'
 
   -- use { 'github/copilot.vim',
   -- config = function()
@@ -123,7 +124,10 @@ require('packer').startup(function(use)
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        suggestion = { enabled = false },
+        suggestion = {
+          enabled = false,
+          auto_trigger = true
+        },
         panel = { enabled = false },
         filetypes = { ["*"] = true }
       })
@@ -194,8 +198,55 @@ require('packer').startup(function(use)
   use { 'lervag/vimtex', -- {{{
     config = function()
     end
+  }                                -- }}}
+
+  use { 'lewis6991/gitsigns.nvim', --- {{{
+    config = function()
+      require('gitsigns').setup({
+        current_line_blame_opts = {
+          virt_text_pos = 'right_align',
+          delay = 300,
+        },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+          local set_keymap = function(mode, l, r, opts)
+            opts = opts or {}
+            opts.noremap = true
+            opts.silent = true
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          local pfx = function(k)
+            return '<leader>g' .. k
+          end
+
+          set_keymap('n', ']c', function()
+            if vim.wo.diff then return ']c' end
+            vim.schedule(function() gs.next_hunk() end)
+            return '<Ignore>'
+          end, { expr = true })
+
+          set_keymap('n', '[c', function()
+            if vim.wo.diff then return '[c' end
+            vim.schedule(function() gs.prev_hunk() end)
+            return '<Ignore>'
+          end, { expr = true })
+
+          set_keymap({ 'n', 'v' }, pfx 's', ':Gitsigns stage_hunk<CR>')
+          set_keymap({ 'n', 'v' }, pfx 'r', ':Gitsigns reset_hunk<CR>')
+          set_keymap('n', pfx 'b', function() gs.blame_line { full = true } end)
+          set_keymap('n', pfx 'tb', gs.toggle_current_line_blame)
+          set_keymap('n', pfx 'd', gs.diffthis)
+          set_keymap('n', pfx 'dW', ':Gitsigns diffthis ')
+          set_keymap('n', pfx 'dD', function() gs.diffthis('~') end)
+          set_keymap('n', pfx 'td', gs.toggle_deleted)
+        end
+      })
+    end
   } -- }}}
 
+  use { 'kevinhwang91/nvim-bqf' }
   -- }}}
 
   if packer_bootstrap then
