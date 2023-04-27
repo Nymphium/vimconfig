@@ -14,6 +14,7 @@ return {
   end,
   lua = { 'lua_ls' }, -- lua-language-server
   vim = { 'vimls' },  -- vim-language-server
+  ruby = { 'solargraph'},
   ocaml = ocamllsp,
   dune = ocamllsp,
   typescript = tsjs,
