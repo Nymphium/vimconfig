@@ -19,7 +19,8 @@ jobs:
     - name: Set up Neovim
       run: |
         sudo apt update
-        sudo apt install curl
+        sudo add-apt-repository universe
+        sudo apt install libfuse2 curl
         curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
         chmod u+x nvim.appimage
         sudo mv ./nvim.appimage /usr/local/bin/nvim
