@@ -12,11 +12,6 @@ end -- }}}
 
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-  use { 'jose-elias-alvarez/null-ls.nvim',
-    config = function()
-      require('null-ls').setup {}
-    end
-  }
 
   use { 'folke/tokyonight.nvim', -- {{{
     config = function()
@@ -84,15 +79,7 @@ require('packer').startup(function(use)
   }
   use { 'williamboman/mason-lspconfig.nvim',
     config = function()
-      require('mason-lspconfig').setup({
-        automatic_install = true
-      })
-    end
-  }
-
-  use { 'jay-babu/mason-null-ls.nvim',
-    config = function()
-      require('mason-null-ls').setup {}
+      require('mason-lspconfig').setup()
     end
   }
 
@@ -124,20 +111,22 @@ require('packer').startup(function(use)
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        suggestion = {
-          enabled = false,
-          auto_trigger = true
-        },
+        suggestion = { enabled = false },
         panel = { enabled = false },
         filetypes = { ["*"] = true }
       })
+      vim.keymap.set("i", "<C-Tab>", "<cmd>Copilot suggestion<CR>", { noremap = true, silent = true })
     end,
   }
   use {
     'zbirenbaum/copilot-cmp',
     after = { 'copilot.lua', 'nvim-cmp' },
     config = function()
-      require('copilot_cmp').setup()
+      require('copilot_cmp').setup({
+        formatters = {
+          insert_text = require("copilot_cmp.format").remove_existing
+        },
+      })
     end
   }
   -- }}}

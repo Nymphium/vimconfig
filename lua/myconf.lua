@@ -288,20 +288,20 @@ cmp.setup {
     },
   },
   sources = cmp.config.sources {
-    { name = 'nvim_lsp',  keyword_length = 2, group_index = 2 },
+    { name = 'nvim_lsp',  keyword_length = 1, group_index = 1 },
     {
       name = 'buffer',
       keyword_length = 2,
+      group_index = 3,
       options = {
         keyword_pattern = [[\k\+]]
       }
     },
     { name = 'luasnip',   keyword_length = 2 },
-    { name = 'path' },
+    { name = 'path',      group_index = 2 },
     { name = 'treesitter' },
-    -- { name = 'cmdline' },
     { name = 'git' },
-    { name = "copilot",   keyword_length = 2, group_index = 2 },
+    { name = "copilot",   keyword_length = 1, group_index = 2 },
   },
   formatting = {
     fields = { 'menu', 'abbr', 'kind' },

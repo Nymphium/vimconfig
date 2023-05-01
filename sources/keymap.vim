@@ -10,7 +10,7 @@ vnoremap <TAB> >
 vnoremap <S-Tab> <
 vnoremap <silent> n "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
 vnoremap <S-y> "+y
-vnoremap <bar> "*y:vim /<C-r>*/ % <bar> cw<CR>
+vnoremap <bar> "*y:vim /<C-r>*/ `git ls-files` <bar> cw<CR>
 
 nnoremap <silent> <ESC> <ESC><ESC>:nohlsearch<CR>
 nnoremap <ESC>s <ESC>:w!<CR>
@@ -57,7 +57,7 @@ augroup RustFmt
   autocmd Filetype rust nnoremap <silent> II :RustFmt<CR>
 augroup END
 
-nnoremap <bar> :vim  // % <bar> cw<left><left><left><left><left><left><left><left>
+nnoremap <bar> :vim // `git ls-files` <bar> cw<HOME><RIGHT><RIGHT><RIGHT><RIGHT><RIGHT>
 nnoremap <silent> cn :cn<CR>
 nnoremap <silent> CN :cN<CR>
 nnoremap <silent> cq :lcl<CR>
