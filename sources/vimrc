@@ -9,5 +9,5 @@ source $HOME/.config/nvim/sources/statusline.vim
 source $HOME/.config/nvim/sources/keymap.vim
 source $HOME/.config/nvim/sources/func.vim
 
-filetype plugin indent on
-syntax on
+" filetype plugin indent on
+" syntax on

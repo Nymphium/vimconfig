@@ -31,11 +31,11 @@ vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
   callback = vim.lsp.buf.clear_references,
 })
 
--- keymaps {{{
-do
+
+do -- keymaps
   local opts = { noremap = true, silent = true }
   local set_keymap = function(...)
-    vim.keymap.set(...)
+    return vim.keymap.set(...)
   end
   set_keymap("n", pfx 'k', "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
   set_keymap("n", pfx 'g', "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
@@ -63,26 +63,16 @@ do
   set_keymap("n", pfx 'n', [[<cmd>lua require"illuminate".next_reference{wrap=true}<cr>]], opts)
   set_keymap("n", pfx 'p', [[<cmd>lua require"illuminate".next_reference{reverse=true,wrap=true}<cr>]], opts)
 end
--- }}}
-
-local on_attach = function(client, bufnr)
-  illuminate.on_attach(client)
-
-  api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  vim.cmd [[setlocal completeopt=menu,menuone,noselect]]
-  -- api.nvim_buf_set_option(bufnr, 'completeopt', 'menu,menuone,noselect')
-
-  api.nvim_buf_create_user_command(bufnr, "LspFormat", vim.lsp.buf.formatting, {})
-  format.on_attach(client)
-end
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 do -- reference / diagnostic {{{
-  vim.fn.sign_define('DiagnosticSignError', { text = '🚫', texthl = 'DiagnosticError', linehl = '', numhl = '' })
-  vim.fn.sign_define('DiagnosticSignWarn', { text = '⚠️', texthl = 'DiagnosticWarn', linehl = '', numhl = '' })
-  vim.fn.sign_define('DiagnosticSignInfo', { text = '💡', texthl = 'DiagnosticInfo', linehl = '', numhl = '' })
-  vim.fn.sign_define('DiagnosticSignHint', { text = '👉', texthl = 'DiagnosticHint', linehl = '', numhl = '' })
+  vim.fn.sign_define('DiagnosticSignError',
+    { text = '', texthl = 'DiagnosticError', linehl = '', numhl = 'DiagnosticVirtualTextError' })
+  vim.fn.sign_define('DiagnosticSignWarn',
+    { text = '', texthl = 'DiagnosticWarn', linehl = '', numhl = 'DiagnosticVirtualTextWarn' })
+  vim.fn.sign_define('DiagnosticSignInfo',
+    { text = '', texthl = 'DiagnosticInfo', linehl = '', numhl = 'DiagnosticVirtualTextInfo' })
+  vim.fn.sign_define('DiagnosticSignHint',
+    { text = '', texthl = 'DiagnosticHint', linehl = '', numhl = 'DiagnosticVirtualTextHint' })
   vim.diagnostic.config({
     update_in_insert = true,
     severity_sort = true,
@@ -101,90 +91,19 @@ do -- reference / diagnostic {{{
   vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = false }
   )
-
-  -- local cb = function(f)
-  -- local line = api.nvim_get_current_line()
-  -- local path, row, col = line:match('([^|]+)|(%d+)%s+col%s+(%d+)')
-  -- row = tonumber(row)
-  -- col = tonumber(col)
-  -- path = path:gsub('%-', '%%-'):gsub('%.', '%%.')
-
-  -- local win = vim.g.cq_prev_buf
-
-  -- api.nvim_win_set_cursor(win, { row, col })
-  -- if type(f) == "function" then
-  -- return f(win, row, col)
-  -- end
-  -- end
-
-  -- local qf = vim.api.nvim_create_augroup(
-  -- 'LSPQF',
-  -- { clear = true }
-  -- )
-
-  -- api.nvim_create_autocmd('FileType', {
-  -- group = qf,
-  -- pattern = 'qf',
-  -- callback = function()
-  -- vim.keymap.set('n', '<CR>', function()
-  -- return cb(function(win)
-  -- api.nvim_set_current_win(win)
-  -- end)
-  -- end,
-  -- { noremap = true, buffer = true })
-
-  -- vim.keymap.set('n', '<CR><CR>', function()
-  -- local current_win = api.nvim_get_current_win()
-  -- return cb(function(win)
-  -- api.nvim_win_close(current_win, true)
-  -- api.nvim_set_current_win(win)
-  -- end)
-  -- end,
-  -- { noremap = true, buffer = true })
-
-  -- vim.keymap.set('n', '<ESC><ESC>', function()
-  -- local current_win = api.nvim_get_current_win()
-  -- return cb(function()
-  -- api.nvim_win_close(current_win, true)
-  -- end)
-  -- end,
-  -- { noremap = true, buffer = true })
-
-  -- vim.keymap.set('n', 'j', function()
-  -- local current_win = api.nvim_get_current_win()
-  -- local lines = vim.fn.line('$')
-  -- local pos = api.nvim_win_get_cursor(current_win)
-  -- local row = pos[1]
-  -- pos[2] = 0
-
-  -- if lines > row then
-  -- pos[1] = row + 1
-  -- api.nvim_win_set_cursor(current_win, pos)
-  -- end
-
-  -- return cb()
-  -- end,
-  -- { noremap = true, buffer = true })
-
-  -- vim.keymap.set('n', 'k', function()
-  -- local current_win = api.nvim_get_current_win()
-  -- local lines = vim.fn.line('$')
-  -- local pos = api.nvim_win_get_cursor(current_win)
-  -- local row = pos[1]
-  -- pos[2] = 0
-  -- if lines > 1 and row > 1 then
-  -- pos[1] = row - 1
-  -- api.nvim_win_set_cursor(current_win, pos)
-  -- end
-
-  -- cb()
-  -- end,
-  -- { noremap = true, buffer = true })
-  -- end
-  -- })
 end -- }}}
 
 do
+  local on_attach = function(client, bufnr)
+    illuminate.on_attach(client)
+
+    api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    -- api.nvim_buf_set_option(bufnr, 'completeopt', 'menu,menuone,noselect')
+
+    return format.on_attach(client)
+  end
+
+  local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
   local mason = require('mason')
   mason.setup({
     ui = {
@@ -201,7 +120,7 @@ do
   local lsp_st = require('lsp_list')
 
   mason_lspconfig.setup_handlers({ function(server_name)
-    lspconfig[server_name].setup {
+    return lspconfig[server_name].setup {
       capabilities = capabilities,
       lint = true,
       on_attach = on_attach
@@ -224,7 +143,7 @@ do
         local config = lspconfig[st[1]]
 
         if config then
-          config.setup {
+          return config.setup {
             capabilities = capabilities,
             lint = true,
             on_attach = on_attach
@@ -235,112 +154,138 @@ do
   })
 end
 
--- completion {{{
-local cmp = require('cmp')
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-local lspkind = require('lspkind')
+do -- completion
+  local cmp = require('cmp')
+  local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  local lspkind = require('lspkind')
 
-local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
-end
+  local has_words_before = function()
+    if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
+  end
 
-local select_opts = { behavior = cmp.SelectBehavior.Select }
+  local select_opts = { behavior = cmp.SelectBehavior.Select }
 
-cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end
-  },
-  mapping = {
-    ["<Tab>"] = vim.schedule_wrap(function(fallback)
-      if cmp.visible() and has_words_before() then
-        cmp.select_next_item(select_opts)
-      else
-        fallback()
+  cmp.setup {
+    snippet = {
+      expand = function(args)
+        return luasnip.lsp_expand(args.body)
       end
-    end),
-    ["<S-Tab>"] = vim.schedule_wrap(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item(select_opts)
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({
-      select = false,
-      behavior = cmp.ConfirmBehavior.Replace,
-    })
-  },
-  window = {
-    completion = {
-      winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
     },
-    documentation = {
-      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    mapping = {
+      ["<Tab>"] = vim.schedule_wrap(function(fallback)
+        if cmp.visible() and has_words_before() then
+          return cmp.select_next_item(select_opts)
+        else
+          return fallback()
+        end
+      end),
+      ["<S-Tab>"] = vim.schedule_wrap(function(fallback)
+        if cmp.visible() then
+          return cmp.select_prev_item(select_opts)
+        elseif luasnip.jumpable(-1) then
+          return luasnip.jump(-1)
+        else
+          return fallback()
+        end
+      end, { "i", "s" }),
+      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({
+        select = false,
+        behavior = cmp.ConfirmBehavior.Replace,
+      })
     },
-  },
-  sources = cmp.config.sources {
-    { name = 'nvim_lsp',  keyword_length = 1, group_index = 1 },
-    {
-      name = 'buffer',
-      keyword_length = 2,
-      group_index = 3,
-      options = {
-        keyword_pattern = [[\k\+]]
-      }
-    },
-    { name = 'luasnip',   keyword_length = 2 },
-    { name = 'path',      group_index = 2 },
-    { name = 'treesitter' },
-    { name = 'git' },
-    { name = "copilot",   keyword_length = 1, group_index = 2 },
-  },
-  formatting = {
-    fields = { 'menu', 'abbr', 'kind' },
-    format = lspkind.cmp_format({
-      symbol_map = {
-        Copilot = "",
+    sources = cmp.config.sources {
+      { name = 'nvim_lsp',  keyword_length = 1, group_index = 1 },
+      {
+        name = 'buffer',
+        keyword_length = 2,
+        group_index = 3,
+        options = {
+          keyword_pattern = [[\k\+]]
+        }
       },
-    }),
-  },
-}
-
-cmp.event:on(
-  'confirm_done',
-  cmp_autopairs.on_confirm_done()
-)
-
-cmp.setup.filetype('gitcommit', {
-  sources = cmp.config.sources({
-    { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-  }, {
-    { name = 'buffer' },
-  }, {
-    { name = "copilot" }
-  })
-})
-
-cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
+      { name = 'luasnip',   keyword_length = 2 },
+      { name = 'path',      group_index = 2 },
+      { name = 'treesitter' },
+      { name = 'git' },
+      { name = "copilot",   keyword_length = 1, group_index = 2, max_item_count = 3, },
+    },
+    window = {
+      completion = {
+        border = "rounded",
+        winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,CursorLine:PmenuSel,Search:None",
+      },
+      documentation = { border = "rounded", },
+    },
+    formatting = {
+      format = function(entry, vim_item)
+        vim_item = lspkind.cmp_format({
+          mode = "symbol_text",
+          symbol_map = {
+            Copilot = "",
+          },
+          menu = {
+            Copilot = "Copilot",
+          }
+        })(entry, vim_item)
+        vim_item.abbr = string.format("%-s", vim_item.abbr)
+        return vim_item
+      end
+    },
   }
-})
 
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
+  cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+  )
+
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'cmp_git' },
+    }, {
+      { name = "path" }
+    }, {
+      { name = 'buffer' },
+    }, {
+      { name = "copilot" }
+    })
   })
-})
--- }}}
+
+  cmp.setup.cmdline({ '/', '?' }, {
+    view = {
+      entries = { name = 'column' }
+    },
+    formatting = {
+      fields = { 'abbr' },
+      format = function(_, vim_item)
+        return vim_item
+      end
+    },
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  cmp.setup.cmdline(':', {
+    view = {
+      entries = { name = 'column' }
+    },
+    formatting = {
+      fields = { 'abbr' },
+      format = function(_, vim_item)
+        return vim_item
+      end
+    },
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+end

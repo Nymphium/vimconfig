@@ -37,7 +37,7 @@ set statusline=
 set statusline+=%0*\ B%n\ W%{win_getid()}\  " buffer window
 set statusline+=%1*\ %t%{&ft!=''?'['.&ft.']':''}%m\  " filename[modified?]
 set statusline+=%2*\ %{toupper(&fenc!=''?&fenc:&enc)}\  " file encoding
-set statusline+=%4*\ %=
+set statusline+=%0*\ %=
 set statusline+=%2*\ %{ModeCurrent()}\ 
 set statusline+=%0*\ %h%wLine\ %l\/%L\ Col\ %v\  " (current linenenumber)/(all linenumber) (nth character)
 set laststatus=2

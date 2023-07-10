@@ -13,37 +13,57 @@ end -- }}}
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
-  use { 'folke/tokyonight.nvim', -- {{{
+  use { 'folke/tokyonight.nvim',
     config = function()
-      local normal = vim.api.nvim_command_output([[hi Normal]]):gsub('Normal%s*xxx%s', '')
-
-      local bg
-      do
-        local guibg = normal:match('guibg=(#?%S+)')
-        local ctermbg = normal:match('ctermbg=(#?%S+)')
-        bg = guibg or ctermbg
-      end
-
-      vim.api.nvim_create_autocmd({ 'VimEnter', 'ColorScheme' }, {
-        callback = function()
-          vim.cmd [[:color tokyonight]]
-          vim.cmd(([[:hi LineNr guifg=%s]]):format(bg))
-          -- clear background color for inactive window
-          vim.cmd [[:hi Normal ctermbg=NONE guibg=NONE]]
-          vim.cmd [[:hi NormalNC ctermbg=NONE guibg=NONE]]
-
-          -- statusline
-          vim.cmd [[:au InsertEnter * hi statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta]]
-          vim.cmd [[:au InsertLeave * hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan]]
-          vim.cmd [[:hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan]]
-          vim.cmd [[:hi User1 ctermfg=007 ctermbg=239 guibg=#4e4e4e guifg=#adadad]]
-          vim.cmd [[:hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad]]
-          vim.cmd [[:hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030]]
-          vim.cmd [[:hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e]]
+      require('tokyonight').setup({
+        transparent = true,
+        on_highlights = function(hl)
+          hl.LineNr = hl.Normal
+          hl.StatusLine = hl.MiniStatuslineModeNormal
+          hl.User1 = hl.MiniStatuslineFilename
+          hl.User2 = hl.MiniStatuslineDevinfo
+          hl.User3 = hl.MiniStatuslineDevinfo
         end
       })
+
+      vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+        pattern = { "*" },
+        callback = function()
+          vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeInsert' })
+        end
+      })
+
+      vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+        pattern = { "*:[vV\x16]" },
+        callback = function()
+          vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeVisual' })
+        end
+      })
+
+      vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+        pattern = { "*:c" },
+        callback = function(ev)
+          vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeCommand' })
+        end
+      })
+
+      vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+        pattern = { "*:r" },
+        callback = function()
+          vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeReplace' })
+        end
+      })
+
+      vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+        pattern = { "*:n" },
+        callback = function(ev)
+          vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeNormal' })
+        end
+      })
+
+      vim.cmd [[:color tokyonight]]
     end
-  }                                 -- }}}
+  }
 
   use { 'scrooloose/nerdcommenter', -- {{{
     config = function()
@@ -60,6 +80,7 @@ require('packer').startup(function(use)
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { "typescript", "haskell", "ocaml", "bash", "lua", "vim" },
+        auto_install = true,
         endwise = { enable = true }, -- for treesitter-endwise
         highlight = {
           enable = true,
@@ -69,6 +90,8 @@ require('packer').startup(function(use)
       }
     end
   } -- }}}
+
+  use 'nvim-treesitter/nvim-treesitter-context'
 
   -- nvim-lsp {{{
   use 'neovim/nvim-lspconfig'
@@ -105,8 +128,7 @@ require('packer').startup(function(use)
   -- vim.cmd([[:let g:copilot_enabled = v:true]])
   -- end
   -- }
-  use {
-    "zbirenbaum/copilot.lua",
+  use { "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
@@ -118,8 +140,7 @@ require('packer').startup(function(use)
       vim.keymap.set("i", "<C-Tab>", "<cmd>Copilot suggestion<CR>", { noremap = true, silent = true })
     end,
   }
-  use {
-    'zbirenbaum/copilot-cmp',
+  use { 'zbirenbaum/copilot-cmp',
     after = { 'copilot.lua', 'nvim-cmp' },
     config = function()
       require('copilot_cmp').setup({
@@ -146,8 +167,7 @@ require('packer').startup(function(use)
   -- } -- }}}
   -- }}}
 
-  use {
-    'Shougo/echodoc.vim',
+  use { 'Shougo/echodoc.vim',
     config = function()
       vim.cmd([[:let g:echodoc_enable_at_startup = 1]])
       vim.cmd([[:let g:echodoc#type = "popup"]])
@@ -169,8 +189,7 @@ require('packer').startup(function(use)
   -- use 'tpope/vim-endwise'
   -- use 'Townk/vim-autoclose'
 
-  use {
-    "windwp/nvim-autopairs",
+  use { "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
   }
 
