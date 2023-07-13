@@ -13,6 +13,16 @@ end -- }}}
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
+  use { 'junegunn/fzf.vim',
+    requires = { 'junegunn/fzf', run = ':call fzf#install()' }
+  }
+
+  use { 'uga-rosa/utf8.nvim',
+    config = function()
+      _G.utf8 = require('utf8')
+    end
+  }
+
   use { 'folke/tokyonight.nvim',
     config = function()
       require('tokyonight').setup({
@@ -42,7 +52,7 @@ require('packer').startup(function(use)
 
       vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
         pattern = { "*:c" },
-        callback = function(ev)
+        callback = function()
           vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeCommand' })
         end
       })
@@ -56,7 +66,7 @@ require('packer').startup(function(use)
 
       vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
         pattern = { "*:n" },
-        callback = function(ev)
+        callback = function()
           vim.api.nvim_set_hl(0, 'StatusLine', { link = 'MiniStatuslineModeNormal' })
         end
       })
@@ -106,7 +116,15 @@ require('packer').startup(function(use)
     end
   }
 
-  use 'tamago324/nlsp-settings.nvim'
+  use { 'tamago324/nlsp-settings.nvim', config = function()
+    require("nlspsettings").setup({
+      config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
+      local_settings_dir = ".nlsp-settings",
+      local_settings_root_markers_fallback = { '.git' },
+      append_default_schemas = true,
+      loader = 'json'
+    })
+  end }
 
   use { 'j-hui/fidget.nvim',
     config = function()
@@ -120,6 +138,12 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
+  use { 'petertriho/cmp-git',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('cmp_git').setup()
+    end
+  }
   use 'ray-x/cmp-treesitter'
   use 'onsails/lspkind.nvim'
 
@@ -143,11 +167,7 @@ require('packer').startup(function(use)
   use { 'zbirenbaum/copilot-cmp',
     after = { 'copilot.lua', 'nvim-cmp' },
     config = function()
-      require('copilot_cmp').setup({
-        formatters = {
-          insert_text = require("copilot_cmp.format").remove_existing
-        },
-      })
+      require('copilot_cmp').setup()
     end
   }
   -- }}}
@@ -254,7 +274,7 @@ require('packer').startup(function(use)
     end
   } -- }}}
 
-  use { 'kevinhwang91/nvim-bqf' }
+  use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
   -- }}}
 
   if packer_bootstrap then
