@@ -1,3 +1,4 @@
+
 name: Neovim Configuration CI
 
 on:
@@ -16,14 +17,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Neovim
-      run: |
-        sudo apt update
-        sudo add-apt-repository universe
-        sudo apt install libfuse2 curl
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-        chmod u+x nvim.appimage
-        sudo mv ./nvim.appimage /usr/local/bin/nvim
+    - uses: rhysd/action-setup-vim@v1
+      with:
+        neovim: true
 
     - name: Test Neovim configuration
       run: |

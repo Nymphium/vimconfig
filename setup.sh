@@ -16,4 +16,4 @@ ln -s "${PWD}/lua/"* "${TARGET}/.config/nvim/lua/"
 ln -s "${PWD}/sources/vimrc" "${TARGET}/.config/nvim/init.vim"
 ln -s "${PWD}/sources/"* "${TARGET}/.config/nvim/sources/"
 
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' +UpdateRemotePlugins +q
+nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' | :
