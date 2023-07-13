@@ -90,35 +90,51 @@ do
 
   local lspconfig = require "lspconfig"
   local mason_lspconfig = require('mason-lspconfig')
+  mason_lspconfig.setup()
+
+  local config = {
+    capabilities = capabilities,
+    lint = true,
+    on_attach = on_attach,
+    handlers = {
+      ["textDocument/hover"] = vim.lsp.with(
+        vim.lsp.handlers.hover,
+        { border = 'rounded' }
+      )
+      ,
+      ['textDocument/signatureHelp'] = vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        { border = 'rounded' }
+      ),
+      ["textDocument/publishDiagnostics"] = vim.lsp.with(
+        vim.lsp.diagnostic.on_publish_diagnostics, {
+          signs = { severity_limit = "Hint", },
+          virtual_text = { severity_limit = "Warning", },
+        }
+      )
+    }
+  }
+
 
   mason_lspconfig.setup_handlers({ function(server_name)
-    return lspconfig[server_name].setup {
-      capabilities = capabilities,
-      lint = true,
-      on_attach = on_attach,
-      handlers = {
-        ["textDocument/hover"] = vim.lsp.with(
-          vim.lsp.handlers.hover,
-          { border = 'rounded' }
-        )
-        ,
-        ['textDocument/signatureHelp'] = vim.lsp.with(
-          vim.lsp.handlers.signature_help,
-          { border = 'rounded' }
-        ),
-        ["textDocument/publishDiagnostics"] = vim.lsp.with(
-          vim.lsp.diagnostic.on_publish_diagnostics, {
-            signs = {
-              severity_limit = "Hint",
-            },
-            virtual_text = {
-              severity_limit = "Warning",
-            },
-          }
-        )
-      }
-    }
+    return lspconfig[server_name].setup(config)
   end })
+
+  api.nvim_create_autocmd('FileType', {
+    pattern = '*',
+    callback = function()
+      local ft = vim.bo.filetype
+      local st = require('lsp_list')[ft]
+
+      if st then
+        local server = lspconfig[st[1]]
+
+        if server then
+          return server.setup(config)
+        end
+      end
+    end
+  })
 end
 
 do -- completion
