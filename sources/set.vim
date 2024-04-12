@@ -66,3 +66,6 @@ set splitright
 
 set shellslash
 
+lua <<LUA
+  vim.o.jumpoptions = "stack"
+LUA

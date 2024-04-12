@@ -23,10 +23,12 @@ require('packer').startup(function(use)
     end
   }
 
-  use { 'folke/tokyonight.nvim',
+  use { 'folke/tokyonight.nvim', --- {{{
     config = function()
       require('tokyonight').setup({
         transparent = true,
+        style = 'storm',
+        terminal_colors = true,
         on_highlights = function(hl)
           hl.LineNr = hl.Normal
           hl.StatusLine = hl.MiniStatuslineModeNormal
@@ -73,7 +75,7 @@ require('packer').startup(function(use)
 
       vim.cmd [[:color tokyonight]]
     end
-  }
+  }                                 -- }}}
 
   use { 'scrooloose/nerdcommenter', -- {{{
     config = function()
@@ -110,11 +112,7 @@ require('packer').startup(function(use)
       require('mason').setup()
     end
   }
-  use { 'williamboman/mason-lspconfig.nvim',
-    config = function()
-      require('mason-lspconfig').setup()
-    end
-  }
+  use { 'williamboman/mason-lspconfig.nvim' }
 
   use { 'tamago324/nlsp-settings.nvim', config = function()
     require("nlspsettings").setup({
@@ -132,6 +130,36 @@ require('packer').startup(function(use)
     end
   }
 
+  -- AI {{{
+  use { "zbirenbaum/copilot.lua",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+        filetypes = { ["*"] = true }
+      })
+    end,
+  }
+
+  use { 'CopilotC-Nvim/CopilotChat.nvim',
+    branch = 'canary',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function()
+      require("CopilotChat").setup()
+      vim.keymap.set('n', '@?', '', {
+        noremap = true,
+        callback = function()
+          require("CopilotChat").open({
+            window = {
+              layout = 'float'
+            }
+          })
+        end
+      })
+    end
+  }
+  -- }}}
+
   -- completions {{{
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
@@ -145,25 +173,16 @@ require('packer').startup(function(use)
     end
   }
   use 'ray-x/cmp-treesitter'
-  use 'onsails/lspkind.nvim'
-
-  -- use { 'github/copilot.vim',
-  -- config = function()
-  -- vim.cmd([[:let g:copilot_enabled = v:true]])
-  -- end
-  -- }
-  use { "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
+  use { 'onsails/lspkind.nvim',
     config = function()
-      require("copilot").setup({
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-        filetypes = { ["*"] = true }
+      require('lspkind').init({
+        symbol_map = {
+          Copilot = '"'
+        }
       })
-      vim.keymap.set("i", "<C-Tab>", "<cmd>Copilot suggestion<CR>", { noremap = true, silent = true })
-    end,
+    end
   }
+
   use { 'zbirenbaum/copilot-cmp',
     after = { 'copilot.lua', 'nvim-cmp' },
     config = function()
@@ -186,6 +205,16 @@ require('packer').startup(function(use)
   -- end,
   -- } -- }}}
   -- }}}
+
+
+
+  use {
+    'chikko80/error-lens.nvim',
+    requires = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require('error-lens').setup()
+    end
+  }
 
   use { 'Shougo/echodoc.vim',
     config = function()
@@ -273,6 +302,8 @@ require('packer').startup(function(use)
       })
     end
   } -- }}}
+
+
 
   use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
   -- }}}

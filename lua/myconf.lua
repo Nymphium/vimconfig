@@ -61,7 +61,6 @@ do -- reference / diagnostic {{{
       })
   end
   vim.diagnostic.config({
-    update_in_insert = true,
     severity_sort = true,
   })
 end -- }}}
@@ -115,7 +114,6 @@ do
     }
   }
 
-
   mason_lspconfig.setup_handlers({ function(server_name)
     return lspconfig[server_name].setup(config)
   end })
@@ -140,7 +138,6 @@ end
 do -- completion
   local cmp = require('cmp')
   local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  local lspkind = require('lspkind')
 
   cmp.event:on("menu_opened", function()
     local buf = vim.api.nvim_get_current_buf()
@@ -168,20 +165,13 @@ do -- completion
       end
     },
     mapping = {
-      ["<Tab>"] = cmp.mapping({
-        i = cmp.mapping.select_next_item(),
-        c = function(fallback)
-          local text = vim.fn.getcmdline()
-          local expanded = vim.fn.expandcmd(text)
-          if expanded ~= text then
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-U>", true, true, true) .. expanded, "n",
-              false)
-            return cmp.complete()
-          else
-            return cmp.select_next_item()
-          end
+      ["<Tab>"] = vim.schedule_wrap(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        else
+          fallback()
         end
-      }),
+      end),
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           return cmp.select_prev_item()
@@ -190,42 +180,23 @@ do -- completion
         else
           return fallback()
         end
-      end, { "i", "s", "c" }),
+      end),
       ['<C-x>'] = cmp.mapping(function()
         return cmp.complete({
           config = {
             sources = {
               { name = "nvim_lsp", keyword_length = 0 },
-              { name = "Copilot",  keyword_length = 0 } }
+              { name = "copilot",  keyword_length = 0 } }
           }
         })
       end),
       ['<C-u>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping({
-        i = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = true,
-        }),
-        c = function(fallback)
-          if cmp.visible() then
-            local ent = cmp.get_selected_entry()
-
-            cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, })
-
-            if ent then
-              return cmp.complete()
-            else
-              return fallback()
-            end
-          else
-            return fallback()
-          end
-        end })
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = cmp.config.sources {
-      { name = 'nvim_lsp',  keyword_length = 1, group_index = 1 },
+      { name = 'nvim_lsp',  keyword_length = 2, group_index = 2 },
       {
         name = 'buffer',
         keyword_length = 2,
@@ -238,7 +209,7 @@ do -- completion
       { name = 'path',      group_index = 2 },
       { name = 'treesitter' },
       { name = 'git' },
-      { name = "copilot",   keyword_length = 1, group_index = 2, max_item_count = 3, },
+      { name = "copilot",   keyword_length = 0, group_index = 1, },
     },
     window = {
       completion = {
@@ -246,17 +217,6 @@ do -- completion
         winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,CursorLine:PmenuSel,Search:None",
       },
       documentation = { border = "rounded", },
-    },
-    formatting = {
-      format = function(entry, vim_item)
-        vim_item = lspkind.cmp_format({
-          mode = "symbol_text",
-          symbol_map = { Copilot = "", },
-          menu = { Copilot = "Copilot", }
-        })(entry, vim_item)
-        vim_item.abbr = string.format("%-s", vim_item.abbr)
-        return vim_item
-      end
     },
   }
 
