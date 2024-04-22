@@ -22,7 +22,6 @@ let g:currentmode={
     \ '!'  : 'Shell',
     \ 't'  : 'Terminal'
     \}
-
 function! ModeCurrent() abort
     let l:modecurrent = mode()
     " use get() -> fails safely, since ^V doesn't seem to register
@@ -41,13 +40,3 @@ set statusline+=%0*\ %=
 set statusline+=%2*\ %{ModeCurrent()}\ 
 set statusline+=%0*\ %h%wLine\ %l\/%L\ Col\ %v\  " (current linenenumber)/(all linenumber) (nth character)
 set laststatus=2
-
-augroup NVimTerminal
-  autocmd!
-  autocmd TermOpen  * setlocal nonumber
-  \|                  setlocal norelativenumber
-  \|                  setlocal nocursorcolumn
-  \|                  setlocal nocursorline
-  \|                  setlocal statusline=%0*\ B%n\ W%{win_getid()}\ %4*\ %=%2*\ %{ModeCurrent()}\ %0*\ %h%w\L%l\/%L\ C%v\ 
-  \|                  startinsert
-augroup END

@@ -114,21 +114,27 @@ require('packer').startup(function(use)
   }
   use { 'williamboman/mason-lspconfig.nvim' }
 
-  use { 'tamago324/nlsp-settings.nvim', config = function()
-    require("nlspsettings").setup({
-      config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
-      local_settings_dir = ".nlsp-settings",
-      local_settings_root_markers_fallback = { '.git' },
-      append_default_schemas = true,
-      loader = 'json'
-    })
-  end }
+  use { 'tamago324/nlsp-settings.nvim',
+    config = function()
+      require("nlspsettings").setup({
+        config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
+        local_settings_dir = ".nlsp-settings",
+        local_settings_root_markers_fallback = { '.git' },
+        append_default_schemas = true,
+        loader = 'json'
+      })
+    end
+  }
 
+  use 'lukas-reineke/lsp-format.nvim'
+
+  -- notification
   use { 'j-hui/fidget.nvim',
     config = function()
       require "fidget".setup {}
     end
   }
+  -- }}}
 
   -- AI {{{
   use { "zbirenbaum/copilot.lua",
@@ -145,8 +151,13 @@ require('packer').startup(function(use)
     branch = 'canary',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
-      require("CopilotChat").setup()
-      vim.keymap.set('n', '@?', '', {
+      require("CopilotChat").setup({
+        show_help = false,
+        context = 'buffers',
+      })
+
+      vim.keymap.set({ 'n', 'v' }, '<leader>?', '', {
+        desc = 'Open Copilot Chat',
         noremap = true,
         callback = function()
           require("CopilotChat").open({
@@ -192,39 +203,9 @@ require('packer').startup(function(use)
   -- }}}
 
   use 'RRethy/vim-illuminate'
-  use 'folke/lsp-colors.nvim'
   use 'L3MON4D3/LuaSnip'
-  use 'lukas-reineke/lsp-format.nvim'
-  -- use { "ErichDonGubler/lsp_lines.nvim", -- {{{
-  -- config = function()
-  -- require("lsp_lines").setup()
 
-  -- vim.diagnostic.config({
-  -- virtual_text = false,
-  -- })
-  -- end,
-  -- } -- }}}
-  -- }}}
-
-
-
-  use {
-    'chikko80/error-lens.nvim',
-    requires = { 'nvim-telescope/telescope.nvim' },
-    config = function()
-      require('error-lens').setup()
-    end
-  }
-
-  use { 'Shougo/echodoc.vim',
-    config = function()
-      vim.cmd([[:let g:echodoc_enable_at_startup = 1]])
-      vim.cmd([[:let g:echodoc#type = "popup"]])
-    end
-  }
-  use 'tpope/vim-sleuth'
-
-  use { 'tpope/vim-surround', -- {{{
+  use { 'tpope/vim-surround',
     config = function()
       vim.cmd [=[xmap " <Plug>VSurround"]=]
       vim.cmd [=[xmap ' <Plug>VSurround']=]
@@ -233,10 +214,7 @@ require('packer').startup(function(use)
       vim.cmd [=[xmap { <Plug>VSurround}]=]
       vim.cmd [=[xmap < <Plug>VSurround>]=]
     end
-  } -- }}}
-
-  -- use 'tpope/vim-endwise'
-  -- use 'Townk/vim-autoclose'
+  }
 
   use { "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
@@ -252,61 +230,102 @@ require('packer').startup(function(use)
   -- use {'rgrinberg/vim-ocaml', ft = 'ocaml'}
   use 'LnL7/vim-nix'
 
-  use { 'lervag/vimtex', -- {{{
+  use { 'lervag/vimtex',
     config = function()
     end
-  }                                -- }}}
+  }
+  -- }}}
 
-  use { 'lewis6991/gitsigns.nvim', --- {{{
+  -- git {{{
+  use { 'lewis6991/gitsigns.nvim',
     config = function()
-      require('gitsigns').setup({
+      local gs = require('gitsigns')
+
+      gs.setup({
         current_line_blame_opts = {
           virt_text_pos = 'right_align',
           delay = 300,
-        },
-        on_attach = function(bufnr)
-          local gs = package.loaded.gitsigns
-          local set_keymap = function(mode, l, r, opts)
-            opts = opts or {}
-            opts.noremap = true
-            opts.silent = true
-            opts.buffer = bufnr
-            vim.keymap.set(mode, l, r, opts)
-          end
+        }
+      })
 
-          local pfx = function(k)
-            return '<leader>g' .. k
-          end
+      local set_keymap = function(mode, l, r, opts)
+        opts = opts or {}
+        opts.noremap = true
+        opts.silent = true
+        vim.keymap.set(mode, l, r, opts)
+      end
 
-          set_keymap('n', ']c', function()
-            if vim.wo.diff then return ']c' end
-            vim.schedule(function() gs.next_hunk() end)
-            return '<Ignore>'
-          end, { expr = true })
+      local pfx = function(k)
+        return '<leader>g' .. k
+      end
 
-          set_keymap('n', '[c', function()
-            if vim.wo.diff then return '[c' end
-            vim.schedule(function() gs.prev_hunk() end)
-            return '<Ignore>'
-          end, { expr = true })
+      set_keymap('n', ']c', "", {
+        callback = function()
+          if vim.wo.diff then return ']c' end
+          vim.schedule(function() gs.next_hunk() end)
+          return '<Ignore>'
+        end,
+        expr = true,
+        desc = 'Next hunk',
+      })
 
-          set_keymap({ 'n', 'v' }, pfx 's', ':Gitsigns stage_hunk<CR>')
-          set_keymap({ 'n', 'v' }, pfx 'r', ':Gitsigns reset_hunk<CR>')
-          set_keymap('n', pfx 'b', function() gs.blame_line { full = true } end)
-          set_keymap('n', pfx 'tb', gs.toggle_current_line_blame)
-          set_keymap('n', pfx 'd', gs.diffthis)
-          set_keymap('n', pfx 'dW', ':Gitsigns diffthis ')
-          set_keymap('n', pfx 'dD', function() gs.diffthis('~') end)
-          set_keymap('n', pfx 'td', gs.toggle_deleted)
-        end
+      set_keymap('n', '[c', "", {
+        callback = function()
+          if vim.wo.diff then return '[c' end
+          vim.schedule(function() gs.prev_hunk() end)
+          return '<Ignore>'
+        end,
+        expr = true,
+        desc = 'Previous hunk',
+      })
+
+      set_keymap({ 'n', 'v' }, pfx 's', ':Gitsigns stage_hunk<CR>')
+      set_keymap({ 'n', 'v' }, pfx 'r', ':Gitsigns reset_hunk<CR>')
+      set_keymap('n', pfx 'b', function() gs.blame_line { full = true } end)
+      set_keymap('n', pfx 'tb', gs.toggle_current_line_blame)
+      set_keymap('n', pfx 'd', gs.diffthis)
+      set_keymap('n', pfx 'dW', ':Gitsigns diffthis ')
+      set_keymap('n', pfx 'dD', function() gs.diffthis('~') end)
+      set_keymap('n', pfx 'td', gs.toggle_deleted)
+    end
+  }
+
+  use { "FabijanZulj/blame.nvim",
+    config = function()
+      require("blame").setup({
+        enable = true,
+        virtual_style = 'right_align',
+      })
+
+      vim.keymap.set('n', '<leader>gbv', '', {
+        callback = function()
+          require("blame").toggle({ args = 'virtual' })
+        end,
+        desc = 'Toggle blame virtual',
+      })
+
+      vim.keymap.set('n', '<leader>gbw', '', {
+        callback = function()
+          require("blame").toggle({ args = 'window' })
+        end,
+        desc = 'Toggle blame window',
       })
     end
-  } -- }}}
+  }
+  --- }}}
 
-
+  use { 'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup({
+        open_mapping = [[<C-t>]],
+        hide_numbers = true,
+        direction = 'float',
+        float_ops = { border = 'single' },
+      })
+    end
+  }
 
   use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
-  -- }}}
 
   if packer_bootstrap then
     require('packer').sync()

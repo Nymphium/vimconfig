@@ -1,5 +1,4 @@
 local vim = vim
-local unpack = table.unpack or unpack
 local api = vim.api
 
 local pfx = function(c)
@@ -14,31 +13,38 @@ do -- keymaps
   local set_keymap = function(...)
     return vim.keymap.set(...)
   end
-  set_keymap("n", pfx 'k', "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-  set_keymap("n", pfx 'g', "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-  set_keymap("n", pfx 'i', "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+  set_keymap("n", pfx 'k', function() vim.lsp.buf.hover() end, opts)
+  set_keymap("n", pfx 'g', function() vim.lsp.buf.definition() end, opts)
+  set_keymap("n", pfx 'i', function() vim.lsp.buf.implementation() end, opts)
+  set_keymap("n", pfx 'i', function() vim.lsp.buf.implementation() end, opts)
 
-  set_keymap("n", pfx '<F1>', "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+  set_keymap("n", pfx '<F1>', function() vim.lsp.buf.signature_help() end, opts)
 
-  set_keymap("n", pfx 'f', "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-  set_keymap("n", pfx 'fw', "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-  set_keymap("n", pfx 'fl', "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-  set_keymap("n", pfx 'r', "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-  set_keymap("n", pfx 'a', "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-  set_keymap('n', pfx 'e', "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
+  set_keymap("n", pfx 'f', function() vim.lsp.buf.add_workspace_folder() end, opts)
+  set_keymap("n", pfx 'fw', function() vim.lsp.buf.remove_workspace_folder() end, opts)
+  set_keymap("n", pfx 'fl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+  set_keymap("n", pfx 'r', function() vim.lsp.buf.rename() end, opts)
+  set_keymap("n", pfx 'a', function() vim.lsp.buf.code_action() end, opts)
+  set_keymap('n', pfx 'e', function() vim.diagnostic.open_float() end, opts)
   set_keymap("n", pfx 'b',
-    "<cmd>lua vim.g.cq_prev_buf = vim.api.nvim_get_current_win(); vim.lsp.buf.references()<CR>", opts)
+    function()
+      vim.g.cq_prev_buf = vim.api.nvim_get_current_win();
+      vim.lsp.buf.references()
+    end, opts)
 
-  set_keymap("n", '<leader><up>', "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-  set_keymap("n", '<leader><down>', "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
+  set_keymap("n", '<leader><up>', function() vim.diagnostic.goto_prev() end, opts)
+  set_keymap("n", '<leader><down>', function() vim.diagnostic.goto_next() end, opts)
 
   set_keymap("n", pfx 'q',
-    "<cmd>lua vim.g.cq_prev_buf = vim.api.nvim_get_current_win(); vim.diagnostic.setloclist()<CR>", opts)
+    function()
+      vim.g.cq_prev_buf = vim.api.nvim_get_current_win();
+      vim.diagnostic.setloclist()
+    end, opts)
 
-  set_keymap("n", pfx '=', "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts)
+  set_keymap("n", pfx '=', function() vim.lsp.buf.format { async = true } end, opts)
 
-  set_keymap("n", pfx 'n', [[<cmd>lua require"illuminate".next_reference{wrap=true}<cr>]], opts)
-  set_keymap("n", pfx 'p', [[<cmd>lua require"illuminate".next_reference{reverse=true,wrap=true}<cr>]], opts)
+  set_keymap("n", pfx 'n', function() require "illuminate".next_reference { wrap = true } end, opts)
+  set_keymap("n", pfx 'p', function() require "illuminate".next_reference { reverse = true, wrap = true } end, opts)
 end
 
 do -- reference / diagnostic {{{
@@ -60,9 +66,6 @@ do -- reference / diagnostic {{{
         numhl = 'DiagnosticVirtualText' .. level
       })
   end
-  vim.diagnostic.config({
-    severity_sort = true,
-  })
 end -- }}}
 
 do
@@ -72,7 +75,7 @@ do
     illuminate.on_attach(client)
     vim.bo.omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-    return lspformat.on_attach(client)
+    return lspformat.on_attach(client, bufnr)
   end
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -114,6 +117,19 @@ do
     }
   }
 
+  local lualsp_config
+  do
+    local m = {}
+    lualsp_config = setmetatable(m, { __index = config })
+    m.setting = {
+      Lua = {
+        runtime = {
+          os.getenv("VIMRUNTIME") .. "/lua"
+        }
+      }
+    }
+  end
+
   mason_lspconfig.setup_handlers({ function(server_name)
     return lspconfig[server_name].setup(config)
   end })
@@ -125,7 +141,13 @@ do
       local st = require('lsp_list')[ft]
 
       if st then
-        local server = lspconfig[st[1]]
+        local name = st[1]
+        local server = lspconfig[name]
+        ---@diagnostic disable-next-line: redefined-local
+        local config = config
+        if name == 'lua_lsp' then
+          config = lualsp_config
+        end
 
         if server then
           return server.setup(config)
@@ -138,24 +160,6 @@ end
 do -- completion
   local cmp = require('cmp')
   local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-
-  cmp.event:on("menu_opened", function()
-    local buf = vim.api.nvim_get_current_buf()
-
-    vim.diagnostic.hide(nil, buf)
-  end)
-
-  cmp.event:on("menu_closed", function()
-    local buf = vim.api.nvim_get_current_buf()
-
-    vim.diagnostic.show(nil, buf)
-  end)
-
-  vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-    callback = function()
-      return vim.diagnostic.reset(nil, vim.api.nvim_get_current_buf())
-    end
-  })
 
   cmp.setup {
     experimental = { ghost_text = true },
@@ -250,5 +254,11 @@ do -- completion
     sources = cmp.config.sources(
       { { name = 'path' } },
       { { name = 'cmdline' } })
+  })
+
+  cmp.setup.filetype('copilot-chat', {
+    sources = cmp.config.sources(
+      { { name = 'copilot' } },
+      { { name = 'buffer' } })
   })
 end
