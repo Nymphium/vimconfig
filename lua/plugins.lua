@@ -105,6 +105,8 @@ require('packer').startup(function(use)
 
   use 'nvim-treesitter/nvim-treesitter-context'
 
+  use 'chentoast/marks.nvim'
+
   -- nvim-lsp {{{
   use 'neovim/nvim-lspconfig'
   use { 'williamboman/mason.nvim',

@@ -57,6 +57,7 @@ nnoremap wj <ESC><C-w>+<C-w>+<C-w>+<C-w>+<C-w>+
 nnoremap wk <ESC><C-w>-<C-w>-<C-w>-<C-w>-<C-w>-
 
 nnoremap <M-o> o<ESC>
+nnoremap wo :new<Space><cfile><CR>
 nnoremap <S-k> k<S-j>
 nnoremap V <C-v>
 nnoremap <M-x> "

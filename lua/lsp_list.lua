@@ -14,5 +14,6 @@ return {
   bash = bashls,
   zsh = bashls,
   haskell = { 'hls' },
-  tex = { 'texlab' }
+  tex = { 'texlab' },
+  rust = { 'rust_analyzer' }
 }
