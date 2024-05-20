@@ -28,7 +28,6 @@ require('packer').startup(function(use)
       require('tokyonight').setup({
         transparent = true,
         style = 'storm',
-        terminal_colors = true,
         on_highlights = function(hl)
           hl.LineNr = hl.Normal
           hl.StatusLine = hl.MiniStatuslineModeNormal
@@ -154,7 +153,6 @@ require('packer').startup(function(use)
     requires = 'nvim-lua/plenary.nvim',
     config = function()
       require("CopilotChat").setup({
-        show_help = false,
         context = 'buffers',
       })
 
@@ -320,10 +318,28 @@ require('packer').startup(function(use)
     config = function()
       require('toggleterm').setup({
         open_mapping = [[<C-t>]],
-        hide_numbers = true,
         direction = 'float',
+        autochdir = true,
         float_ops = { border = 'single' },
       })
+
+      local Terminal = require('toggleterm.terminal').Terminal
+      local lazygit  = Terminal:new({
+        cmd = "lazygit",
+        count = 5,
+        dir = "git_dir",
+        float_opts = { border = 'single' },
+        -- function to run on opening the terminal
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        -- function to run on closing the terminal
+        on_close = function(term)
+          vim.cmd("startinsert!")
+        end,
+      })
+      vim.keymap.set('n', '<leader>g?', '', { callback = function() lazygit:toggle() end })
     end
   }
 
