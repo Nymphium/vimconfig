@@ -92,6 +92,7 @@ require('packer').startup(function(use)
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { "typescript", "haskell", "ocaml", "bash", "lua", "vim" },
         auto_install = true,
+        indent = { enable = true, },
         endwise = { enable = true }, -- for treesitter-endwise
         highlight = {
           enable = true,
@@ -224,16 +225,13 @@ require('packer').startup(function(use)
 
   use { 'andymass/vim-matchup', requires = { 'nvim-treesitter/nvim-treesitter' } }
   use 'szw/vim-maximizer'
-  use 'simeji/winresizer'
+  use { 'nvim-focus/focus.nvim', config = function() require('focus').setup() end }
 
   -- language-specific {{{
   -- use {'rgrinberg/vim-ocaml', ft = 'ocaml'}
   use 'LnL7/vim-nix'
 
-  use { 'lervag/vimtex',
-    config = function()
-    end
-  }
+  use { 'lervag/vimtex' }
   -- }}}
 
   -- git {{{
