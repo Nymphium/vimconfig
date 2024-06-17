@@ -2,8 +2,10 @@ if &compatible
   set nocompatible
 endif
 
-lua require('plugins')
-lua require('myconf')
+lua <<EOL
+  require('plugins')
+  require('myconf')
+EOL
 source $HOME/.config/nvim/sources/set.vim
 source $HOME/.config/nvim/sources/statusline.vim
 source $HOME/.config/nvim/sources/keymap.vim
