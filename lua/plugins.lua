@@ -139,6 +139,20 @@ require('packer').startup(function(use)
     ft = "scala",
   }
 
+  -- for neovim api
+  use { 'folke/lazydev.nvim', ft = 'lua',
+    requires = { 'neovim/nvim-lspconfig' },
+    config = function()
+      require('lazydev').setup({
+        debug = false,
+        integrations = {
+          lspconfig = true,
+          cmp = true
+        }
+      })
+    end,
+  }
+
   -- notification
   use { 'j-hui/fidget.nvim',
     config = function()

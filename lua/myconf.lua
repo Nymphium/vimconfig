@@ -1,6 +1,3 @@
-local vim = vim
-local api = vim.api
-
 local pfx = function(c)
   return '<leader>l' .. c
 end
@@ -127,26 +124,8 @@ do
     }
   }
 
-  local lualsp_config
-  do
-    local m = {}
-    lualsp_config = setmetatable(m, { __index = config })
-    m.setting = {
-      Lua = {
-        runtime = {
-          os.getenv("VIMRUNTIME") .. "/lua"
-        }
-      }
-    }
-  end
-
-  local start_server = function(name)
-    local server = lspconfig[name]
-    ---@diagnostic disable-next-line: redefined-local
-    local config = config
-    if name == 'lua_lsp' then
-      config = lualsp_config
-    end
+  local start_server = function(server_name)
+    local server = lspconfig[server_name]
 
     if server then
       return server.setup(config)
@@ -157,15 +136,15 @@ do
     return start_server(server_name)
   end })
 
-  api.nvim_create_autocmd('FileType', {
+  vim.api.nvim_create_autocmd('FileType', {
     pattern = '*',
     callback = function()
       local ft = vim.bo.filetype
-      local st = require('lsp_list')[ft]
+      local lsps = require('lsp_list')[ft]
 
-      if st then
-        local name = st[1]
-        return start_server(name)
+      if lsps then
+        local lsp_name = lsps[1]
+        return start_server(lsp_name)
       end
     end
   })
@@ -189,7 +168,7 @@ do -- completion
         return luasnip.lsp_expand(args.body)
       end
     },
-    mapping = {
+    mapping = cmp.mapping.preset.insert {
       ['<Tab>'] = function(fallback)
         if not cmp.select_next_item() then
           if vim.bo.buftype ~= 'prompt' and has_words_before() then
@@ -209,38 +188,28 @@ do -- completion
           end
         end
       end,
-      ['<C-x>'] = cmp.mapping(function()
-        return cmp.complete({
-          config = {
-            sources = {
-              { name = "nvim_lsp", keyword_length = 0 },
-              { name = "copilot",  keyword_length = 0 } }
-          }
-        })
-      end),
+      ['<C-x>'] = cmp.mapping.complete(),
       ['<C-u>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-e>'] = cmp.mapping.abort(),
       ['<CR>'] = cmp.mapping.confirm({ select = true }),
     },
-    sources = cmp.config.sources {
-      { name = 'nvim_lsp',               keyword_length = 2, group_index = 2 },
-      {
-        name = 'buffer',
+    sources = cmp.config.sources(
+      { { name = 'nvim_lsp', keyword_length = 2, group_index = 1 } },
+      { { name = 'nvim_lsp_signature_help', group_index = 1 } },
+      { { name = "copilot", keyword_length = 0, group_index = 2, } },
+      { { name = 'buffer',
         keyword_length = 2,
-        group_index = 3,
+        group_index = 2,
         options = {
           keyword_pattern = [[\k\+]]
         }
-      },
-      { name = 'nvim_lsp_signature_help' },
-      { name = 'luasnip',                keyword_length = 2 },
-      { name = 'path',                   group_index = 2 },
-      { name = 'treesitter' },
-      { name = 'git' },
-      { name = "copilot",                keyword_length = 3, group_index = 2, },
-    },
-    -- view = { entries = "native" },
+      } },
+      { { name = 'luasnip', keyword_length = 2 } },
+      { { name = 'path', group_index = 2 } },
+      { { name = 'treesitter' } },
+      { { name = 'git' } }),
+    view = { docs = { auto_open = true } },
     window = {
       completion = {
         border = "rounded",
@@ -264,7 +233,8 @@ do -- completion
   })
 
   cmp.setup.cmdline({ '/', '?' }, {
-    view     = { entries = { name = 'column' } },
+    mapping  = cmp.mapping.preset.cmdline(),
+    view     = { entries = 'column' },
     -- formatting = {
     -- fields = { 'abbr' },
     -- format = function(_, vim_item)
@@ -272,17 +242,24 @@ do -- completion
     -- end
     -- },
     sources  = cmp.config.sources(
-      { { name = 'nvim_lsp_document_symbol' } },
-      { { name = 'buffer' } }),
-    matching = { disallow_fuzzy_matching = false },
+      { { name = 'nvim_lsp_document_symbol', pattern = '@' } },
+      { { name = 'buffer', keyword_length = 1 } }),
+    ---@diagnostic disable-next-line: missing-fields
+    matching = { disallow_partial_fuzzy_matching = false, },
   })
 
   cmp.setup.cmdline(':', {
-    view = { entries = { name = 'column' } },
+    mapping  = cmp.mapping.preset.cmdline(),
+    view     = { entries = 'column' },
     -- formatting = { fields = { 'abbr' }, },
-    sources = cmp.config.sources(
+    sources  = cmp.config.sources(
       { { name = 'path' } },
-      { { name = 'cmdline' } })
+      { { name = 'cmdline' } }),
+    ---@diagnostic disable-next-line: missing-fields
+    matching = {
+      disallow_symbol_nonprefix_matching = false,
+      disallow_partial_fuzzy_matching = false,
+    },
   })
 
   cmp.setup.filetype('copilot-chat', {
