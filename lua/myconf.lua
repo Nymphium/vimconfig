@@ -69,13 +69,22 @@ do -- reference / diagnostic {{{
 end -- }}}
 
 do
+  local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
   local illuminate = require('illuminate')
-  local lspformat = require 'lsp-format'
   local on_attach = function(client, bufnr)
-    illuminate.on_attach(client)
     vim.bo.omnifunc = 'v:lua.vim.lsp.omnifunc'
+    illuminate.on_attach(client)
 
-    return lspformat.on_attach(client, bufnr)
+    if client.supports_method("textDocument/formatting") then
+      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = augroup,
+        buffer = bufnr,
+        callback = function()
+          vim.lsp.buf.format()
+        end,
+      })
+    end
   end
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())

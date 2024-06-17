@@ -74,15 +74,20 @@ require('packer').startup(function(use)
 
       vim.cmd [[:color tokyonight]]
     end
-  }                                 -- }}}
+  } -- }}}
 
-  use { 'scrooloose/nerdcommenter', -- {{{
-    config = function()
-      vim.cmd [[let NERDSpaceDelims = 1]]
-      vim.api.nvim_set_keymap('n', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('v', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
-    end
-  }                                        -- }}}
+  if vim.version() < vim.version('0.10.0') then
+    use { 'scrooloose/nerdcommenter',
+      config = function()
+        vim.cmd [[let NERDSpaceDelims = 1]]
+        vim.api.nvim_set_keymap('n', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('v', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
+      end
+    }
+  else
+    vim.api.nvim_set_keymap('n', '<M-C>', 'gcc', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('v', '<M-C>', 'gc', { noremap = true, silent = true })
+  end
 
   use { 'nvim-treesitter/nvim-treesitter', -- {{{
     run = ':TSUpdate',
@@ -127,8 +132,6 @@ require('packer').startup(function(use)
       })
     end
   }
-
-  use 'lukas-reineke/lsp-format.nvim'
 
   -- notification
   use { 'j-hui/fidget.nvim',
