@@ -95,6 +95,7 @@ require('packer').startup(function(use)
     config = function()
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      ---@diagnostic disable-next-line: missing-fields
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { "bash", "lua", "vim" },
         auto_install = true,
@@ -120,16 +121,19 @@ require('packer').startup(function(use)
       require('mason').setup()
     end
   }
-  use { 'williamboman/mason-lspconfig.nvim' }
+  use { 'williamboman/mason-lspconfig.nvim',
+    config = function()
+      require('mason-lspconfig').setup {
+        ensure_installed = { "lua_ls" },
+      }
+    end
+  }
 
   use { 'tamago324/nlsp-settings.nvim',
     config = function()
+      ---@diagnostic disable-next-line: missing-fields
       require("nlspsettings").setup({
-        config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
-        local_settings_dir = ".nlsp-settings",
-        local_settings_root_markers_fallback = { '.git' },
         append_default_schemas = true,
-        loader = 'json'
       })
     end
   }
@@ -358,7 +362,7 @@ require('packer').startup(function(use)
           vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
         end,
         -- function to run on closing the terminal
-        on_close = function(term)
+        on_close = function(_term)
           vim.cmd("startinsert!")
         end,
       })

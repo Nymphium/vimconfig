@@ -82,10 +82,13 @@ do
       })
     end
 
+    vim.lsp.inlay_hint.enable(true, { bufnr })
+
     illuminate.on_attach(client)
   end
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
   local mason = require('mason')
   mason.setup({
     ui = {
@@ -98,13 +101,10 @@ do
   })
 
   local lspconfig = require "lspconfig"
-  local mason_lspconfig = require('mason-lspconfig')
-  mason_lspconfig.setup()
-
-  local config = {
-    capabilities = capabilities,
+  lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
     lint = true,
-    on_attach = on_attach,
+    capabilities = capabilities,
+    showMessage = { messageActionItem = { additionalPropertiesSupport = true } },
     handlers = {
       ["textDocument/hover"] = vim.lsp.with(
         vim.lsp.handlers.hover,
@@ -122,32 +122,34 @@ do
         }
       )
     }
-  }
+  })
 
-  local start_server = function(server_name)
+  local mason_lspconfig = require('mason-lspconfig')
+  mason_lspconfig.setup()
+
+  local lsp_settings = require('lsp_list')
+  local setup_server = function(server_name)
     local server = lspconfig[server_name]
+    local settings = lsp_settings[server_name]
 
     if server then
-      return server.setup(config)
+      return server.setup({
+        on_attach = on_attach,
+        settings = settings
+      })
     end
   end
 
   mason_lspconfig.setup_handlers({ function(server_name)
-    return start_server(server_name)
+    return setup_server(server_name)
   end })
 
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = '*',
-    callback = function()
-      local ft = vim.bo.filetype
-      local lsps = require('lsp_list')[ft]
-
-      if lsps then
-        local lsp_name = lsps[1]
-        return start_server(lsp_name)
-      end
+  local servers = mason_lspconfig.get_available_servers()
+  for _, server_name in pairs(servers) do
+    if vim.fn.executable(server_name) == 1 then
+      setup_server(server_name)
     end
-  })
+  end
 end
 
 do -- completion
