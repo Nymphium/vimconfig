@@ -73,16 +73,19 @@ do
   local illuminate = require('illuminate')
   local on_attach = function(client, bufnr)
     vim.bo.omnifunc = 'v:lua.vim.lsp.omnifunc'
-    illuminate.on_attach(client)
 
     if client.supports_method("textDocument/formatting") then
       vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = augroup,
         buffer = bufnr,
-        callback = vim.lsp.buf.format
+        callback = function()
+          vim.lsp.buf.format()
+        end
       })
     end
+
+    illuminate.on_attach(client)
   end
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -171,11 +174,13 @@ end
 do -- completion
   local cmp = require('cmp')
   local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  -- local has_words_before = function()
-  -- if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  -- local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  -- return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
-  -- end
+  vim.opt.completeopt = { "menu", "menuone", "noselect" }
+
+  local has_words_before = function()
+    unpack = unpack or table.unpack
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+  end
 
   cmp.setup {
     experimental = { ghost_text = true },
@@ -185,22 +190,25 @@ do -- completion
       end
     },
     mapping = {
-      ["<Tab>"] = vim.schedule_wrap(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-        else
-          fallback()
+      ['<Tab>'] = function(fallback)
+        if not cmp.select_next_item() then
+          if vim.bo.buftype ~= 'prompt' and has_words_before() then
+            cmp.complete()
+          else
+            fallback()
+          end
         end
-      end),
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          return cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          return luasnip.jump(-1)
-        else
-          return fallback()
+      end,
+
+      ['<S-Tab>'] = function(fallback)
+        if not cmp.select_prev_item() then
+          if vim.bo.buftype ~= 'prompt' and has_words_before() then
+            cmp.complete()
+          else
+            fallback()
+          end
         end
-      end),
+      end,
       ['<C-x>'] = cmp.mapping(function()
         return cmp.complete({
           config = {
@@ -216,7 +224,7 @@ do -- completion
       ['<CR>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = cmp.config.sources {
-      { name = 'nvim_lsp',  keyword_length = 2, group_index = 2 },
+      { name = 'nvim_lsp',               keyword_length = 2, group_index = 2 },
       {
         name = 'buffer',
         keyword_length = 2,
@@ -225,12 +233,14 @@ do -- completion
           keyword_pattern = [[\k\+]]
         }
       },
-      { name = 'luasnip',   keyword_length = 2 },
-      { name = 'path',      group_index = 2 },
+      { name = 'nvim_lsp_signature_help' },
+      { name = 'luasnip',                keyword_length = 2 },
+      { name = 'path',                   group_index = 2 },
       { name = 'treesitter' },
       { name = 'git' },
-      { name = "copilot",   keyword_length = 0, group_index = 2, },
+      { name = "copilot",                keyword_length = 3, group_index = 2, },
     },
+    -- view = { entries = "native" },
     window = {
       completion = {
         border = "rounded",
@@ -254,14 +264,17 @@ do -- completion
   })
 
   cmp.setup.cmdline({ '/', '?' }, {
-    view = { entries = { name = 'column' } },
+    view     = { entries = { name = 'column' } },
     -- formatting = {
     -- fields = { 'abbr' },
     -- format = function(_, vim_item)
     -- return vim_item
     -- end
     -- },
-    sources = { { name = 'buffer' } }
+    sources  = cmp.config.sources(
+      { { name = 'nvim_lsp_document_symbol' } },
+      { { name = 'buffer' } }),
+    matching = { disallow_fuzzy_matching = false },
   })
 
   cmp.setup.cmdline(':', {

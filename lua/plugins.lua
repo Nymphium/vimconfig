@@ -76,18 +76,18 @@ require('packer').startup(function(use)
     end
   } -- }}}
 
-  if vim.version() < vim.version('0.10.0') then
-    use { 'scrooloose/nerdcommenter',
-      config = function()
-        vim.cmd [[let NERDSpaceDelims = 1]]
-        vim.api.nvim_set_keymap('n', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('v', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
-      end
-    }
-  else
-    vim.api.nvim_set_keymap('n', '<M-C>', 'gcc', { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('v', '<M-C>', 'gc', { noremap = true, silent = true })
-  end
+  -- if vim.version() < vim.version('0.10.0') then
+  use { 'scrooloose/nerdcommenter',
+    config = function()
+      vim.cmd [[let NERDSpaceDelims = 1]]
+      vim.api.nvim_set_keymap('n', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('v', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
+    end
+  }
+  -- else
+  --   vim.api.nvim_set_keymap('n', '<M-C>', 'gcc', { noremap = true, silent = true })
+  --   vim.api.nvim_set_keymap('v', '<M-C>', 'gc', { noremap = true, silent = true })
+  -- end
 
   use { 'nvim-treesitter/nvim-treesitter', -- {{{
     run = ':TSUpdate',
@@ -95,7 +95,7 @@ require('packer').startup(function(use)
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
       require 'nvim-treesitter.configs'.setup {
-        ensure_installed = { "typescript", "haskell", "ocaml", "bash", "lua", "vim" },
+        ensure_installed = { "bash", "lua", "vim" },
         auto_install = true,
         indent = { enable = true, },
         endwise = { enable = true }, -- for treesitter-endwise
@@ -135,6 +135,7 @@ require('packer').startup(function(use)
 
   use { 'scalameta/nvim-metals',
     requires = 'nvim-lua/plenary.nvim',
+    ft = "scala",
   }
 
   -- notification
@@ -149,7 +150,7 @@ require('packer').startup(function(use)
   use { "zbirenbaum/copilot.lua",
     config = function()
       require("copilot").setup({
-        suggestion = { enabled = false },
+        suggestion = { enabled = true, hide_during_completion = true, },
         panel = { enabled = false },
         filetypes = { ["*"] = true }
       })
@@ -201,9 +202,11 @@ require('packer').startup(function(use)
       })
     end
   }
+  use 'hrsh7th/cmp-nvim-lsp-signature-help'
+  use 'hrsh7th/cmp-nvim-lsp-document-symbol'
 
   use { 'zbirenbaum/copilot-cmp',
-    after = { 'copilot.lua', 'nvim-cmp' },
+    requires = { 'zbirenbaum/copilot.lua', 'hrsh7th/nvim-cmp' },
     config = function()
       require('copilot_cmp').setup()
     end
@@ -236,9 +239,9 @@ require('packer').startup(function(use)
 
   -- language-specific {{{
   -- use {'rgrinberg/vim-ocaml', ft = 'ocaml'}
-  use 'LnL7/vim-nix'
+  use { 'LnL7/vim-nix', ft = 'nix' }
 
-  use { 'lervag/vimtex' }
+  use { 'lervag/vimtex', ft = "tex" }
   -- }}}
 
   -- git {{{
