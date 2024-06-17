@@ -5,7 +5,7 @@ local tsjs = { 'tsserver', 'typescript-language-server' }
 return {
   lua = { 'lua_ls' }, -- lua-language-server
   vim = { 'vimls' },  -- vim-language-server
-  ruby = { 'solargraph'},
+  ruby = { 'solargraph' },
   ocaml = ocamllsp,
   dune = ocamllsp,
   typescript = tsjs,

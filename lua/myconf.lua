@@ -80,9 +80,7 @@ do
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = augroup,
         buffer = bufnr,
-        callback = function()
-          vim.lsp.buf.format()
-        end,
+        callback = vim.lsp.buf.format
       })
     end
   end
@@ -139,8 +137,21 @@ do
     }
   end
 
+  local start_server = function(name)
+    local server = lspconfig[name]
+    ---@diagnostic disable-next-line: redefined-local
+    local config = config
+    if name == 'lua_lsp' then
+      config = lualsp_config
+    end
+
+    if server then
+      return server.setup(config)
+    end
+  end
+
   mason_lspconfig.setup_handlers({ function(server_name)
-    return lspconfig[server_name].setup(config)
+    return start_server(server_name)
   end })
 
   api.nvim_create_autocmd('FileType', {
@@ -151,16 +162,7 @@ do
 
       if st then
         local name = st[1]
-        local server = lspconfig[name]
-        ---@diagnostic disable-next-line: redefined-local
-        local config = config
-        if name == 'lua_lsp' then
-          config = lualsp_config
-        end
-
-        if server then
-          return server.setup(config)
-        end
+        return start_server(name)
       end
     end
   })
