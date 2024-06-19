@@ -32,11 +32,7 @@ do -- keymaps
   set_keymap("n", '<leader><up>', function() vim.diagnostic.goto_prev() end, opts)
   set_keymap("n", '<leader><down>', function() vim.diagnostic.goto_next() end, opts)
 
-  set_keymap("n", pfx 'q',
-    function()
-      vim.g.cq_prev_buf = vim.api.nvim_get_current_win();
-      vim.diagnostic.setloclist()
-    end, opts)
+  set_keymap("n", pfx 'q', ':LspDiagnostics 0<CR>', opts)
 
   set_keymap("n", pfx '=', function() vim.lsp.buf.format { async = true } end, opts)
 

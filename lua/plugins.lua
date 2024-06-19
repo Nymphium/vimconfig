@@ -17,6 +17,13 @@ require('packer').startup(function(use)
   use { 'junegunn/fzf.vim',
     requires = { 'junegunn/fzf', run = ':call fzf#install()' }
   }
+  use { 'ibhagwan/fzf-lua', requires = { "nvim-tree/nvim-web-devicons" } }
+
+  use { 'ojroques/nvim-lspfuzzy', requires = { 'junegunn/fzf.vim' },
+    config = function()
+      require('lspfuzzy').setup {}
+    end
+  }
 
   use { 'uga-rosa/utf8.nvim',
     config = function()
@@ -369,8 +376,6 @@ require('packer').startup(function(use)
       vim.keymap.set('n', '<leader>g?', '', { callback = function() lazygit:toggle() end })
     end
   }
-
-  use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
 
   if packer_bootstrap then
     require('packer').sync()

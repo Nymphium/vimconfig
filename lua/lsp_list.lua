@@ -12,10 +12,7 @@ return {
       usePlaceholders = true,
       staticcheck = true,
       analyses = {
-        unusedparams = true,
-        unreachable = true,
         nilness = true,
-        shadow = true,
       },
       hints = {
         assignVariableTypes = true,
