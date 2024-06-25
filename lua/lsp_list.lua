@@ -11,9 +11,6 @@ return {
       },
       usePlaceholders = true,
       staticcheck = true,
-      analyses = {
-        nilness = true,
-      },
       hints = {
         assignVariableTypes = true,
       }

@@ -31,13 +31,13 @@ require('packer').startup(function(use)
     end
   }
 
-  use { 'folke/tokyonight.nvim', --- {{{
+  use { 'folke/tokyonight.nvim',
     config = function()
       require('tokyonight').setup({
-        transparent = true,
-        style = 'storm',
+        day_brightness = 0.4,
+        dim_inactive = true,
         on_highlights = function(hl)
-          hl.LineNr = hl.Normal
+          -- hl.LineNr = hl.Normal
           hl.StatusLine = hl.MiniStatuslineModeNormal
           hl.User1 = hl.MiniStatuslineFilename
           hl.User2 = hl.MiniStatuslineDevinfo
@@ -82,7 +82,14 @@ require('packer').startup(function(use)
 
       vim.cmd [[:color tokyonight]]
     end
-  } -- }}}
+  }
+
+  use { 'cormacrelf/dark-notify',
+    requires = 'folke/tokyonight.nvim',
+    config = function()
+      require('dark_notify').run()
+    end
+  }
 
   -- if vim.version() < vim.version('0.10.0') then
   use { 'scrooloose/nerdcommenter',
