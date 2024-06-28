@@ -1,15 +1,9 @@
-if &compatible
-  set nocompatible
-endif
-
 lua <<EOL
   require('plugins')
   require('myconf')
+  require('set')
+  require('keymap')
 EOL
-source $HOME/.config/nvim/sources/set.vim
-source $HOME/.config/nvim/sources/statusline.vim
-source $HOME/.config/nvim/sources/keymap.vim
-source $HOME/.config/nvim/sources/func.vim
 
-" filetype plugin indent on
-" syntax on
+source $HOME/.config/nvim/sources/statusline.vim
+source $HOME/.config/nvim/sources/func.vim

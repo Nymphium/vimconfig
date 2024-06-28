@@ -14,12 +14,14 @@ local packer_bootstrap = ensure_packer()
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
-  use { 'junegunn/fzf.vim',
-    requires = { 'junegunn/fzf', run = ':call fzf#install()' }
+  use { 'ibhagwan/fzf-lua',
+    requires = {
+      "nvim-tree/nvim-web-devicons",
+      { 'junegunn/fzf', run = ':call fzf#install()' }
+    }
   }
-  use { 'ibhagwan/fzf-lua', requires = { "nvim-tree/nvim-web-devicons" } }
 
-  use { 'ojroques/nvim-lspfuzzy', requires = { 'junegunn/fzf.vim' },
+  use { 'ojroques/nvim-lspfuzzy', requires = { 'ibhagwan/fzf-lua' },
     config = function()
       require('lspfuzzy').setup {}
     end
@@ -84,25 +86,18 @@ require('packer').startup(function(use)
     end
   }
 
-  use { 'cormacrelf/dark-notify',
-    requires = 'folke/tokyonight.nvim',
+  use { 'f-person/auto-dark-mode.nvim',
     config = function()
-      require('dark_notify').run()
+      require('auto-dark-mode').setup({
+        set_dark_mode = function()
+          vim.o.background = 'dark'
+        end,
+        set_light_mode = function()
+          vim.o.background = 'light'
+        end,
+      })
     end
   }
-
-  -- if vim.version() < vim.version('0.10.0') then
-  use { 'scrooloose/nerdcommenter',
-    config = function()
-      vim.cmd [[let NERDSpaceDelims = 1]]
-      vim.api.nvim_set_keymap('n', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('v', '<M-C>', '<Plug>NERDCommenterToggle', { noremap = true, silent = true })
-    end
-  }
-  -- else
-  --   vim.api.nvim_set_keymap('n', '<M-C>', 'gcc', { noremap = true, silent = true })
-  --   vim.api.nvim_set_keymap('v', '<M-C>', 'gc', { noremap = true, silent = true })
-  -- end
 
   use { 'nvim-treesitter/nvim-treesitter', -- {{{
     run = ':TSUpdate',

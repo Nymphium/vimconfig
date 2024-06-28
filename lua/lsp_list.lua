@@ -15,5 +15,10 @@ return {
         assignVariableTypes = true,
       }
     }
-  }
+  },
+  jsonnet_ls = {
+    formatting = {
+      CommentStyle = 'hash',
+    }
+  },
 }
