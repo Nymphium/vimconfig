@@ -12,7 +12,7 @@ local detect_from_shebang = function()
   local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
   local this_ft = line:match('#!.-/bin/([%w]+)')
 
-  if #this_ft > 0 then
+  if this_ft and #this_ft > 0 then
     if this_ft == 'bash' or this_ft == 'zsh' then
       this_ft = 'sh'
     end

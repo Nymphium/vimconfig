@@ -119,7 +119,20 @@ require('packer').startup(function(use)
     end
   } -- }}}
 
-  use 'nvim-treesitter/nvim-treesitter-context'
+  use { 'nvim-treesitter/nvim-treesitter-context', requires = 'nvim-treesitter',
+    config = function()
+      local ctx = require('treesitter-context')
+
+      ctx.setup {
+        max_lines = 3,
+        line_numbers = false
+      }
+
+      vim.keymap.set('n', '<leader>l<Up>', function()
+        ctx.go_to_context(1)
+      end, { silent = true })
+    end
+  }
 
   use 'chentoast/marks.nvim'
 
@@ -244,6 +257,7 @@ require('packer').startup(function(use)
   use 'RRethy/vim-illuminate'
   use 'L3MON4D3/LuaSnip'
 
+  -- pair constructs {{{
   use { 'tpope/vim-surround',
     config = function()
       vim.cmd [=[xmap " <Plug>VSurround"]=]
@@ -258,11 +272,11 @@ require('packer').startup(function(use)
   use { "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
   }
-
-  use 'RRethy/nvim-treesitter-endwise'
-
   use { 'andymass/vim-matchup', requires = { 'nvim-treesitter/nvim-treesitter' } }
+  -- }}}
+
   use 'szw/vim-maximizer'
+  -- auto resizing windows
   use { 'nvim-focus/focus.nvim', config = function() require('focus').setup() end }
 
   -- language-specific {{{
@@ -318,6 +332,7 @@ require('packer').startup(function(use)
       set_keymap({ 'n', 'v' }, pfx 's', ':Gitsigns stage_hunk<CR>')
       set_keymap({ 'n', 'v' }, pfx 'r', ':Gitsigns reset_hunk<CR>')
       set_keymap('n', pfx 'b', function() gs.blame_line { full = true } end)
+      set_keymap('n', pfx 'B', function() gs.blame() end)
       set_keymap('n', pfx 'tb', gs.toggle_current_line_blame)
       set_keymap('n', pfx 'd', gs.diffthis)
       set_keymap('n', pfx 'dW', ':Gitsigns diffthis ')
@@ -325,30 +340,6 @@ require('packer').startup(function(use)
       set_keymap('n', pfx 'td', gs.toggle_deleted)
     end
   }
-
-  use { "FabijanZulj/blame.nvim",
-    config = function()
-      require("blame").setup({
-        enable = true,
-        virtual_style = 'right_align',
-      })
-
-      vim.keymap.set('n', '<leader>gbv', '', {
-        callback = function()
-          require("blame").toggle({ args = 'virtual' })
-        end,
-        desc = 'Toggle blame virtual',
-      })
-
-      vim.keymap.set('n', '<leader>gbw', '', {
-        callback = function()
-          require("blame").toggle({ args = 'window' })
-        end,
-        desc = 'Toggle blame window',
-      })
-    end
-  }
-  --- }}}
 
   use { 'akinsho/toggleterm.nvim',
     config = function()
