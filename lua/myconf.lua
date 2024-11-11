@@ -1,6 +1,7 @@
 local pfx = function(c)
   return '<leader>l' .. c
 end
+local unpack = unpack or table.unpack
 
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
@@ -10,18 +11,17 @@ do -- keymaps
   local set_keymap = function(...)
     return vim.keymap.set(...)
   end
-  set_keymap("n", pfx 'k', function() vim.lsp.buf.hover() end, opts)
-  set_keymap("n", pfx 'g', function() vim.lsp.buf.definition() end, opts)
-  set_keymap("n", pfx 'i', function() vim.lsp.buf.implementation() end, opts)
-  set_keymap("n", pfx 'i', function() vim.lsp.buf.implementation() end, opts)
+  set_keymap("n", pfx 'k', '<cmd>Lspsaga hover_doc<CR>', opts)
+  set_keymap("n", pfx 'g', '<cmd>Lspsaga goto_definition<CR>', opts)
+  set_keymap("n", pfx 'i', '<cmd>Lspsaga finder imp<CR>', opts)
 
   set_keymap("n", pfx '<F1>', function() vim.lsp.buf.signature_help() end, opts)
 
   set_keymap("n", pfx 'f', function() vim.lsp.buf.add_workspace_folder() end, opts)
   set_keymap("n", pfx 'fw', function() vim.lsp.buf.remove_workspace_folder() end, opts)
   set_keymap("n", pfx 'fl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
-  set_keymap("n", pfx 'r', function() vim.lsp.buf.rename() end, opts)
-  set_keymap("n", pfx 'a', function() vim.lsp.buf.code_action() end, opts)
+  set_keymap("n", pfx 'r', '<cmd>Lspsaga rename<CR>', opts)
+  set_keymap("n", pfx 'a', '<cmd>Lspsaga code_action<CR>', opts)
   set_keymap('n', pfx 'e', function() vim.diagnostic.open_float() end, opts)
   set_keymap("n", pfx 'b',
     function()
@@ -29,10 +29,10 @@ do -- keymaps
       vim.lsp.buf.references()
     end, opts)
 
-  set_keymap("n", '<leader><up>', function() vim.diagnostic.goto_prev() end, opts)
-  set_keymap("n", '<leader><down>', function() vim.diagnostic.goto_next() end, opts)
+  set_keymap("n", '<leader><up>', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  set_keymap("n", '<leader><down>', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
 
-  set_keymap("n", pfx 'q', ':LspDiagnostics 0<CR>', opts)
+  set_keymap("n", pfx 'q', '<cmd>Lspsaga show_buf_diagnostics<CR>', opts)
 
   set_keymap("n", pfx '=', function() vim.lsp.buf.format { async = true } end, opts)
 
@@ -77,6 +77,30 @@ do
         end
       })
     end
+    --
+    -- if client.supports_method("textDocument/hover") then
+    --   client.handlers["textDocument/hover"] = vim.lsp.with(
+    --     vim.lsp.handlers.hover,
+    --     { border = 'rounded' }
+    --   )
+    -- end
+    --
+    -- if client.supports_method('textDocument/signatureHelp') then
+    --   client.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+    --     vim.lsp.handlers.signature_help,
+    --     { border = 'rounded' }
+    --   )
+    -- end
+    --
+    -- if client.supports_method("textDocument/publishDiagnostics") then
+    --   client.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    --     vim.lsp.diagnostic.on_publish_diagnostics,
+    --     {
+    --       signs = { min = vim.diagnostic.severity.HINT, },
+    --       virtual_text = { min = vim.diagnostic.severity.WARN, },
+    --     }
+    --   )
+    -- end
 
     vim.lsp.inlay_hint.enable(true, { bufnr })
 
@@ -84,7 +108,13 @@ do
   end
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  local lspconfig = require "lspconfig"
+  lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+    lint = true,
+    capabilities = capabilities,
+    showMessage = { messageActionItem = { additionalPropertiesSupport = true } },
+  })
+
   local mason = require('mason')
   mason.setup({
     ui = {
@@ -96,56 +126,21 @@ do
     }
   })
 
-  local lspconfig = require "lspconfig"
-  lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-    lint = true,
-    capabilities = capabilities,
-    showMessage = { messageActionItem = { additionalPropertiesSupport = true } },
-    handlers = {
-      ["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { border = 'rounded' }
-      )
-      ,
-      ['textDocument/signatureHelp'] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { border = 'rounded' }
-      ),
-      ["textDocument/publishDiagnostics"] = vim.lsp.with(
-        vim.lsp.diagnostic.on_publish_diagnostics, {
-          signs = { min = vim.diagnostic.severity.HINT, },
-          virtual_text = { min = vim.diagnostic.severity.WARN, },
-        }
-      )
-    }
-  })
-
   local mason_lspconfig = require('mason-lspconfig')
   mason_lspconfig.setup()
 
-  local lsp_settings = require('lsp_list')
-  local setup_server = function(server_name)
-    local server = lspconfig[server_name]
-    local settings = lsp_settings[server_name]
+  -- @param server_cmd mason naming convention
+  local setup_server = function(server_name_lspconfig)
+    local server = lspconfig[server_name_lspconfig]
 
     if server then
       return server.setup({
         on_attach = on_attach,
-        settings = settings
       })
     end
   end
 
-  mason_lspconfig.setup_handlers({ function(server_name)
-    return setup_server(server_name)
-  end })
-
-  local servers = mason_lspconfig.get_available_servers()
-  for _, server_name in pairs(servers) do
-    if vim.fn.executable(server_name) == 1 then
-      setup_server(server_name)
-    end
-  end
+  mason_lspconfig.setup_handlers({ setup_server })
 end
 
 do -- completion
@@ -154,7 +149,6 @@ do -- completion
   vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
   local has_words_before = function()
-    unpack = unpack or table.unpack
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and
         vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil

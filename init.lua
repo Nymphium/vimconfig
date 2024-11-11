@@ -1,0 +1,6 @@
+require('plugins')
+require('myconf')
+require('set')
+require('keymap')
+require('statusline')
+require('func')

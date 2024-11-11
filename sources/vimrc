@@ -1,9 +1,0 @@
-lua <<EOL
-  require('plugins')
-  require('myconf')
-  require('set')
-  require('keymap')
-EOL
-
-source $HOME/.config/nvim/sources/statusline.vim
-source $HOME/.config/nvim/sources/func.vim

@@ -21,11 +21,11 @@ require('packer').startup(function(use)
     }
   }
 
-  use { 'ojroques/nvim-lspfuzzy', requires = { 'ibhagwan/fzf-lua' },
-    config = function()
-      require('lspfuzzy').setup {}
-    end
-  }
+  -- use { 'ojroques/nvim-lspfuzzy', requires = { 'ibhagwan/fzf-lua' },
+  --   config = function()
+  --     require('lspfuzzy').setup {}
+  --   end
+  -- }
 
   use { 'uga-rosa/utf8.nvim',
     config = function()
@@ -106,7 +106,7 @@ require('packer').startup(function(use)
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
       ---@diagnostic disable-next-line: missing-fields
       require 'nvim-treesitter.configs'.setup {
-        ensure_installed = { "bash", "lua", "vim" },
+        ensure_installed = { "bash", "lua", "vim", "markdown", "markdown_inline" },
         auto_install = true,
         indent = { enable = true, },
         endwise = { enable = true }, -- for treesitter-endwise
@@ -119,20 +119,20 @@ require('packer').startup(function(use)
     end
   } -- }}}
 
-  use { 'nvim-treesitter/nvim-treesitter-context', requires = 'nvim-treesitter',
-    config = function()
-      local ctx = require('treesitter-context')
-
-      ctx.setup {
-        max_lines = 3,
-        line_numbers = false
-      }
-
-      vim.keymap.set('n', '<leader>l<Up>', function()
-        ctx.go_to_context(1)
-      end, { silent = true })
-    end
-  }
+  -- use { 'nvim-treesitter/nvim-treesitter-context', requires = 'nvim-treesitter',
+  --   config = function()
+  --     local ctx = require('treesitter-context')
+  --
+  --     ctx.setup {
+  --       max_lines = 3,
+  --       line_numbers = false
+  --     }
+  --
+  --     vim.keymap.set('n', '<leader>l<Up>', function()
+  --       ctx.go_to_context(1)
+  --     end, { silent = true })
+  --   end
+  -- }
 
   use 'chentoast/marks.nvim'
 
@@ -151,14 +151,40 @@ require('packer').startup(function(use)
     end
   }
 
-  use { 'tamago324/nlsp-settings.nvim',
+  use { 'nvimdev/lspsaga.nvim',
+    after = { 'nvim-lspconfig' },
+    require = { 'gitsigns' },
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require("nlspsettings").setup({
-        append_default_schemas = true,
+      require('lspsaga').setup({
+        hover = {
+          open_cmd = '!firefox',
+        },
+        lightbulb = {
+          sign = false
+        },
+        code_action = {
+          extend_gitsigns = true,
+        },
+        symbol_in_winbar = {
+          folder_level = 0,
+          separator = '.'
+        }
       })
-    end
+
+      vim.keymap.set('n', '<C-t>', '<cmd>Lspsaga term_toggle<CR>')
+    end,
   }
+
+  -- use { 'tamago324/nlsp-settings.nvim',
+  --   after = { 'nvim-lspconfig', 'mason-lspconfig' },
+  --   config = function()
+  --     ---@diagnostic disable-next-line: missing-fields
+  --     require("nlspsettings").setup({
+  --       append_default_schemas = true,
+  --       local_settings_dir = ",nlsp-settings",
+  --     })
+  --   end
+  -- }
 
   use { 'scalameta/nvim-metals',
     requires = 'nvim-lua/plenary.nvim',
@@ -167,7 +193,7 @@ require('packer').startup(function(use)
 
   -- for neovim api
   use { 'folke/lazydev.nvim', ft = 'lua',
-    requires = { 'neovim/nvim-lspconfig' },
+    after = { 'nvim-lspconfig' },
     config = function()
       require('lazydev').setup({
         debug = false,
@@ -341,34 +367,34 @@ require('packer').startup(function(use)
     end
   }
 
-  use { 'akinsho/toggleterm.nvim',
-    config = function()
-      require('toggleterm').setup({
-        open_mapping = [[<C-t>]],
-        direction = 'float',
-        autochdir = true,
-        float_ops = { border = 'single' },
-      })
-
-      local Terminal = require('toggleterm.terminal').Terminal
-      local lazygit  = Terminal:new({
-        cmd = "lazygit",
-        count = 5,
-        dir = "git_dir",
-        float_opts = { border = 'single' },
-        -- function to run on opening the terminal
-        on_open = function(term)
-          vim.cmd("startinsert!")
-          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-        end,
-        -- function to run on closing the terminal
-        on_close = function(_term)
-          vim.cmd("startinsert!")
-        end,
-      })
-      vim.keymap.set('n', '<leader>g?', '', { callback = function() lazygit:toggle() end })
-    end
-  }
+  -- use { 'akinsho/toggleterm.nvim',
+  --   config = function()
+  --     require('toggleterm').setup({
+  --       open_mapping = [[<C-t>]],
+  --       direction = 'float',
+  --       autochdir = true,
+  --       float_ops = { border = 'single' },
+  --     })
+  --
+  --     local Terminal = require('toggleterm.terminal').Terminal
+  --     local lazygit  = Terminal:new({
+  --       cmd = "lazygit",
+  --       count = 5,
+  --       dir = "git_dir",
+  --       float_opts = { border = 'single' },
+  --       -- function to run on opening the terminal
+  --       on_open = function(term)
+  --         vim.cmd("startinsert!")
+  --         vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  --       end,
+  --       -- function to run on closing the terminal
+  --       on_close = function(_term)
+  --         vim.cmd("startinsert!")
+  --       end,
+  --     })
+  --     vim.keymap.set('n', '<leader>g?', '', { callback = function() lazygit:toggle() end })
+  --   end
+  -- }
 
   if packer_bootstrap then
     require('packer').sync()

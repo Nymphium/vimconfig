@@ -1,9 +1,5 @@
-scriptencoding utf-8
+vim.cmd [[syntax match Shebang /^#!.*$/]]
 
-syntax match Shebang /^#!.*$/
-
-"" set-shellscript filetype {{{
-lua <<EOL
 local detect_from_shebang = function()
   if #vim.bo.filetype > 1 then
     return
@@ -22,10 +18,10 @@ local detect_from_shebang = function()
 end
 
 local augroup = vim.api.nvim_create_augroup('DetectFromShebangAndHighlightAgain', {})
-vim.cmd[[hi def link Shebang MiniHipatternsFixme]]
+vim.cmd [[hi def link Shebang MiniHipatternsFixme]]
 
 if #vim.bo.filetype < 1 then
-  vim.api.nvim_clear_autocmds({group = augroup, buffer = vim.fn.bufnr('%')})
+  vim.api.nvim_clear_autocmds({ group = augroup, buffer = vim.fn.bufnr('%') })
   vim.api.nvim_create_autocmd('BufWritePost', {
     group = augroup,
     buffer = vim.fn.bufnr('%'),
@@ -34,11 +30,8 @@ if #vim.bo.filetype < 1 then
     end
   })
 end
-EOL
-"" }}}
 
-function! Dirof()
-  return expand('%:p:h')
-endfunction
-
-command! Dirof echo Dirof()
+vim.api.nvim_create_user_command(
+  'Dirof', function()
+    return print(vim.fn.expand('%:p:h'))
+  end, {})

@@ -23,8 +23,8 @@ vim.api.nvim_set_keymap('n', '<ESC>s', '<ESC>:w!<CR>', { noremap = true, desc = 
 vim.api.nvim_set_keymap('n', '<ESC>s<ESC>s', '<ESC>:wq!<CR>', { noremap = true, desc = 'Save and quit' })
 vim.api.nvim_set_keymap('n', '<M-s>', '<ESC>:w!<CR>', { noremap = true, desc = 'Save file' })
 vim.api.nvim_set_keymap('n', '<M-s><M-s>', '<ESC>:wq!<CR>', { noremap = true, desc = 'Save and quit' })
-vim.api.nvim_set_keymap('n', '<C-q>', ':bd!<CR>', { noremap = true, desc = 'Close buffer' })
-vim.api.nvim_set_keymap('n', '<C-w><C-w>', ':q!<CR>', { noremap = true, desc = 'Quit without saving' })
+vim.api.nvim_set_keymap('n', '<C-q>', '<cmd>bd!<CR>', { noremap = true, desc = 'Close buffer' })
+vim.api.nvim_set_keymap('n', '<C-w><C-w>', '<cmd>q!<CR>', { noremap = true, desc = 'Quit without saving' })
 vim.api.nvim_set_keymap('n', '<Left>', '<C-w><Left>', { noremap = true, desc = 'Move to window on the left' })
 vim.api.nvim_set_keymap('n', '<Right>', '<C-w><Right>', { noremap = true, desc = 'Move to window on the right' })
 vim.api.nvim_set_keymap('n', '<Up>', '<C-w><Up>', { noremap = true, desc = 'Move to window above' })
@@ -38,15 +38,15 @@ vim.api.nvim_set_keymap('n', 'j', 'gj', { noremap = true, desc = 'Move down by v
 vim.api.nvim_set_keymap('n', 'k', 'gk', { noremap = true, desc = 'Move up by visual line' })
 vim.api.nvim_set_keymap('n', 'r', '<C-r>', { noremap = true, desc = 'Redo' })
 vim.api.nvim_set_keymap('n', '<C-r>', 'r', { noremap = true, desc = 'Replace character under cursor' })
-vim.api.nvim_set_keymap('n', '<F4>', ':setlocal relativenumber!<CR>',
+vim.api.nvim_set_keymap('n', '<F4>', '<cmd>setlocal relativenumber!<CR>',
   { silent = true, noremap = true, desc = 'Toggle relative line numbers' })
 
 -- More normal mode mappings
-vim.api.nvim_set_keymap('n', 'cn', ':cn<CR>',
+vim.api.nvim_set_keymap('n', 'cn', '<cmd>cn<CR>',
   { silent = true, noremap = true, desc = 'Go to next item in quickfix list' })
-vim.api.nvim_set_keymap('n', 'CN', ':cN<CR>',
+vim.api.nvim_set_keymap('n', 'CN', '<cmd>cN<CR>',
   { silent = true, noremap = true, desc = 'Go to previous item in quickfix list' })
-vim.api.nvim_set_keymap('n', 'cq', ':lcl<CR>', { silent = true, noremap = true, desc = 'Close location list' })
+vim.api.nvim_set_keymap('n', 'cq', '<cmd>lcl<CR>', { silent = true, noremap = true, desc = 'Close location list' })
 vim.api.nvim_set_keymap('n', 'w<TAB>', '<C-w>w', { noremap = true, desc = 'Switch to next window' })
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, desc = 'Move to window on the left' })
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, desc = 'Move to window below' })
@@ -62,7 +62,7 @@ vim.api.nvim_set_keymap('n', 'wk', '<ESC><C-w>-<C-w>-<C-w>-<C-w>-<C-w>-',
   { noremap = true, desc = 'Decrease window height' })
 vim.api.nvim_set_keymap('n', '<M-o>', 'o<ESC>',
   { noremap = true, desc = 'Open new line below and return to normal mode' })
-vim.api.nvim_set_keymap('n', 'wo', ':new<Space><cfile><CR>',
+vim.api.nvim_set_keymap('n', 'wo', '<cmd>new<Space><cfile><CR>',
   { noremap = true, desc = 'Open new window with current file' })
 vim.api.nvim_set_keymap('n', '<S-k>', 'k<S-j>', { noremap = true, desc = 'Move line up' })
 vim.api.nvim_set_keymap('n', 'V', '<C-v>', { noremap = true, desc = 'Start visual block selection' })
