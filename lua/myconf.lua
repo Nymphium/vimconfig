@@ -77,30 +77,30 @@ do
         end
       })
     end
-    --
-    -- if client.supports_method("textDocument/hover") then
-    --   client.handlers["textDocument/hover"] = vim.lsp.with(
-    --     vim.lsp.handlers.hover,
-    --     { border = 'rounded' }
-    --   )
-    -- end
-    --
-    -- if client.supports_method('textDocument/signatureHelp') then
-    --   client.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-    --     vim.lsp.handlers.signature_help,
-    --     { border = 'rounded' }
-    --   )
-    -- end
-    --
-    -- if client.supports_method("textDocument/publishDiagnostics") then
-    --   client.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    --     vim.lsp.diagnostic.on_publish_diagnostics,
-    --     {
-    --       signs = { min = vim.diagnostic.severity.HINT, },
-    --       virtual_text = { min = vim.diagnostic.severity.WARN, },
-    --     }
-    --   )
-    -- end
+
+    if client.supports_method("textDocument/hover") then
+      client.handlers["textDocument/hover"] = vim.lsp.with(
+        vim.lsp.handlers.hover,
+        { border = 'rounded' }
+      )
+    end
+
+    if client.supports_method('textDocument/signatureHelp') then
+      client.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        { border = 'rounded' }
+      )
+    end
+
+    if client.supports_method("textDocument/publishDiagnostics") then
+      client.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+        vim.lsp.diagnostic.on_publish_diagnostics,
+        {
+          signs = { min = vim.diagnostic.severity.HINT, },
+          virtual_text = { min = vim.diagnostic.severity.WARN, },
+        }
+      )
+    end
 
     vim.lsp.inlay_hint.enable(true, { bufnr })
 
@@ -108,6 +108,10 @@ do
   end
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  require('neoconf').setup({
+    local_settings = ',neoconf.json'
+  })
+
   local lspconfig = require "lspconfig"
   lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
     lint = true,
@@ -129,6 +133,7 @@ do
   local mason_lspconfig = require('mason-lspconfig')
   mason_lspconfig.setup()
 
+
   -- @param server_cmd mason naming convention
   local setup_server = function(server_name_lspconfig)
     local server = lspconfig[server_name_lspconfig]
@@ -141,6 +146,26 @@ do
   end
 
   mason_lspconfig.setup_handlers({ setup_server })
+
+  for _, v in ipairs(mason_lspconfig.get_available_servers()) do
+    local server = lspconfig[v]
+
+    if server
+        and (
+          (not server.manager)
+          or #server.manager._clients == 0)
+    then
+      local default_config = server.default_config or server.config_def.default_config
+      if default_config
+          and default_config.cmd
+          and #default_config.cmd > 0 and
+          vim.fn.executable(default_config.cmd[1]) == 1 then
+        server.setup({
+          on_attach = on_attach,
+        })
+      end
+    end
+  end
 end
 
 do -- completion
