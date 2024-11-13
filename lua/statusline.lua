@@ -1,10 +1,33 @@
+local modes = {
+  ["n"] = "NORMAL",
+  ["no"] = "NORMAL",
+  ["v"] = "VISUAL",
+  ["V"] = "VISUAL LINE",
+  [""] = "VISUAL BLOCK",
+  ["s"] = "SELECT",
+  ["S"] = "SELECT LINE",
+  [""] = "SELECT BLOCK",
+  ["i"] = "INSERT",
+  ["ic"] = "INSERT",
+  ["R"] = "REPLACE",
+  ["Rv"] = "VISUAL REPLACE",
+  ["c"] = "COMMAND",
+  ["cv"] = "VIM EX",
+  ["ce"] = "EX",
+  ["r"] = "PROMPT",
+  ["rm"] = "MOAR",
+  ["r?"] = "CONFIRM",
+  ["!"] = "SHELL",
+  ["t"] = "TERMINAL",
+}
+
 local mode_current = function()
-  return vim.api.nvim_get_mode().mode
+  return modes[vim.api.nvim_get_mode().mode]
 end
 
 local compile = function()
-  return "%0* B%n W%{win_getid()} L%l C%v "
-      .. ("%%2* %s "):format(mode_current())
+  return ("%%0* %s "):format("%l:%v")
+      .. ("%%#StatusLineMode# %s "):format(mode_current())
       .. "%0* "
 end
 

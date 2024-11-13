@@ -63,5 +63,6 @@ vim.o.winblend = 15
 
 vim.o.splitright = true
 
-
 vim.o.jumpoptions = "stack"
+
+vim.o.laststatus = 3

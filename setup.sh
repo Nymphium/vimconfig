@@ -4,9 +4,10 @@ set -ux
 
 TARGET=${1:-$HOME}
 
-mkdir -p "${TARGET}/.config/nvim/lua"
+mkdir -p "${TARGET}/.config/nvim/"{lua,nlsp-settings}
 
 ln -s "${PWD}/init.lua" "${TARGET}/.config/nvim/"
 ln -s "${PWD}/lua/"* "${TARGET}/.config/nvim/lua/"
+ln -s "${PWD}/nlsp-settings/"* "${TARGET}/.config/nvim/nlsp-settings"
 
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' | :

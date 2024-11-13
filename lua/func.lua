@@ -18,20 +18,16 @@ local detect_from_shebang = function()
 end
 
 local augroup = vim.api.nvim_create_augroup('DetectFromShebangAndHighlightAgain', {})
-vim.cmd [[hi def link Shebang MiniHipatternsFixme]]
+vim.api.nvim_set_hl(0, 'Shebang', { link = 'MiniHipatternsFixme' })
 
-if #vim.bo.filetype < 1 then
-  vim.api.nvim_clear_autocmds({ group = augroup, buffer = vim.fn.bufnr('%') })
-  vim.api.nvim_create_autocmd('BufWritePost', {
-    group = augroup,
-    buffer = vim.fn.bufnr('%'),
-    callback = function()
-      detect_from_shebang()
-    end
-  })
-end
+vim.api.nvim_clear_autocmds({ group = augroup })
+vim.api.nvim_create_autocmd('BufWritePost', {
+  group = augroup,
+  callback = detect_from_shebang
+})
 
-vim.api.nvim_create_user_command(
-  'Dirof', function()
-    return print(vim.fn.expand('%:p:h'))
-  end, {})
+vim.api.nvim_create_user_command('Dirof',
+  function()
+    print(vim.fn.expand('%:p:h'))
+  end,
+  {})

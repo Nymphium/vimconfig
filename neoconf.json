@@ -1,0 +1,30 @@
+{
+  "lspconfig": {
+    "gopls": {
+      "gopls": {
+        "ui.codelenses": {
+          "gc_details": true
+        },
+        "usePlaceholders": true,
+        "hints": {
+          "assignVariableTypes": true,
+          "parameterNames": true
+        }
+      }
+    },
+    "lua_ls": {
+      "Lua.hint.enable": true,
+      "Lua.hint.paramType": true,
+      "Lua.codeLens.enable": true,
+      "Lua.diagnostics.enable": true
+    },
+    "nil": {
+      "formatting": {
+        "command": [
+          "nixfmt"
+        ]
+      },
+      "flake.autoEvalInputs": true
+    }
+  }
+}
