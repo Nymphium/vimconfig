@@ -11,6 +11,7 @@ do -- keymaps
   end
   set_keymap("n", pfx 'k', '<cmd>Lspsaga hover_doc<CR>', opts)
   set_keymap("n", pfx 'g', '<cmd>Lspsaga goto_definition<CR>', opts)
+  set_keymap("n", pfx 'G', '<cmd>Lspsaga peek_definition<CR>', opts)
   set_keymap("n", pfx 'i', '<cmd>Lspsaga finder imp<CR>', opts)
 
   set_keymap("n", pfx '<F1>', function() vim.lsp.buf.signature_help() end, opts)
@@ -69,7 +70,7 @@ local illuminate = require('illuminate')
 local on_attach = function(client, bufnr)
   vim.bo.omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-  if client.supports_method("textDocument/formatting") then
+  if client.supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = augroup,
@@ -80,21 +81,21 @@ local on_attach = function(client, bufnr)
     })
   end
 
-  if client.supports_method("textDocument/hover") then
+  if client.supports_method(vim.lsp.protocol.Methods.textDocument_hover) then
     client.handlers["textDocument/hover"] = vim.lsp.with(
       vim.lsp.handlers.hover,
       { border = 'rounded' }
     )
   end
 
-  if client.supports_method('textDocument/signatureHelp') then
+  if client.supports_method(vim.lsp.protocol.Methods.textDocument_signatureHelp) then
     client.handlers['textDocument/signatureHelp'] = vim.lsp.with(
       vim.lsp.handlers.signature_help,
       { border = 'rounded' }
     )
   end
 
-  if client.supports_method("textDocument/publishDiagnostics") then
+  if client.supports_method(vim.lsp.protocol.Methods.textDocument_publishDiagnostics) then
     client.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
       vim.lsp.diagnostic.on_publish_diagnostics,
       {
@@ -104,12 +105,14 @@ local on_attach = function(client, bufnr)
     )
   end
 
-  vim.lsp.inlay_hint.enable(true, { bufnr })
+  if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+    vim.lsp.inlay_hint.enable(true, { bufnr })
+  end
 
   illuminate.on_attach(client)
 end
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 require('neoconf').setup({
   local_settings = ',neoconf.json'
 })
@@ -117,7 +120,6 @@ require('neoconf').setup({
 local lspconfig = require "lspconfig"
 lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
   lint = true,
-  capabilities = capabilities,
   showMessage = { messageActionItem = { additionalPropertiesSupport = true } },
 })
 
@@ -135,22 +137,9 @@ mason.setup({
 local mason_lspconfig = require('mason-lspconfig')
 mason_lspconfig.setup()
 
-
 -- @param server_cmd mason naming convention
 local setup_server = function(server_name_lspconfig)
   local server = lspconfig[server_name_lspconfig]
-
-  if server then
-    return server.setup({
-      on_attach = on_attach,
-    })
-  end
-end
-
-mason_lspconfig.setup_handlers({ setup_server })
-
-for _, v in ipairs(mason_lspconfig.get_available_servers()) do
-  local server = lspconfig[v]
 
   if server
       and (
@@ -162,9 +151,22 @@ for _, v in ipairs(mason_lspconfig.get_available_servers()) do
         and default_config.cmd
         and #default_config.cmd > 0 and
         vim.fn.executable(default_config.cmd[1]) == 1 then
+      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
       server.setup({
         on_attach = on_attach,
       })
     end
   end
 end
+
+mason_lspconfig.setup_handlers({ setup_server })
+
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  once = true,
+  callback = function(args)
+    for _, v in ipairs(mason_lspconfig.get_available_servers(args.filetype)) do
+      setup_server(v)
+    end
+  end
+})

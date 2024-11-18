@@ -2,45 +2,86 @@ local modes = {
   ["n"] = "NORMAL",
   ["no"] = "NORMAL",
   ["v"] = "VISUAL",
-  ["V"] = "VISUAL LINE",
-  [""] = "VISUAL BLOCK",
+  ["V"] = "VISUAL",
+  [""] = "VISUAL",
   ["s"] = "SELECT",
-  ["S"] = "SELECT LINE",
-  [""] = "SELECT BLOCK",
+  ["S"] = "SELECT",
+  [""] = "SELECT",
   ["i"] = "INSERT",
   ["ic"] = "INSERT",
   ["R"] = "REPLACE",
-  ["Rv"] = "VISUAL REPLACE",
+  ["Rv"] = "REPLACE",
   ["c"] = "COMMAND",
-  ["cv"] = "VIM EX",
+  ["cv"] = "EX",
   ["ce"] = "EX",
   ["r"] = "PROMPT",
   ["rm"] = "MOAR",
   ["r?"] = "CONFIRM",
   ["!"] = "SHELL",
   ["t"] = "TERMINAL",
+  ["nt"] = "TERMINAL",
 }
 
-local mode_current = function()
-  return modes[vim.api.nvim_get_mode().mode]
-end
+local mode_color = {
+  NORMAL = 'MiniStatuslineModeNormal',
+  INSERT = 'MiniStatuslineModeInsert',
+  VISUAL = 'MiniStatuslineModeVisual',
+  COMMAND = 'MiniStatuslineModeVisual',
+  REPLACE = 'MiniStatuslineModeReplace',
+}
 
-local compile = function()
-  return ("%%0* %s "):format("%l:%v")
-      .. ("%%#StatusLineMode# %s "):format(mode_current())
-      .. "%0* "
-end
-
-vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
-  callback = function()
-    vim.cmd([=[setlocal statusline=%!v:lua.require'statusline'.compile()]=])
+setmetatable(mode_color, {
+  __index = function(self, k)
+    local raw = rawget(self, k)
+    if raw then
+      return raw
+    else
+      return 'MiniStatuslineModeOther'
+    end
   end
 })
 
-vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
-  callback = function()
-    vim.cmd([[setlocal statusline=\ B%n\ W%{win_getid()}\ %t]])
-  end
+local mode_current = function()
+  local mode = modes[vim.api.nvim_get_mode().mode]
+  local color = mode_color[mode]
+  return color, mode
+end
+
+local compile = function()
+  return "%#Normal#"
+      .. ("%%#%s# %s %%#Normal#"):format(mode_current())
+      .. ("%%m%%h %%#Normal#%s%%#Normal#"):format(require('lspsaga.symbol.winbar').get_bar() or '%t')
+end
+
+vim.opt.ruler = false
+vim.opt.cmdheight = 0
+vim.opt.laststatus = 3
+
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
+  callback = vim.schedule_wrap(function()
+    if vim.fn.winheight(0) > 1 and vim.bo.buftype == '' then
+      vim.cmd([=[setlocal winbar=%!v:lua.require'statusline'.compile()]=])
+      vim.cmd([=[setlocal statusline=%#NonText#]=])
+    end
+  end)
+})
+
+vim.api.nvim_create_autocmd({ 'VimEnter' }, {
+  callback = vim.schedule_wrap(function()
+    if vim.fn.winheight(0) > 1 and vim.bo.buftype == '' then
+      vim.cmd([=[setlocal winbar=%!v:lua.require'statusline'.compile()]=])
+      vim.cmd([=[setlocal statusline=%#NonText#]=])
+    end
+  end)
+})
+
+vim.api.nvim_create_autocmd({ 'WinLeave' }, {
+  callback = vim.schedule_wrap(function()
+    if vim.fn.winheight(0) > 1 and vim.bo.buftype ~= 'nofile' then
+      vim.cmd([[setlocal winbar=\ %m\ %t]])
+      vim.cmd [[setlocal statusline=]]
+    end
+  end)
 })
 
 return { compile = compile }

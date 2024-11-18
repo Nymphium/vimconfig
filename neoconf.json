@@ -18,13 +18,26 @@
       "Lua.codeLens.enable": true,
       "Lua.diagnostics.enable": true
     },
-    "nil": {
-      "formatting": {
-        "command": [
-          "nixfmt"
-        ]
-      },
-      "flake.autoEvalInputs": true
+    "nil_ls": {
+      "filetypes": [
+        "nix"
+      ],
+      "rootPatterns": [
+        "flake.nix"
+      ],
+      "nil": {
+        "formatting": {
+          "command": [
+            "nixfmt"
+          ]
+        },
+        "flake": {
+          "autoEvalInputs": true
+        }
+      }
+    },
+    "ts_ls": {
+      "typescript.tsserver.experimental.enableProjectDiagnostics": true
     }
   }
 }

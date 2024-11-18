@@ -14,8 +14,12 @@ local packer_bootstrap = ensure_packer()
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
-  use { 'junegunn/fzf', run = './install --bin' }
-  use { 'junegunn/fzf.vim', require = { 'junegunn/fzf.vim' } }
+  use { "ibhagwan/fzf-lua",
+    requires = {
+      "nvim-tree/nvim-web-devicons",
+      { 'junegunn/fzf', run = ':call fzf#install()' }
+    },
+  }
 
   use { 'uga-rosa/utf8.nvim',
     config = function()
@@ -38,7 +42,7 @@ require('packer').startup(function(use)
     end
   }
 
-  use { 'nvim-treesitter/nvim-treesitter', -- {{{
+  use { 'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
       vim.opt.foldmethod = "expr"
@@ -56,7 +60,7 @@ require('packer').startup(function(use)
         },
       }
     end
-  } -- }}}
+  }
 
   use 'chentoast/marks.nvim'
 
@@ -82,9 +86,14 @@ require('packer').startup(function(use)
   }
 
   use { 'nvimdev/lspsaga.nvim',
-    requires = { 'lewis6991/gitsigns.nvim' },
+    requires = { 'lewis6991/gitsigns.nvim', 'nvim-treesitter/nvim-treesitter' },
     config = function()
       require('lspsaga').setup({
+        rename = {
+          keys = {
+            quit = '<ESC>',
+          }
+        },
         hover = {
           open_cmd = '!firefox',
         },
@@ -96,10 +105,11 @@ require('packer').startup(function(use)
         },
         outline = {
           win_position = 'left',
-          auto_close = false,
-          details = false,
         },
         symbol_in_winbar = {
+          enable = false,
+          color_mode = false,
+          hide_keyword = true,
           folder_level = 0,
           separator = '.'
         }
@@ -114,7 +124,6 @@ require('packer').startup(function(use)
     ft = "scala",
   }
 
-  -- for neovim api
   use { 'folke/lazydev.nvim', ft = 'lua',
     requires = { 'neovim/nvim-lspconfig' },
     config = function()
@@ -127,14 +136,14 @@ require('packer').startup(function(use)
       })
     end,
   }
-
-  -- notification
+  --
+  -- -- notification
   use { 'j-hui/fidget.nvim',
     config = function()
       require "fidget".setup {}
     end
   }
-  -- }}}
+  -- -- }}}
 
   -- AI {{{
   use { "zbirenbaum/copilot.lua",
@@ -184,7 +193,6 @@ require('packer').startup(function(use)
   }
   use 'ray-x/cmp-treesitter'
   use { 'onsails/lspkind.nvim',
-    requires = { 'nvimdev/lspsaga.nvim' },
     config = function()
       require('lspkind').init({
         symbol_map = {
@@ -238,24 +246,27 @@ require('packer').startup(function(use)
         }
       })
 
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'sagaoutline', 'packer' },
+      vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
         once = true,
-        callback = function()
+        callback = vim.schedule_wrap(function()
           vim.b.focus_disable = true
-        end
+        end)
       })
     end
   }
 
+  use { 'nvimdev/indentmini.nvim',
+    config = function()
+      require("indentmini").setup()
+    end
+  }
+
   -- language-specific {{{
-  -- use {'rgrinberg/vim-ocaml', ft = 'ocaml'}
-  use { 'LnL7/vim-nix', ft = 'nix' }
+  use { 'rgrinberg/vim-ocaml', ft = 'ocaml' }
 
   use { 'lervag/vimtex', ft = "tex" }
   -- }}}
 
-  -- git {{{
   use { 'lewis6991/gitsigns.nvim',
     config = function()
       local gs = require('gitsigns')
@@ -281,7 +292,7 @@ require('packer').startup(function(use)
       set_keymap('n', ']c', "", {
         callback = function()
           if vim.wo.diff then return ']c' end
-          vim.schedule(function() gs.next_hunk() end)
+          vim.schedule(function() gs.nav_hunk('next') end)
           return '<Ignore>'
         end,
         expr = true,
@@ -291,7 +302,7 @@ require('packer').startup(function(use)
       set_keymap('n', '[c', "", {
         callback = function()
           if vim.wo.diff then return '[c' end
-          vim.schedule(function() gs.prev_hunk() end)
+          vim.schedule(function() gs.nav_hunk('prev') end)
           return '<Ignore>'
         end,
         expr = true,
