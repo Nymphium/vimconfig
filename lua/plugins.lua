@@ -247,9 +247,10 @@ require('packer').startup(function(use)
       })
 
       vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
-        once = true,
         callback = vim.schedule_wrap(function()
-          vim.b.focus_disable = true
+          if vim.bo.buftype ~= '' then
+            vim.b.focus_disable = true
+          end
         end)
       })
     end

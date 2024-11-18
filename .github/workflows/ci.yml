@@ -24,6 +24,5 @@ jobs:
     - name: Test Neovim configuration
       run: |
         ./setup.sh
-        nvim --headless +q > /dev/null 2>&1 | :
         nvim --headless +'checkhealth | qa'
 

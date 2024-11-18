@@ -56,12 +56,13 @@ end
 vim.opt.ruler = false
 vim.opt.cmdheight = 0
 vim.opt.laststatus = 3
+vim.cmd([=[set statusline=%#NonText#]=])
+
 
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
   callback = vim.schedule_wrap(function()
     if vim.fn.winheight(0) > 1 and vim.bo.buftype == '' then
       vim.cmd([=[setlocal winbar=%!v:lua.require'statusline'.compile()]=])
-      vim.cmd([=[setlocal statusline=%#NonText#]=])
     end
   end)
 })
@@ -70,7 +71,6 @@ vim.api.nvim_create_autocmd({ 'VimEnter' }, {
   callback = vim.schedule_wrap(function()
     if vim.fn.winheight(0) > 1 and vim.bo.buftype == '' then
       vim.cmd([=[setlocal winbar=%!v:lua.require'statusline'.compile()]=])
-      vim.cmd([=[setlocal statusline=%#NonText#]=])
     end
   end)
 })
@@ -79,7 +79,6 @@ vim.api.nvim_create_autocmd({ 'WinLeave' }, {
   callback = vim.schedule_wrap(function()
     if vim.fn.winheight(0) > 1 and vim.bo.buftype ~= 'nofile' then
       vim.cmd([[setlocal winbar=\ %m\ %t]])
-      vim.cmd [[setlocal statusline=]]
     end
   end)
 })
