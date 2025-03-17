@@ -17,8 +17,16 @@ require('packer').startup(function(use)
   use { "ibhagwan/fzf-lua",
     requires = {
       "nvim-tree/nvim-web-devicons",
-      { 'junegunn/fzf', run = ':call fzf#install()' }
     },
+    config = function()
+      require('fzf-lua').setup({ 'skim' })
+
+      local pfx = '<leader>f'
+
+      vim.keymap.set('n', pfx .. 'b', '<cmd>FzfLua buffers<CR>')
+      vim.keymap.set('n', pfx .. 't', '<cmd>FzfLua tabs<CR>')
+      vim.keymap.set('n', pfx .. 'T', '<cmd>FzfLua tabs<CR>')
+    end
   }
 
   use { 'uga-rosa/utf8.nvim',
@@ -78,45 +86,16 @@ require('packer').startup(function(use)
 
   use { 'williamboman/mason-lspconfig.nvim',
     requires = { 'neovim/nvim-lspconfig' },
-    config = function()
-      require('mason-lspconfig').setup {
-        ensure_installed = { "lua_ls" },
-      }
-    end
+  }
+
+  use { 'folke/lazydev.nvim' }
+
+  use { "WieeRd/auto-lsp.nvim",
+    requires = { "neovim/nvim-lspconfig" },
   }
 
   use { 'nvimdev/lspsaga.nvim',
     requires = { 'lewis6991/gitsigns.nvim', 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      require('lspsaga').setup({
-        rename = {
-          keys = {
-            quit = '<ESC>',
-          }
-        },
-        hover = {
-          open_cmd = '!firefox',
-        },
-        lightbulb = {
-          enable = false
-        },
-        code_action = {
-          extend_gitsigns = true,
-        },
-        outline = {
-          win_position = 'left',
-        },
-        symbol_in_winbar = {
-          enable = false,
-          color_mode = false,
-          hide_keyword = true,
-          folder_level = 0,
-          separator = '.'
-        }
-      })
-
-      vim.keymap.set('n', '<C-t>', '<cmd>Lspsaga term_toggle<CR>')
-    end,
   }
 
   use { 'scalameta/nvim-metals',
@@ -124,26 +103,13 @@ require('packer').startup(function(use)
     ft = "scala",
   }
 
-  use { 'folke/lazydev.nvim', ft = 'lua',
-    requires = { 'neovim/nvim-lspconfig' },
-    config = function()
-      require('lazydev').setup({
-        debug = false,
-        integrations = {
-          lspconfig = true,
-          cmp = true
-        }
-      })
-    end,
-  }
-  --
-  -- -- notification
+  -- notification
   use { 'j-hui/fidget.nvim',
     config = function()
       require "fidget".setup {}
     end
   }
-  -- -- }}}
+  -- }}}
 
   -- AI {{{
   use { "zbirenbaum/copilot.lua",
@@ -157,7 +123,6 @@ require('packer').startup(function(use)
   }
 
   use { 'CopilotC-Nvim/CopilotChat.nvim',
-    branch = 'canary',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
       require("CopilotChat").setup({
@@ -174,6 +139,23 @@ require('packer').startup(function(use)
             }
           })
         end
+      })
+    end
+  }
+
+  use {
+    'yetone/avante.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim',
+      'MunifTanjim/nui.nvim',
+      'MeanderingProgrammer/render-markdown.nvim',
+    },
+    branch = 'main',
+    run = 'make',
+    config = function()
+      require('avante').setup({
+        provider = 'copilot',
       })
     end
   }
@@ -215,14 +197,16 @@ require('packer').startup(function(use)
   use 'L3MON4D3/LuaSnip'
 
   -- pair constructs {{{
-  use { 'tpope/vim-surround',
+  use { 'kylechui/nvim-surround',
     config = function()
-      vim.cmd [=[xmap " <Plug>VSurround"]=]
-      vim.cmd [=[xmap ' <Plug>VSurround']=]
-      vim.cmd [=[xmap ( <Plug>VSurround)]=]
-      vim.cmd [=[xmap [ <Plug>VSurround]]=]
-      vim.cmd [=[xmap { <Plug>VSurround}]=]
-      vim.cmd [=[xmap < <Plug>VSurround>]=]
+      require('nvim-surround').setup {}
+
+      -- vim.cmd [=[xmap " <Plug>(nvim-surround-visual)"]=]
+      -- vim.cmd [=[xmap ' <Plug>(nvim-surround-visual)']=]
+      -- vim.cmd [=[xmap ( <Plug>(nvim-surround-visual))]=]
+      -- vim.cmd [=[xmap [ <Plug>(nvim-surround-visual)]]=]
+      -- vim.cmd [=[xmap { <Plug>(nvim-surround-visual)}]=]
+      -- vim.cmd [=[xmap < <Plug>(nvim-surround-visual)>]=]
     end
   }
 
@@ -266,6 +250,13 @@ require('packer').startup(function(use)
   use { 'rgrinberg/vim-ocaml', ft = 'ocaml' }
 
   use { 'lervag/vimtex', ft = "tex" }
+
+  use { 'OXY2DEV/markview.nvim', ft = { 'markdown', 'markdown_inline', 'html' },
+    requires = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
+    }
+  }
   -- }}}
 
   use { 'lewis6991/gitsigns.nvim',
@@ -318,7 +309,35 @@ require('packer').startup(function(use)
       set_keymap('n', pfx 'd', gs.diffthis)
       set_keymap('n', pfx 'dW', ':Gitsigns diffthis ')
       set_keymap('n', pfx 'dD', function() gs.diffthis('~') end)
-      set_keymap('n', pfx 'td', gs.toggle_deleted)
+      set_keymap('n', pfx 'td', gs.preview_hunk_inline)
+    end
+  }
+
+  use { 'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup({
+        open_mapping = [[<C-t>]],
+        direction = 'float',
+        autochdir = true,
+        float_ops = { border = 'curved' },
+        highlights = { winblend = 0 },
+      })
+      local Terminal = require('toggleterm.terminal').Terminal
+      local lazygit  = Terminal:new({
+        cmd = "lazygit",
+        count = 5,
+        dir = "git_dir",
+        float_opts = { border = 'single' },
+        -- function to run on opening the terminal
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        on_close = function(_)
+          vim.cmd("startinsert!")
+        end,
+      })
+      vim.keymap.set('n', '<leader>g?', '', { callback = function() lazygit:toggle() end })
     end
   }
 

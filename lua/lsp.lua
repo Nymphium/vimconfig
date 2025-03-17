@@ -20,7 +20,7 @@ do -- keymaps
   set_keymap("n", pfx 'F', '<cmd>Lspsaga outline<CR>', opts)
   set_keymap("n", pfx 'fw', function() vim.lsp.buf.remove_workspace_folder() end, opts)
   set_keymap("n", pfx 'fl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
-  set_keymap("n", pfx 'r', '<cmd>Lspsaga rename<CR>', opts)
+  set_keymap("n", pfx 'r', vim.lsp.buf.rename, opts)
   set_keymap("n", pfx 'a', '<cmd>Lspsaga code_action<CR>', opts)
   set_keymap('n', pfx 'e', function() vim.diagnostic.open_float() end, opts)
   set_keymap("n", pfx 'b', '<cmd>Lspsaga finder ref<CR>', opts)
@@ -112,6 +112,12 @@ local on_attach = function(client, bufnr)
   illuminate.on_attach(client)
 end
 
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+  callback = function()
+    vim.lsp.codelens.refresh({ bufnr = 0 })
+  end
+})
+
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 require('neoconf').setup({
   local_settings = ',neoconf.json'
@@ -121,6 +127,9 @@ local lspconfig = require "lspconfig"
 lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
   lint = true,
   showMessage = { messageActionItem = { additionalPropertiesSupport = true } },
+
+  capabilities = capabilities,
+  on_attach = on_attach
 })
 
 local mason = require('mason')
@@ -135,38 +144,46 @@ mason.setup({
 })
 
 local mason_lspconfig = require('mason-lspconfig')
-mason_lspconfig.setup()
+mason_lspconfig.setup({
+  ensure_installed = { "lua_ls" },
+})
 
--- @param server_cmd mason naming convention
-local setup_server = function(server_name_lspconfig)
-  local server = lspconfig[server_name_lspconfig]
+mason_lspconfig.setup_handlers({
+  lua_ls = function()
+    lspconfig.lua_ls.setup({})
+    require('lazydev').setup {}
+  end,
 
-  if server
-      and (
-        (not server.manager)
-        or #server.manager._clients == 0)
-  then
-    local default_config = server.default_config or server.config_def.default_config
-    if default_config
-        and default_config.cmd
-        and #default_config.cmd > 0 and
-        vim.fn.executable(default_config.cmd[1]) == 1 then
-      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-
-      server.setup({
-        on_attach = on_attach,
-      })
-    end
+  function(server_name_lspconfig)
+    lspconfig[server_name_lspconfig].setup({})
   end
-end
+})
 
-mason_lspconfig.setup_handlers({ setup_server })
+pcall(require("auto-lsp").setup, {})
 
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-  once = true,
-  callback = function(args)
-    for _, v in ipairs(mason_lspconfig.get_available_servers(args.filetype)) do
-      setup_server(v)
-    end
-  end
+require('lspsaga').setup({
+  rename = {
+    keys = {
+      quit = '<ESC>',
+    }
+  },
+  hover = {
+    open_cmd = '!firefox',
+  },
+  lightbulb = {
+    enable = false
+  },
+  code_action = {
+    extend_gitsigns = true,
+  },
+  outline = {
+    win_position = 'left',
+  },
+  symbol_in_winbar = {
+    enable = false,
+    color_mode = false,
+    hide_keyword = true,
+    folder_level = 0,
+    separator = '.'
+  }
 })
