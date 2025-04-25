@@ -122,26 +122,26 @@ require('packer').startup(function(use)
     end,
   }
 
-  use { 'CopilotC-Nvim/CopilotChat.nvim',
-    requires = 'nvim-lua/plenary.nvim',
-    config = function()
-      require("CopilotChat").setup({
-        context = 'buffers',
-      })
-
-      vim.keymap.set({ 'n', 'v' }, '<leader>?', '', {
-        desc = 'Open Copilot Chat',
-        noremap = true,
-        callback = function()
-          require("CopilotChat").open({
-            window = {
-              layout = 'float'
-            }
-          })
-        end
-      })
-    end
-  }
+  -- use { 'CopilotC-Nvim/CopilotChat.nvim',
+  --   requires = 'nvim-lua/plenary.nvim',
+  --   config = function()
+  --     require("CopilotChat").setup({
+  --       context = 'buffers',
+  --     })
+  --
+  --     vim.keymap.set({ 'n', 'v' }, '<leader>?', '', {
+  --       desc = 'Open Copilot Chat',
+  --       noremap = true,
+  --       callback = function()
+  --         require("CopilotChat").open({
+  --           window = {
+  --             layout = 'float'
+  --           }
+  --         })
+  --       end
+  --     })
+  --   end
+  -- }
 
   use {
     'yetone/avante.nvim',
@@ -149,15 +149,66 @@ require('packer').startup(function(use)
       'nvim-lua/plenary.nvim',
       'stevearc/dressing.nvim',
       'MunifTanjim/nui.nvim',
-      'MeanderingProgrammer/render-markdown.nvim',
+      "ravitemer/mcphub.nvim",
     },
     branch = 'main',
     run = 'make',
     config = function()
       require('avante').setup({
         provider = 'copilot',
+        behaviour = {
+          enable_cursor_planning_mode = true,
+        },
+        windows = {
+          file_selector = 'fzf',
+          position = 'smart',
+          ask = {
+            floating = true,
+            start_insert = false,
+          },
+          edit = {
+            start_insert = true,
+          },
+        },
+
+        system_prompt = function()
+          local hub = require("mcphub").get_hub_instance()
+          if hub == nil then
+            return nil
+          end
+          return hub:get_active_servers_prompt()
+        end,
+        -- custom_tools = function()
+        --   return {
+        --     require("mcphub.extensions.avante").mcp_tool(),
+        --   }
+        -- end,
+      })
+
+
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          if vim.startswith(vim.bo.filetype, 'Avante') then
+            vim.opt_local.foldmethod = 'manual'
+            vim.opt_local.foldlevel = 0
+            vim.opt_local.foldenable = true
+          end
+        end
       })
     end
+  }
+
+  use {
+    "ravitemer/mcphub.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    run = "npm install -g mcp-hub@latest",
+    config = function()
+      require("mcphub").setup({
+        auto_approve = true,
+      })
+    end,
   }
   -- }}}
 
@@ -217,11 +268,11 @@ require('packer').startup(function(use)
   use 'RRethy/nvim-treesitter-endwise'
   -- }}}
 
-  use 'szw/vim-maximizer'
   -- auto resizing windows
   use { 'nvim-focus/focus.nvim',
     config = function()
       require('focus').setup({
+        autoresize = { enable = false },
         ui = {
           colorcolumn = {
             enable = true,
@@ -230,13 +281,9 @@ require('packer').startup(function(use)
         }
       })
 
-      vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
-        callback = vim.schedule_wrap(function()
-          if vim.bo.buftype ~= '' then
-            vim.b.focus_disable = true
-          end
-        end)
-      })
+      vim.keymap.set('n', '<F3>', function()
+        require('focus').focus_toggle_window()
+      end)
     end
   }
 

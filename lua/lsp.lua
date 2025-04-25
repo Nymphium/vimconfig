@@ -148,18 +148,26 @@ mason_lspconfig.setup({
   ensure_installed = { "lua_ls" },
 })
 
-mason_lspconfig.setup_handlers({
+local config = {
   lua_ls = function()
     lspconfig.lua_ls.setup({})
     require('lazydev').setup {}
   end,
 
+  clangd = function()
+    lspconfig.clangd.setup({
+      filetypes = { "c", "cpp", "objc", "objcpp" }
+    })
+  end,
+
   function(server_name_lspconfig)
     lspconfig[server_name_lspconfig].setup({})
   end
-})
+}
 
-pcall(require("auto-lsp").setup, {})
+mason_lspconfig.setup_handlers(config)
+
+pcall(require("auto-lsp").setup, config)
 
 require('lspsaga').setup({
   rename = {
