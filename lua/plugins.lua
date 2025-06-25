@@ -14,9 +14,9 @@ local packer_bootstrap = ensure_packer()
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
-  use { "ibhagwan/fzf-lua",
+  use { 'ibhagwan/fzf-lua',
     requires = {
-      "nvim-tree/nvim-web-devicons",
+      'nvim-tree/nvim-web-devicons',
     },
     config = function()
       require('fzf-lua').setup({ 'skim' })
@@ -53,11 +53,11 @@ require('packer').startup(function(use)
   use { 'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      vim.opt.foldmethod = "expr"
-      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      vim.opt.foldmethod = 'expr'
+      vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
       ---@diagnostic disable-next-line: missing-fields
       require 'nvim-treesitter.configs'.setup {
-        ensure_installed = { "bash", "lua", "vim", "markdown", "markdown_inline" },
+        ensure_installed = { 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' },
         auto_install = true,
         indent = { enable = true, },
         endwise = { enable = true }, -- for treesitter-endwise
@@ -76,176 +76,202 @@ require('packer').startup(function(use)
   use 'folke/neoconf.nvim'
 
   use { 'neovim/nvim-lspconfig' }
-  use { 'williamboman/mason.nvim',
-    config = function()
-      require('mason').setup({
-        PATH = 'append'
-      })
-    end
-  }
 
-  use { 'williamboman/mason-lspconfig.nvim',
+  use { 'mason-org/mason.nvim' }
+  use { 'mason-org/mason-lspconfig.nvim',
     requires = { 'neovim/nvim-lspconfig' },
-  }
-
-  use { 'folke/lazydev.nvim' }
-
-  use { "WieeRd/auto-lsp.nvim",
-    requires = { "neovim/nvim-lspconfig" },
   }
 
   use { 'nvimdev/lspsaga.nvim',
     requires = { 'lewis6991/gitsigns.nvim', 'nvim-treesitter/nvim-treesitter' },
   }
 
-  use { 'scalameta/nvim-metals',
-    requires = 'nvim-lua/plenary.nvim',
-    ft = "scala",
+  use { 'lukas-reineke/lsp-format.nvim' }
+
+  use {
+    'SmiteshP/nvim-navbuddy',
+    requires = {
+      'neovim/nvim-lspconfig',
+      'SmiteshP/nvim-navic',
+      'MunifTanjim/nui.nvim',
+    },
+    config = function()
+      require('nvim-navbuddy').setup()
+    end
+  }
+
+  -- Lua
+  use { 'folke/lazydev.nvim',
+    ft = { 'lua' },
+    config = function()
+      require('lazydev').setup({
+        integrations = {
+          cmp = false,
+          coq = false,
+        },
+      })
+    end
+  }
+
+  use { 'WieeRd/auto-lsp.nvim',
+    requires = { 'neovim/nvim-lspconfig' },
   }
 
   -- notification
   use { 'j-hui/fidget.nvim',
     config = function()
-      require "fidget".setup {}
+      require 'fidget'.setup {}
     end
   }
   -- }}}
 
   -- AI {{{
-  use { "zbirenbaum/copilot.lua",
+  use { 'zbirenbaum/copilot.lua',
     config = function()
-      require("copilot").setup({
+      require('copilot').setup({
         suggestion = { enabled = true, hide_during_completion = true, },
         panel = { enabled = false },
-        filetypes = { ["*"] = true }
+        filetypes = { ['*'] = true }
       })
     end,
   }
 
-  -- use { 'CopilotC-Nvim/CopilotChat.nvim',
-  --   requires = 'nvim-lua/plenary.nvim',
-  --   config = function()
-  --     require("CopilotChat").setup({
-  --       context = 'buffers',
-  --     })
-  --
-  --     vim.keymap.set({ 'n', 'v' }, '<leader>?', '', {
-  --       desc = 'Open Copilot Chat',
-  --       noremap = true,
-  --       callback = function()
-  --         require("CopilotChat").open({
-  --           window = {
-  --             layout = 'float'
-  --           }
-  --         })
-  --       end
-  --     })
-  --   end
-  -- }
-
   use {
-    'yetone/avante.nvim',
+    "olimorris/codecompanion.nvim",
     requires = {
-      'nvim-lua/plenary.nvim',
-      'stevearc/dressing.nvim',
-      'MunifTanjim/nui.nvim',
-      "ravitemer/mcphub.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "echasnovski/mini.diff",
+      'j-hui/fidget.nvim'
     },
-    branch = 'main',
-    run = 'make',
     config = function()
-      require('avante').setup({
-        provider = 'copilot',
-        behaviour = {
-          enable_cursor_planning_mode = true,
-        },
-        windows = {
-          file_selector = 'fzf',
-          position = 'smart',
-          ask = {
-            floating = true,
-            start_insert = false,
-          },
-          edit = {
-            start_insert = true,
-          },
-        },
+      local pfx = '<leader>a'
 
-        system_prompt = function()
-          local hub = require("mcphub").get_hub_instance()
-          if hub == nil then
-            return nil
-          end
-          return hub:get_active_servers_prompt()
-        end,
-        -- custom_tools = function()
-        --   return {
-        --     require("mcphub.extensions.avante").mcp_tool(),
-        --   }
-        -- end,
+      require('codecompanion_spinner'):init()
+      require("codecompanion").setup({
+        extensions = {
+          mcphub = {
+            callback = "mcphub.extensions.codecompanion",
+            opts = {
+              make_vars = true,
+              make_slash_commands = true,
+              show_result_in_chat = true
+            }
+          }
+        },
+        display = {
+          chat = {
+            show_header_separator = true,
+          }
+        },
       })
 
-
-      vim.api.nvim_create_autocmd("FileType", {
-        callback = function()
-          if vim.startswith(vim.bo.filetype, 'Avante') then
-            vim.opt_local.foldmethod = 'manual'
-            vim.opt_local.foldlevel = 0
-            vim.opt_local.foldenable = true
-          end
-        end
-      })
+      vim.keymap.set({ 'n', 'v' }, pfx .. 'e', '<cmd>CodeCompanion<CR>', { silent = true, desc = 'CodeCompanion' })
+      vim.keymap.set({ 'n', 'v' }, pfx .. 't', '<cmd>CodeCompanionChat<CR>',
+        { silent = true, desc = 'CodeCompanion Chat' })
+      vim.keymap.set({ 'n', 'v' }, pfx .. 'a', '<cmd>CodeCompanionAction<CR>',
+        { silent = true, desc = 'CodeCompanion Action' })
     end
   }
 
   use {
-    "ravitemer/mcphub.nvim",
+    'ravitemer/mcphub.nvim',
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      'nvim-lua/plenary.nvim',
     },
-    run = "npm install -g mcp-hub@latest",
+    run = 'npm install -g mcp-hub@latest',
     config = function()
-      require("mcphub").setup({
+      require('mcphub').setup({
         auto_approve = true,
+        extensions = {
+          avante = { make_slash_commands = true },
+        }
       })
     end,
   }
   -- }}}
 
   -- completions {{{
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use { 'petertriho/cmp-git',
-    requires = 'nvim-lua/plenary.nvim',
+  use { 'saghen/blink.cmp',
+    requires = { 'giuxtaposition/blink-cmp-copilot',
+      'Kaiser-Yang/blink-cmp-avante',
+    },
     config = function()
-      require('cmp_git').setup()
+      require('blink.cmp').setup {
+        completion = {
+          documentation = { auto_show = true },
+          trigger = { show_on_keyword = true, show_on_insert_on_trigger_character = true },
+          list = { selection = { preselect = true } },
+          menu = { draw = { columns = { { 'label', 'label_description', gap = 1 }, { 'kind_icon', 'kind' } }, } }
+        },
+        cmdline = { completion = { ghost_text = { enabled = true } } },
+        sources = {
+          default = {
+            'lsp', 'path', 'buffer', 'copilot'
+          },
+          per_filetype = {
+            codecompanion = { "codecompanion" },
+          },
+          providers = {
+            copilot = {
+              name = 'copilot',
+              module = 'blink-cmp-copilot',
+              score_offset = 100,
+              async = true,
+            },
+            avante = {
+              module = 'blink-cmp-avante',
+              name = 'Avante',
+            },
+            codecompanion = {
+              name = "CodeCompanion",
+              module = "codecompanion.providers.completion.blink",
+              score_offset = 100,
+              enabled = true,
+            },
+            -- lazydev = {
+            --   name = 'LazyDev',
+            --   module = 'lazydev.integrations.blink',
+            --   -- make lazydev completions top priority (see `:h blink.cmp`)
+            --   score_offset = 100,
+            -- },
+          },
+        },
+        fuzzy = { implementation = 'lua' },
+
+        keymap = {
+          ['<Tab>'] = { 'select_next', 'fallback' },
+          ['<S-Tab>'] = { 'select_prev', 'fallback' },
+          ['<C-e>'] = { 'cancel' },
+          ['<C-x>'] = { 'show_and_insert' },
+          ['<CR>'] = {
+            'accept',
+            'fallback_to_mappings'
+          },
+        },
+      }
     end
   }
-  use 'ray-x/cmp-treesitter'
+
+  use {
+    'giuxtaposition/blink-cmp-copilot',
+    after = { 'copilot.lua' },
+  }
+
+  -- use 'ray-x/cmp-treesitter'
   use { 'onsails/lspkind.nvim',
     config = function()
       require('lspkind').init({
         symbol_map = {
-          Copilot = '"'
+          Copilot = ''
         }
       })
     end
   }
-  use 'hrsh7th/cmp-nvim-lsp-signature-help'
 
-  use { 'zbirenbaum/copilot-cmp',
-    requires = { 'zbirenbaum/copilot.lua', 'hrsh7th/nvim-cmp' },
-    config = function()
-      require('copilot_cmp').setup()
-    end
-  }
   -- }}}
 
   use 'RRethy/vim-illuminate'
-  use 'L3MON4D3/LuaSnip'
 
   -- pair constructs {{{
   use { 'kylechui/nvim-surround',
@@ -261,8 +287,8 @@ require('packer').startup(function(use)
     end
   }
 
-  use { "windwp/nvim-autopairs",
-    config = function() require("nvim-autopairs").setup {} end
+  use { 'windwp/nvim-autopairs',
+    config = function() require('nvim-autopairs').setup {} end
   }
   use { 'andymass/vim-matchup', requires = { 'nvim-treesitter/nvim-treesitter' } }
   use 'RRethy/nvim-treesitter-endwise'
@@ -271,38 +297,67 @@ require('packer').startup(function(use)
   -- auto resizing windows
   use { 'nvim-focus/focus.nvim',
     config = function()
-      require('focus').setup({
-        autoresize = { enable = false },
-        ui = {
-          colorcolumn = {
-            enable = true,
-            list = '+1,+2'
-          }
-        }
-      })
+      local focus = require('focus')
+      focus.setup({})
+
+      local ignore_buftypes = { 'nofile', 'prompt', 'popup' }
+      local ignore_filetypes = { 'Avante', 'AvanteInput', 'AvanteSelectedFiles', 'AvanteTodos' }
+
+      local augroup = vim.api.nvim_create_augroup('FocusDisable', { clear = true })
 
       vim.keymap.set('n', '<F3>', function()
-        require('focus').focus_toggle_window()
+        focus.focus_maximise()
       end)
+
+      vim.api.nvim_create_autocmd('WinEnter', {
+        group = augroup,
+        callback = function(_)
+          if vim.tbl_contains(ignore_buftypes, vim.bo.buftype)
+          then
+            vim.w.focus_disable = true
+          else
+            vim.w.focus_disable = false
+          end
+        end,
+        desc = 'Disable focus autoresize for BufType',
+      })
+
+      vim.api.nvim_create_autocmd('FileType', {
+        group = augroup,
+        callback = function(_)
+          if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
+            vim.b.focus_disable = true
+          else
+            vim.b.focus_disable = false
+          end
+        end,
+        desc = 'Disable focus autoresize for FileType',
+      })
     end
   }
 
   use { 'nvimdev/indentmini.nvim',
     config = function()
-      require("indentmini").setup()
+      require('indentmini').setup()
     end
   }
 
   -- language-specific {{{
-  use { 'rgrinberg/vim-ocaml', ft = 'ocaml' }
-
-  use { 'lervag/vimtex', ft = "tex" }
+  use { 'lervag/vimtex', ft = 'tex' }
 
   use { 'OXY2DEV/markview.nvim', ft = { 'markdown', 'markdown_inline', 'html' },
     requires = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons"
-    }
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons'
+    },
+    config = function()
+      require('markview').setup({
+        preview = {
+          filetypes = { "markdown", "codecompanion" },
+          ignore_buftypes = {},
+        },
+      })
+    end
   }
   -- }}}
 
@@ -328,7 +383,7 @@ require('packer').startup(function(use)
         return '<leader>g' .. k
       end
 
-      set_keymap('n', ']c', "", {
+      set_keymap('n', ']c', '', {
         callback = function()
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.nav_hunk('next') end)
@@ -338,7 +393,7 @@ require('packer').startup(function(use)
         desc = 'Next hunk',
       })
 
-      set_keymap('n', '[c', "", {
+      set_keymap('n', '[c', '', {
         callback = function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.nav_hunk('prev') end)
@@ -371,20 +426,28 @@ require('packer').startup(function(use)
       })
       local Terminal = require('toggleterm.terminal').Terminal
       local lazygit  = Terminal:new({
-        cmd = "lazygit",
+        cmd = 'lazygit',
         count = 5,
-        dir = "git_dir",
+        dir = 'git_dir',
         float_opts = { border = 'single' },
         -- function to run on opening the terminal
         on_open = function(term)
-          vim.cmd("startinsert!")
-          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+          vim.cmd('startinsert!')
+          vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
         end,
         on_close = function(_)
-          vim.cmd("startinsert!")
+          vim.cmd('startinsert!')
         end,
       })
       vim.keymap.set('n', '<leader>g?', '', { callback = function() lazygit:toggle() end })
+    end
+  }
+
+  use { 'mikavilpas/yazi.nvim',
+    config = function()
+      require('yazi').setup({
+        open_for_directories = true
+      })
     end
   }
 

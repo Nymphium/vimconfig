@@ -2,7 +2,7 @@ local pfx = function(c)
   return '<leader>l' .. c
 end
 
-require('luasnip.loaders.from_vscode').lazy_load()
+local navbuddy = require('nvim-navbuddy')
 
 do -- keymaps
   local opts = { noremap = true, silent = true }
@@ -24,6 +24,8 @@ do -- keymaps
   set_keymap("n", pfx 'a', '<cmd>Lspsaga code_action<CR>', opts)
   set_keymap('n', pfx 'e', function() vim.diagnostic.open_float() end, opts)
   set_keymap("n", pfx 'b', '<cmd>Lspsaga finder ref<CR>', opts)
+
+  set_keymap('n', pfx 't', function() navbuddy.open() end, opts)
 
   set_keymap("n", '<leader><up>', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
   set_keymap("n", '<leader><down>', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
@@ -65,32 +67,15 @@ do -- reference / diagnostic {{{
   end
 end -- }}}
 
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-local illuminate = require('illuminate')
 local on_attach = function(client, bufnr)
   vim.bo.omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-  if client.supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.format()
-      end
-    })
-  end
-
   if client.supports_method(vim.lsp.protocol.Methods.textDocument_hover) then
-    client.handlers["textDocument/hover"] = vim.lsp.with(
-      vim.lsp.handlers.hover,
-      { border = 'rounded' }
-    )
+    client.handlers["textDocument/hover"] = vim.lsp.buf.hover({ border = 'rounded' })
   end
 
   if client.supports_method(vim.lsp.protocol.Methods.textDocument_signatureHelp) then
-    client.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-      vim.lsp.handlers.signature_help,
+    client.handlers['textDocument/signatureHelp'] = vim.lsp.buf.signature_help(
       { border = 'rounded' }
     )
   end
@@ -109,7 +94,8 @@ local on_attach = function(client, bufnr)
     vim.lsp.inlay_hint.enable(true, { bufnr })
   end
 
-  illuminate.on_attach(client)
+  navbuddy.attach(client, bufnr)
+  require('lsp-format').on_attach(client, bufnr)
 end
 
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -118,7 +104,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
   end
 })
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('blink.cmp').get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 require('neoconf').setup({
   local_settings = ',neoconf.json'
 })
@@ -127,13 +113,21 @@ local lspconfig = require "lspconfig"
 lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
   lint = true,
   showMessage = { messageActionItem = { additionalPropertiesSupport = true } },
-
   capabilities = capabilities,
+  autostart = true,
   on_attach = on_attach
 })
 
-local mason = require('mason')
-mason.setup({
+vim.lsp.config('clangd', {
+  filetypes = { "c", "cpp", "objc", "objcpp" }
+})
+
+vim.lsp.config('lua_ls', {
+  on_attach = on_attach
+})
+
+require('mason').setup({
+  PATH = 'append',
   ui = {
     icons = {
       package_installed = "✓",
@@ -143,31 +137,10 @@ mason.setup({
   }
 })
 
-local mason_lspconfig = require('mason-lspconfig')
-mason_lspconfig.setup({
-  ensure_installed = { "lua_ls" },
-})
-
-local config = {
-  lua_ls = function()
-    lspconfig.lua_ls.setup({})
-    require('lazydev').setup {}
-  end,
-
-  clangd = function()
-    lspconfig.clangd.setup({
-      filetypes = { "c", "cpp", "objc", "objcpp" }
-    })
-  end,
-
-  function(server_name_lspconfig)
-    lspconfig[server_name_lspconfig].setup({})
-  end
+require('mason-lspconfig').setup {
+  ensure_installed = { "lua_ls", "vimls" },
+  automatic_enable = true,
 }
-
-mason_lspconfig.setup_handlers(config)
-
-pcall(require("auto-lsp").setup, config)
 
 require('lspsaga').setup({
   rename = {
@@ -189,9 +162,16 @@ require('lspsaga').setup({
   },
   symbol_in_winbar = {
     enable = false,
-    color_mode = false,
-    hide_keyword = true,
+    -- color_mode = false,
     folder_level = 0,
-    separator = '.'
+    show_file = false,
+    separator = ' '
   }
 })
+
+require('auto-lsp').setup {
+  -- start lua_ls by lazydev
+  lua_ls = false,
+  clangd = false,
+  rubocop = false,
+}

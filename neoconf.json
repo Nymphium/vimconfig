@@ -15,7 +15,10 @@
     "Lua.hint.enable": true,
     "Lua.hint.paramType": true,
     "Lua.codeLens.enable": true,
-    "Lua.diagnostics.enable": true
+    "Lua.diagnostics.enable": true,
+    "Lua.diagnostics.disable": [
+      "redefined-local"
+    ]
   },
   "lspconfig.nil_ls": {
     "filetypes": [
@@ -80,6 +83,14 @@
         "implicitHashValue": true,
         "implicitRescue": true
       }
+    }
+  },
+  "lspconfig.texlab": {
+    "texlab.experimental.followPackageLinks": true
+  },
+  "lspconfig.terraformls": {
+    "terraformls.experimentalFeatures": {
+      "prefillRequiredFields": true
     }
   }
 }
