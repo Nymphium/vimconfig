@@ -4,11 +4,11 @@ set -ux
 
 TARGET=${1:-$HOME}
 
-mkdir -p "${TARGET}/.config/nvim/"{lua,nlsp-settings}
+mkdir -p "${TARGET}/.config/nvim/"{lua,after/lsp}
 
 ln -s "${PWD}/init.lua" "${TARGET}/.config/nvim/"
 ln -s "${PWD}/lua/"* "${TARGET}/.config/nvim/lua/"
-ln -s "${PWD}/nlsp-settings/"* "${TARGET}/.config/nvim/nlsp-settings"
+ln -s "${PWD}/after/lsp/"* "${TARGET}/.config/nvim/after/lsp"
 
 nvim -u packer_init.lua --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 nvim -u lua/plugins.lua --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'

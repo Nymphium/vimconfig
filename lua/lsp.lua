@@ -94,8 +94,9 @@ local on_attach = function(client, bufnr)
     vim.lsp.inlay_hint.enable(true, { bufnr })
   end
 
-  navbuddy.attach(client, bufnr)
-  require('lsp-format').on_attach(client, bufnr)
+  if client.supports_method(vim.lsp.protocol.Methods.textDocument_codeLens) then
+    navbuddy.attach(client, bufnr)
+  end
 end
 
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -105,10 +106,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
 })
 
 local capabilities = require('blink.cmp').get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
-require('neoconf').setup({
-  local_settings = ',neoconf.json'
-})
-
 local lspconfig = require "lspconfig"
 lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
   lint = true,
@@ -138,7 +135,7 @@ require('mason').setup({
 })
 
 require('mason-lspconfig').setup {
-  ensure_installed = { "lua_ls", "vimls" },
+  ensure_installed = { 'lua_ls' },
   automatic_enable = true,
 }
 
@@ -169,9 +166,34 @@ require('lspsaga').setup({
   }
 })
 
-require('auto-lsp').setup {
-  -- start lua_ls by lazydev
-  lua_ls = false,
-  clangd = false,
-  rubocop = false,
+
+local disabled_lsp = {
+  'lua_ls', -- start by lazydev
+  'clangd',
+  'rubocop'
 }
+
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter', 'BufWinEnter' }, {
+  callback = function()
+    local ft = vim.bo.filetype
+    if ft == '' then return end
+
+    local cls = vim.lsp.get_clients({ bufnr = 0 })
+    local attached_clients = {}
+    for _, k in ipairs(cls) do
+      attached_clients[k.name] = true
+    end
+
+    local lsps = require('mason-lspconfig').get_available_servers({ filetype = ft })
+    for _, k in pairs(lsps) do
+      if disabled_lsp[k] or attached_clients[k] then
+        lsps[k] = nil
+      end
+    end
+
+    if #lsps == 0 then return end
+
+    -- ignore executable not found
+    pcall(vim.lsp.enable, lsps)
+  end
+})

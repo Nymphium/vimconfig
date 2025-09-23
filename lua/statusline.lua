@@ -77,9 +77,9 @@ local winbar = function()
   end
 
   return '%#Normal#'
-    .. ('%%#%s# %s %%#Normal#'):format(mode_current())
-    .. ('%%m%%h %%#Normal#%s%%#Normal#'):format(lhs)
-    .. '%='  .. (require('lspsaga.symbol.winbar').get_bar() or '')
+      .. ('%%#%s# %s %%#Normal#'):format(mode_current())
+      .. ('%%m%%h %%#Normal#%s%%#Normal#'):format(lhs)
+      .. '%=' .. (require('lspsaga.symbol.winbar').get_bar() or '')
 end
 
 vim.opt.ruler = false

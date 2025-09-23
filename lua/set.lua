@@ -2,6 +2,7 @@ vim.o.fileencoding = 'utf-8'
 vim.o.fileencodings = 'utf-8,iso-2022-jp,sjis,cp932,euc-jp'
 vim.o.fileformats = 'unix,dos,mac'
 
+vim.o.termguicolors = true
 vim.o.backup = false
 vim.o.swapfile = false
 vim.o.ttyfast = true
