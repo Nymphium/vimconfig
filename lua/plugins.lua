@@ -72,6 +72,15 @@ require("packer").startup(function(use)
 
 	-- nvim-lsp {{{
 	-- use 'nymphium/neoconf.nvim'
+	use({
+		"mrjones2014/codesettings.nvim",
+		config = function()
+			require("codesettings").setup({
+				config_file_paths = { ".vscode/settings.json", ".codesettings.json", ",codesettings.json" },
+				live_reload = true,
+			})
+		end,
+	})
 
 	use({ "neovim/nvim-lspconfig" })
 
