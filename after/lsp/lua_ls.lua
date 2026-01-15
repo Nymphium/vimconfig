@@ -1,15 +1,13 @@
 return {
-  settings = {
-    Lua = {
-      hint = {
-        enable    = true,
-        paramType = true
-      },
-      codelens = { enable = true },
-      diagnostics = {
-        enable = true,
-        disable = { "redefined-local" }
-      },
-    }
+  Lua = {
+    hint = {
+      enable    = true,
+      paramType = true
+    },
+    codelens = { enable = true },
+    diagnostics = {
+      enable = true,
+      disable = { "redefined-local" }
+    },
   }
 }

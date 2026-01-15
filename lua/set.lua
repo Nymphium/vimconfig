@@ -54,7 +54,7 @@ vim.o.relativenumber = true
 vim.o.cursorcolumn = true
 vim.o.cursorline = true
 
-vim.o.lazyredraw = true
+-- vim.o.lazyredraw = true # disable for noice
 vim.o.timeoutlen = 250
 vim.o.updatetime = 500
 vim.o.display = 'uhex,lastline'

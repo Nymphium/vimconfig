@@ -1,14 +1,12 @@
 return {
-  settings = {
-    ["filetypes"] = { "nix" },
-    ["rootPatterns"] = { "flake.nix" },
-    ["nil"] = {
-      ["formatting"] = {
-        ["command"] = { "nixfmt" }
-      },
-      ["flake"] = {
-        ["autoEvalInputs"] = true
-      }
+  ["filetypes"] = { "nix" },
+  ["rootPatterns"] = { "flake.nix" },
+  ["nil"] = {
+    ["formatting"] = {
+      ["command"] = { "nixfmt" }
+    },
+    ["flake"] = {
+      ["autoEvalInputs"] = true
     }
   }
 }
