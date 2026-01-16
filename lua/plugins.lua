@@ -55,9 +55,15 @@ require('lazy').setup({
       vim.opt.foldmethod = 'expr'
       vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
       local ts = require('nvim-treesitter')
+      local ensure_installed = { 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' }
+      local installed = ts.get_installed()
 
-      for _, parser in ipairs({ 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' }) do
-        pcall(ts.install, parser)
+      for _, parser in ipairs(ensure_installed) do
+        if not vim.tbl_contains(installed, parser) then
+          vim.schedule(function()
+            pcall(ts.install, parser)
+          end)
+        end
       end
 
       vim.api.nvim_create_autocmd('FileType', {
