@@ -10,5 +10,4 @@ ln -s "${PWD}/init.lua" "${TARGET}/.config/nvim/"
 ln -s "${PWD}/lua/"* "${TARGET}/.config/nvim/lua/"
 ln -s "${PWD}/after/lsp/"* "${TARGET}/.config/nvim/after/lsp"
 
-nvim -u packer_init.lua --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-nvim -u lua/plugins.lua --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+nvim --headless "+Lazy! sync" +qa
