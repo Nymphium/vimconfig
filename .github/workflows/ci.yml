@@ -1,4 +1,3 @@
-
 name: Neovim Configuration CI
 
 on:
@@ -14,15 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-    - uses: rhysd/action-setup-vim@v1
-      with:
-        neovim: true
+      - uses: rhysd/action-setup-vim@v3
+        with:
+          neovim: true
 
-    - name: Test Neovim configuration
-      run: |
-        ./setup.sh
-        nvim --headless +'checkhealth | qa'
-
+      - name: Test Neovim configuration
+        run: |
+          ./setup.sh
+          nvim --headless +'checkhealth | qa'
