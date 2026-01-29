@@ -55,7 +55,7 @@ require('lazy').setup({
       vim.opt.foldmethod = 'expr'
       vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
       local ts = require('nvim-treesitter')
-      local ensure_installed = { 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' }
+      local ensure_installed = { 'zsh', 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' }
       local installed = ts.get_installed()
 
       for _, parser in ipairs(ensure_installed) do
@@ -72,17 +72,17 @@ require('lazy').setup({
         end,
       })
 
-      -- require('nvim-treesitter').setup({
-      --   ensure_installed = { 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' },
-      --   auto_install = true,
-      --   indent = { enable = true },
-      --   endwise = { enable = true }, -- for treesitter-endwise
-      --   highlight = {
-      --     enable = true,
-      --     disable = {},
-      --     additional_vim_regex_highlighting = false,
-      --   },
-      -- })
+      require('nvim-treesitter').setup({
+        ensure_installed = { 'bash', 'lua', 'vim', 'markdown', 'markdown_inline' },
+        auto_install = true,
+        indent = { enable = true },
+        endwise = { enable = true }, -- for treesitter-endwise
+        highlight = {
+          enable = true,
+          disable = {},
+          additional_vim_regex_highlighting = false,
+        },
+      })
     end,
   },
 
@@ -90,15 +90,15 @@ require('lazy').setup({
 
   -- nvim-lsp {{{
   -- 'nymphium/neoconf.nvim'
-  {
-    'mrjones2014/codesettings.nvim',
-    config = function()
-      require('codesettings').setup({
-        config_file_paths = { '.vscode/settings.json', '.codesettings.json', ',codesettings.json' },
-        live_reload = true,
-      })
-    end,
-  },
+  -- {
+  --   'mrjones2014/codesettings.nvim',
+  --   config = function()
+  --     require('codesettings').setup({
+  --       config_file_paths = { '.vscode/settings.json', '.codesettings.json', ',codesettings.json' },
+  --       live_reload = true,
+  --     })
+  --   end,
+  -- },
 
   { 'neovim/nvim-lspconfig' },
 
@@ -216,11 +216,12 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter',
       'echasnovski/mini.diff',
       'j-hui/fidget.nvim',
+      'ravitemer/mcphub.nvim'
     },
     config = function()
       local pfx = '<leader>a'
 
-      require('codecompanion_spinner'):init()
+      -- require('codecompanion_spinner'):init()
       require('codecompanion').setup({
         extensions = {
           mcphub = {

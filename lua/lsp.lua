@@ -127,12 +127,12 @@ lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_c
   on_attach = on_attach,
 })
 
-vim.lsp.config("*", {
-  before_init = function(_, config)
-    local codesettings = require("codesettings")
-    config = codesettings.with_local_settings(config.name, config)
-  end,
-})
+-- vim.lsp.config("*", {
+--   before_init = function(_, config)
+--     local codesettings = require("codesettings")
+--     config = codesettings.with_local_settings(config.name, config)
+--   end,
+-- })
 
 vim.lsp.config("clangd", {
   filetypes = { "c", "cpp", "objc", "objcpp" },
