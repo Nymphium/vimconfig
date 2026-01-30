@@ -12,8 +12,69 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-  -- Packer removal
-  -- "wbthomason/packer.nvim", -- No longer needed
+  {
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      bigfile = { enabled = true },
+      indent = { enabled = true },
+      input = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      words = { enabled = true },
+      terminal = {
+        enabled = true,
+        win = {
+          position = 'bottom',
+          wo = { winbar = '' },
+        },
+      },
+    },
+    keys = {
+      {
+        '<leader>n',
+        function()
+          Snacks.notifier.show_history()
+        end,
+        desc = 'Notification History',
+      },
+      {
+        '<leader>gg',
+        function()
+          Snacks.lazygit({
+            win = { style = 'float' },
+          })
+        end,
+        desc = 'Lazygit',
+      },
+      {
+        '<leader>gl',
+        function()
+          Snacks.lazygit.log({
+            win = { style = 'float' },
+          })
+        end,
+        desc = 'Lazygit Log',
+      },
+      {
+        '<leader>un',
+        function()
+          Snacks.notifier.hide()
+        end,
+        desc = 'Dismiss All Notifications',
+      },
+      {
+        '<C-t>',
+        function()
+          Snacks.terminal()
+        end,
+        desc = 'Toggle Terminal',
+        mode = { 'n', 't' },
+      },
+    },
+  },
 
   {
     'ibhagwan/fzf-lua',
@@ -88,20 +149,8 @@ require('lazy').setup({
 
   { 'chentoast/marks.nvim' },
 
-  -- nvim-lsp {{{
-  -- 'nymphium/neoconf.nvim'
-  -- {
-  --   'mrjones2014/codesettings.nvim',
-  --   config = function()
-  --     require('codesettings').setup({
-  --       config_file_paths = { '.vscode/settings.json', '.codesettings.json', ',codesettings.json' },
-  --       live_reload = true,
-  --     })
-  --   end,
-  -- },
-
+  -- nvim-lsp
   { 'neovim/nvim-lspconfig' },
-
   { 'mason-org/mason.nvim' },
   { 'mason-org/mason-lspconfig.nvim', dependencies = { 'neovim/nvim-lspconfig' } },
 
@@ -161,24 +210,9 @@ require('lazy').setup({
     end,
   },
 
-  -- notification
-  {
-    'rcarriga/nvim-notify',
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('notify').setup({
-        timeout = 2500,
-        level = 1,
-        render = 'compact',
-        fps = 60,
-      })
-    end,
-  },
-  -- }}}
-
   {
     'folke/noice.nvim',
-    dependencies = { 'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify' },
+    dependencies = { 'MunifTanjim/nui.nvim' },
     config = function()
       require('noice').setup({
         lsp = {
@@ -192,6 +226,9 @@ require('lazy').setup({
           command_palette = true,
           long_message_to_split = true,
           inc_rename = false,
+        },
+        notify = {
+          enabled = false,
         },
       })
     end,
@@ -216,12 +253,11 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter',
       'echasnovski/mini.diff',
       'j-hui/fidget.nvim',
-      'ravitemer/mcphub.nvim'
+      'ravitemer/mcphub.nvim',
     },
     config = function()
       local pfx = '<leader>a'
 
-      -- require('codecompanion_spinner'):init()
       require('codecompanion').setup({
         extensions = {
           mcphub = {
@@ -281,6 +317,7 @@ require('lazy').setup({
     version = '*',
     config = function()
       require('blink.cmp').setup({
+        signature = { enabled = true },
         completion = {
           documentation = { auto_show = true },
           trigger = { show_on_keyword = true, show_on_insert_on_trigger_character = true },
@@ -326,6 +363,7 @@ require('lazy').setup({
         keymap = {
           ['<Tab>'] = { 'select_next', 'fallback' },
           ['<S-Tab>'] = { 'select_prev', 'fallback' },
+          ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
           ['<C-e>'] = { 'cancel' },
           ['<C-x>'] = { 'show_and_insert' },
           ['<CR>'] = {
@@ -339,7 +377,7 @@ require('lazy').setup({
 
   {
     'giuxtaposition/blink-cmp-copilot',
-    dependencies = { 'zbirenbaum/copilot.lua' }, -- Added dependency for safety
+    dependencies = { 'zbirenbaum/copilot.lua' },
   },
 
   {
@@ -414,13 +452,6 @@ require('lazy').setup({
         end,
         desc = 'Disable focus autoresize for FileType',
       })
-    end,
-  },
-
-  {
-    'nvimdev/indentmini.nvim',
-    config = function()
-      require('indentmini').setup()
     end,
   },
 
@@ -511,40 +542,6 @@ require('lazy').setup({
         gs.diffthis('~')
       end)
       set_keymap('n', pfx('td'), gs.preview_hunk_inline)
-    end,
-  },
-
-  {
-    'akinsho/toggleterm.nvim',
-    config = function()
-      require('toggleterm').setup({
-        open_mapping = [[<C-t>]],
-        direction = 'horizontal',
-        autochdir = true,
-        shading_terminals = false,
-        shading_factor = 0,
-        start_in_insert = true,
-      })
-      local Terminal = require('toggleterm.terminal').Terminal
-      local lazygit = Terminal:new({
-        cmd = 'lazygit',
-        count = 5,
-        dir = 'git_dir',
-        float_opts = { border = 'single' },
-        -- function to run on opening the terminal
-        on_open = function(term)
-          vim.cmd('startinsert!')
-          vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
-        end,
-        on_close = function(_)
-          vim.cmd('startinsert!')
-        end,
-      })
-      vim.keymap.set('n', '<leader>g?', '', {
-        callback = function()
-          lazygit:toggle()
-        end,
-      })
     end,
   },
 
