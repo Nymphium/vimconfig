@@ -247,73 +247,19 @@ require('lazy').setup({
   },
 
   {
-    'olimorris/codecompanion.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-treesitter/nvim-treesitter',
-      'echasnovski/mini.diff',
-      'j-hui/fidget.nvim',
-      'ravitemer/mcphub.nvim',
-    },
+    'lambdalisue/nvim-aibo',
     config = function()
-      local pfx = '<leader>a'
+      require('aibo').setup({})
 
-      require('codecompanion').setup({
-        extensions = {
-          mcphub = {
-            callback = 'mcphub.extensions.codecompanion',
-            opts = {
-              make_vars = true,
-              make_slash_commands = true,
-              show_result_in_chat = true,
-            },
-          },
-        },
-        display = {
-          chat = {
-            show_header_separator = true,
-          },
-        },
-      })
-
-      vim.keymap.set({ 'n', 'v' }, pfx .. 'e', '<cmd>CodeCompanion<CR>', { silent = true, desc = 'CodeCompanion' })
-      vim.keymap.set(
-        { 'n', 'v' },
-        pfx .. 't',
-        '<cmd>CodeCompanionChat<CR>',
-        { silent = true, desc = 'CodeCompanion Chat' }
-      )
-      vim.keymap.set(
-        { 'n', 'v' },
-        pfx .. 'a',
-        '<cmd>CodeCompanionAction<CR>',
-        { silent = true, desc = 'CodeCompanion Action' }
-      )
-    end,
-  },
-
-  {
-    'ravitemer/mcphub.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-    build = 'npm install -g mcp-hub@latest',
-    config = function()
-      require('mcphub').setup({
-        auto_approve = true,
-        mcp_request_timeout = 120000,
-        extensions = {
-          codecompanion = { make_slash_commands = true },
-        },
-      })
-    end,
+      vim.keymap.set('n', '<leader>ae', ':Aibo -opener=vsplit gemini<CR>')
+    end
   },
   -- }}}
 
   -- completions {{{
   {
     'saghen/blink.cmp',
-    dependencies = { 'giuxtaposition/blink-cmp-copilot', 'Kaiser-Yang/blink-cmp-avante' },
+    dependencies = { 'giuxtaposition/blink-cmp-copilot' },
     version = '*',
     config = function()
       require('blink.cmp').setup({
@@ -334,21 +280,12 @@ require('lazy').setup({
             'buffer',
             'copilot',
           },
-          per_filetype = {
-            codecompanion = { 'codecompanion' },
-          },
           providers = {
             copilot = {
               name = 'copilot',
               module = 'blink-cmp-copilot',
               score_offset = 100,
               async = true,
-            },
-            codecompanion = {
-              name = 'CodeCompanion',
-              module = 'codecompanion.providers.completion.blink',
-              score_offset = 100,
-              enabled = true,
             },
           },
         },
@@ -468,7 +405,7 @@ require('lazy').setup({
     config = function()
       require('markview').setup({
         preview = {
-          filetypes = { 'markdown', 'codecompanion' },
+          filetypes = { 'markdown' },
           ignore_buftypes = {},
         },
       })
