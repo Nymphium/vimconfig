@@ -358,7 +358,7 @@ require('lazy').setup({
       focus.setup({})
 
       local ignore_buftypes = { 'nofile', 'popup' }
-      local ignore_filetypes = { 'codecompanion' }
+      local ignore_filetypes = {}
 
       local augroup = vim.api.nvim_create_augroup('FocusDisable', { clear = true })
 
