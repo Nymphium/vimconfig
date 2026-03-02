@@ -21,7 +21,6 @@ require('lazy').setup({
       bigfile = { enabled = true },
       indent = { enabled = true },
       input = { enabled = true },
-      notifier = { enabled = true },
       quickfile = { enabled = true },
       words = { enabled = true },
       terminal = {
@@ -212,7 +211,7 @@ require('lazy').setup({
 
   {
     'folke/noice.nvim',
-    dependencies = { 'MunifTanjim/nui.nvim' },
+    dependencies = { 'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify' },
     config = function()
       require('noice').setup({
         lsp = {
@@ -228,7 +227,7 @@ require('lazy').setup({
           inc_rename = false,
         },
         notify = {
-          enabled = false,
+          enabled = true,
         },
       })
     end,
