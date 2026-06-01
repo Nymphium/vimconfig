@@ -258,8 +258,11 @@ require('lazy').setup({
   -- completions {{{
   {
     'saghen/blink.cmp',
-    dependencies = { 'giuxtaposition/blink-cmp-copilot' },
-    version = '*',
+    dependencies = { 'saghen/blink.lib', 'giuxtaposition/blink-cmp-copilot' },
+    version = '2.*',
+    build = function()
+      require('blink.cmp').download({ force = true, tags = '*' }):pwait()
+    end,
     config = function()
       require('blink.cmp').setup({
         signature = { enabled = true },
@@ -290,10 +293,6 @@ require('lazy').setup({
         },
         fuzzy = {
           implementation = 'prefer_rust',
-          prebuilt_binaries = {
-            download = true,
-            force_version = 'main',
-          },
         },
 
         keymap = {
